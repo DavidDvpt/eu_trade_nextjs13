@@ -1,15 +1,15 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import Login from './(auth)/login/page';
 
 function AuthCheck({ children }: IChildren) {
-  const router = useRouter();
-  const { data: session } = useSession();
-  console.log('seession', session);
-  if (!session) {
-    router.push('/login');
+  const { status } = useSession();
+
+  if (status === 'unauthenticated') {
+    return <Login />;
   }
+
   return <div>{children}</div>;
 }
 

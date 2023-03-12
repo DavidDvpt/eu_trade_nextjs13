@@ -1,16 +1,12 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type LoginFormValues = { email: string; password: string };
 const intialLoginValues: LoginFormValues = { email: '', password: '' };
 
 function Login(): React.ReactElement {
-  const router = useRouter();
-  const [error, setError] = useState<any | null>(null);
   const {
     register,
     handleSubmit,
@@ -24,16 +20,6 @@ function Login(): React.ReactElement {
       password: values.password,
       callbackUrl: '/',
     });
-
-    if (res?.error) {
-      setError(res.error);
-    } else {
-      setError(null);
-    }
-
-    if (res?.url) {
-      router.push(res.url);
-    }
   };
 
   return (
