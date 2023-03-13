@@ -10,7 +10,7 @@ function AuthCheck({ children }: IChildren) {
     return <Login />;
   }
 
-  return <div>{children}</div>;
+  return <>{children}</>;
 }
 
 export default AuthCheck;
