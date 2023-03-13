@@ -1,3 +1,5 @@
+import encodeFnc from '@/lib/auth/encodeFnc';
+import prismadb from '@/lib/prisma/prismadb';
 import { randomBytes, randomUUID } from 'crypto';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -26,31 +28,15 @@ export default NextAuth({
           credentials?.password === 'david'
             ? true
             : false;
+        const user = await prismadb.user.findUnique({
+          where: { email: credentials?.email ?? '' },
+        });
 
-        if (res) {
-          return { id: '1', name: 'david' };
+        if (user && user.password === encodeFnc(credentials?.password ?? '')) {
+          return { id: user.id, name: user.firstname };
         } else {
           throw new Error('bad credentials');
         }
-        // const res = await fetch('http://localhost:5287/api/tokens', {
-        //   method: 'POST',
-        //   body: JSON.stringify(payload),
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        // });
-
-        // const user = await res.json();
-        // if (!res.ok) {
-        //   throw new Error(user.message);
-        // }
-        // // If no error and we have user data, return it
-        // if (res.ok && user) {
-        //   return user;
-        // }
-
-        // Return null if user data could not be retrieved
-        // return null;
       },
     }),
     // ...add more providers here

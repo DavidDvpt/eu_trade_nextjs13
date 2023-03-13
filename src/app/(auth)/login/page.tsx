@@ -20,6 +20,7 @@ function Login(): React.ReactElement {
       password: values.password,
       callbackUrl: '/',
     });
+    console.log(res);
   };
 
   return (
