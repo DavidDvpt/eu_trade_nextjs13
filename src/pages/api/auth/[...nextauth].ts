@@ -1,5 +1,6 @@
 import encodeFnc from '@/lib/auth/encodeFnc';
 import prismadb from '@/lib/prisma/prismadb';
+import bcrypt from 'bcrypt';
 import { randomBytes, randomUUID } from 'crypto';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -23,18 +24,35 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        const res =
-          credentials?.email === 'david.mosca69@gmail.com' &&
-          credentials?.password === 'david'
-            ? true
-            : false;
         const user = await prismadb.user.findUnique({
           where: { email: credentials?.email ?? '' },
         });
 
-        if (user && user.password === encodeFnc(credentials?.password ?? '')) {
+        if (
+          user &&
+          user.password &&
+          bcrypt.compareSync(credentials?.password ?? '', user.password)
+        ) {
           return { id: user.id, name: user.firstname };
         } else {
+          if (credentials?.email !== user?.email) {
+            throw new Error('bad email');
+          }
+          if (
+            bcrypt.compareSync(
+              credentials?.password ?? '',
+              user?.password ?? ''
+            )
+          ) {
+            throw new Error(
+              'bad password  --  ' +
+                credentials?.password +
+                ' -- ' +
+                encodeFnc(credentials?.password ?? '') +
+                ' -- ' +
+                user?.password
+            );
+          }
           throw new Error('bad credentials');
         }
       },

@@ -14,6 +14,7 @@ function Login(): React.ReactElement {
   } = useForm<LoginFormValues>({ defaultValues: intialLoginValues });
 
   const onSubmit = async (values: LoginFormValues) => {
+    console.log(values);
     const res = await signIn('credentials', {
       redirect: false,
       email: values.email,

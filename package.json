@@ -9,9 +9,10 @@
     "lint": "next lint",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:reset": "npx prisma migrate reset --force"
+    "prisma:reset": "npx prisma migrate reset --force",
+    "prisma:studio": "npx prisma studio"
   },
-  "Prisma": {
+  "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
