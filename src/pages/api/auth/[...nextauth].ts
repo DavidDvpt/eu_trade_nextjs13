@@ -1,4 +1,3 @@
-import encodeFnc from '@/lib/auth/encodeFnc';
 import prismadb from '@/lib/prisma/prismadb';
 import bcrypt from 'bcrypt';
 import { randomBytes, randomUUID } from 'crypto';
@@ -30,7 +29,6 @@ export default NextAuth({
 
         if (
           user &&
-          user.password &&
           bcrypt.compareSync(credentials?.password ?? '', user.password)
         ) {
           return { id: user.id, name: user.firstname };
@@ -44,15 +42,9 @@ export default NextAuth({
               user?.password ?? ''
             )
           ) {
-            throw new Error(
-              'bad password  --  ' +
-                credentials?.password +
-                ' -- ' +
-                encodeFnc(credentials?.password ?? '') +
-                ' -- ' +
-                user?.password
-            );
+            throw new Error('bad password');
           }
+
           throw new Error('bad credentials');
         }
       },
