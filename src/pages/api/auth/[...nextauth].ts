@@ -26,7 +26,7 @@ export default NextAuth({
         const user = await prismadb.user.findUnique({
           where: { email: credentials?.email ?? '' },
         });
-
+        console.log(user);
         if (
           user &&
           bcrypt.compareSync(credentials?.password ?? '', user.password)

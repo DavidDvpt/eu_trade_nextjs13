@@ -1,5 +1,8 @@
 'use client';
 
+import InputField from '@/components/form/InputField';
+import PasswordInput from '@/components/form/PasswordInput';
+import { Button } from '@mui/material';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
@@ -8,13 +11,13 @@ const intialLoginValues: LoginFormValues = { email: '', password: '' };
 
 function Login(): React.ReactElement {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>({ defaultValues: intialLoginValues });
 
   const onSubmit = async (values: LoginFormValues) => {
-    console.log(values);
+    console.log('before submit', values);
     const res = await signIn('credentials', {
       redirect: false,
       email: values.email,
@@ -26,17 +29,14 @@ function Login(): React.ReactElement {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <fieldset>
-        <label htmlFor='email'>Email</label>
-        <input type='text' {...register('email')} aria-required='true' />
-      </fieldset>
+      <InputField control={control} name='email' label='Email' />
 
-      <fieldset>
-        <label htmlFor='password'>Mot de passe</label>
-        <input type='password' {...register('password')} aria-required='true' />
-      </fieldset>
+      <PasswordInput control={control} name='password' />
 
-      <button type='submit'>Se connecter</button>
+      <Button type='submit' variant='contained' color='info'>
+        Se connecter
+      </Button>
+      {/* <button type='submit'>Se connecter</button> */}
     </form>
   );
 }
