@@ -1,0 +1,6 @@
+@import '../../styles/main';
+
+.main {
+  @include flex-center-center;
+  flex-direction: column;
+}
