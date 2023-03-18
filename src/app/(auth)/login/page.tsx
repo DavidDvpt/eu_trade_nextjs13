@@ -2,7 +2,6 @@
 
 import InputField from '@/components/form/InputField';
 import PasswordInput from '@/components/form/PasswordInput';
-import { Button } from '@mui/material';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
@@ -32,11 +31,9 @@ function Login(): React.ReactElement {
     <form onSubmit={handleSubmit(onSubmit)}>
       <InputField control={control} name='email' label='Email' />
 
-      <PasswordInput control={control} name='password' />
+      <PasswordInput control={control} name='password' label='Mot de passe' />
 
-      <Button type='submit' variant='contained' color='info'>
-        Se connecter
-      </Button>
+      <button type='submit'>Se connecter</button>
       {/* <button type='submit'>Se connecter</button> */}
     </form>
   );

@@ -1,0 +1,6 @@
+@import '../../styles/main';
+
+.fieldset {
+  @include input-field-base;
+  width: 400px;
+}

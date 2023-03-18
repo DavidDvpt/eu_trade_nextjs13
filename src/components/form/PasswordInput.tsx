@@ -1,20 +1,17 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
-
+import styles from './formFields.module.scss';
 interface IPasswordInputProps {
   control: any;
   name: string;
+  className?: string;
+  label: string;
 }
 function PasswordInput({
   control,
   name,
+  className,
+  label,
 }: IPasswordInputProps): React.ReactElement {
   const [hidden, setHidden] = useState<boolean>(true);
   return (
@@ -22,26 +19,12 @@ function PasswordInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormControlLabel
-          label='Mot de passe'
-          labelPlacement='start'
-          control={
-            <TextField
-              {...field}
-              type={hidden ? 'password' : 'text'}
-              variant='outlined'
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton edge='end' onClick={() => setHidden(!hidden)}>
-                      {hidden ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          }
-        />
+        <fieldset className={`${styles.fieldset} ${className ?? ''}`}>
+          <label htmlFor={name}>{label}</label>
+          <div>
+            <input type={hidden ? 'password' : 'text'} {...field} />
+          </div>
+        </fieldset>
       )}
     />
   );

@@ -1,5 +1,38 @@
 @mixin flex-center-center {
   display: flex;
-  justify-content: flex;
+  justify-content: center;
   align-items: center;
+}
+
+@mixin flex-center-center-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+@mixin flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin input-field-base {
+  @include flex-between-center;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  overflow: hidden;
+
+  input {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    line-height: 25px;
+
+    &:focus {
+      outline: none;
+      background-color: whitesmoke;
+    }
+  }
 }

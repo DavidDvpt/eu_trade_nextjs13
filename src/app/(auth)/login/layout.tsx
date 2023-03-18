@@ -1,5 +1,7 @@
+import styles from '../auth.module.scss';
+
 function layout({ children }: IChildren) {
-  return <div>{children}</div>;
+  return <div className={styles.loginContent}>{children}</div>;
 }
 
 export default layout;

@@ -1,6 +1,12 @@
 @import '../../styles/main';
 
 .main {
-  @include flex-center-center;
-  flex-direction: column;
+  height: 100%;
+  @include flex-center-center-column;
+
+  .loginContent {
+    form {
+      @include flex-center-center-column;
+    }
+  }
 }
