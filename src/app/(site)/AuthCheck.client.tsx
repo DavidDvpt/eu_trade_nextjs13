@@ -1,12 +1,15 @@
 'use client';
 
-function AuthCheck({ children }: IChildren) {
-  // const router = useRouter();
-  // const { status } = useSession();
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-  // if (status === 'unauthenticated') {
-  //   router.push('/login');
-  // }
+function AuthCheck({ children }: IChildren) {
+  const router = useRouter();
+  const { status } = useSession();
+
+  if (status === 'unauthenticated') {
+    router.push('/login');
+  }
 
   return <>{children}</>;
 }

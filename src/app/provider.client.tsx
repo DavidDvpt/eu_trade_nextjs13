@@ -1,6 +1,6 @@
 'use client';
 import { SessionProvider } from 'next-auth/react';
-import AuthCheck from './AuthCheck.client';
+import AuthCheck from './(site)/AuthCheck.client';
 
 function Provider({ children }: IChildren) {
   return (
