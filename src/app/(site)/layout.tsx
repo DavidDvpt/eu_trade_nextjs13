@@ -1,13 +1,20 @@
 'use client';
-import React from 'react';
-import AuthCheck from './AuthCheck.client';
 
-function layout({ children }: IChildren): React.ReactElement {
-  return (
-    <div>
-      <AuthCheck>{children}</AuthCheck>
-    </div>
-  );
+import { signIn, useSession } from 'next-auth/react';
+import React from 'react';
+
+function Layout({ children }: IChildren): React.ReactElement {
+  const { status, data } = useSession();
+  console.log(status, data);
+  if (status === 'loading') {
+    ('...loading');
+  }
+
+  if (status === 'unauthenticated') {
+    signIn();
+  }
+
+  return <div>{children}</div>;
 }
 
-export default layout;
+export default Layout;

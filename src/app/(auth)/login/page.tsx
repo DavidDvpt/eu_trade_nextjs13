@@ -7,7 +7,10 @@ import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
 type LoginFormValues = { email: string; password: string };
-const intialLoginValues: LoginFormValues = { email: '', password: '' };
+const intialLoginValues: LoginFormValues = {
+  email: 'appmail@gmail.com',
+  password: 'david',
+};
 
 function Login(): React.ReactElement {
   const {
@@ -17,14 +20,12 @@ function Login(): React.ReactElement {
   } = useForm<LoginFormValues>({ defaultValues: intialLoginValues });
 
   const onSubmit = async (values: LoginFormValues) => {
-    console.log('before submit', values);
-    const res = await signIn('credentials', {
-      redirect: false,
+    await signIn('credentials', {
       email: values.email,
       password: values.password,
+      redirect: true,
       callbackUrl: '/',
     });
-    console.log(res);
   };
 
   return (

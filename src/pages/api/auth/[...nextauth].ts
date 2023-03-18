@@ -86,19 +86,19 @@ export default NextAuth({
     // async encode({}) {},
     // async decode() {},
   },
-  callbacks: {
-    async jwt({ token, user, account }) {
-      if (account && user) {
-        return {
-          ...token,
-          accessToken: account.access_token,
-          refreshToken: account.refreshToken,
-        };
-      }
+  // callbacks: {
+  //   async jwt({ token, user, account }) {
+  //     if (account && user) {
+  //       return {
+  //         ...token,
+  //         accessToken: account.access_token,
+  //         refreshToken: account.refreshToken,
+  //       };
+  //     }
 
-      return token;
-    },
-  },
+  //     return token;
+  //   },
+  // },
 
   //   async session({ session, token }) {
   //     session.accessToken = token.accessToken;
