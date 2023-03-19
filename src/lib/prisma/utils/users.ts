@@ -3,7 +3,7 @@ import client from '../prismadb';
 
 export const getUserByEmail = async (email: string | null) => {
   try {
-    if (!email) {
+    if (email) {
       const user = await client.user.findUnique({
         where: { email: email ?? '' },
       });
