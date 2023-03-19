@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+@mixin flex-end {
+  display: flex;
+  justify-content: end;
+}
 @mixin flex-center-center-column {
   display: flex;
   justify-content: center;

@@ -46,9 +46,8 @@ function Login(): React.ReactElement {
           className={styles.fieldset}
         />
 
-        <Button content='Se connecter' type='submit' success />
+        <Button content='Se connecter' type='submit' primary />
       </section>
-      {/* <button type='submit'>Se connecter</button> */}
     </form>
   );
 }

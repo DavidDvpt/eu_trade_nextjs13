@@ -4,7 +4,7 @@ interface IButtonProps {
   content: string | React.ReactNode;
   type: 'submit' | 'reset' | 'button';
   className?: string;
-  info?: boolean;
+  primary?: boolean;
   warning?: boolean;
   error?: boolean;
   success?: boolean;
@@ -14,12 +14,12 @@ function Button({
   content,
   type = 'button',
   className,
-  info,
+  primary,
   error,
   success,
   warning,
 }: IButtonProps) {
-  const btnType = info
+  const btnType = primary
     ? 'info'
     : error
     ? 'error'
