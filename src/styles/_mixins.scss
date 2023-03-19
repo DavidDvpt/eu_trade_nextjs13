@@ -6,7 +6,7 @@
 
 @mixin flex-end {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 @mixin flex-center-center-column {
   display: flex;

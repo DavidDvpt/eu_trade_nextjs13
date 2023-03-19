@@ -1,6 +1,6 @@
+import client from '@/lib/prisma/prismadb';
 import { ResourceType } from '@prisma/client';
 import encodeFnc from '../src/lib/auth/encodeFnc';
-import prismadb from '../src/lib/prisma/prismadb';
 
 import {
   enmatterDatas,
@@ -20,10 +20,10 @@ const users = [
 ];
 
 async function createAdmin() {
-  const userCount = await prismadb.user.count();
+  const userCount = await client.user.count();
 
   if (userCount === 0) {
-    await prismadb.user.createMany({ data: users });
+    await client.user.createMany({ data: users });
   }
 }
 
@@ -31,9 +31,9 @@ createAdmin();
 
 let resourcesTypes: ResourceType[] = [];
 async function createResourceTypes() {
-  await prismadb.resourceType.createMany({ data: resourceTypeDatas });
+  await client.resourceType.createMany({ data: resourceTypeDatas });
 
-  resourcesTypes = await prismadb.resourceType.findMany();
+  resourcesTypes = await client.resourceType.findMany();
   console.log('types', resourcesTypes.length);
 }
 
@@ -42,7 +42,7 @@ createResourceTypes().then((response) => {
   async function createOres() {
     const type = resourcesTypes.find((f) => f.name === 'Ore') as ResourceType;
     console.log(type.id);
-    const count = await prismadb.resource.createMany({
+    const count = await client.resource.createMany({
       data: oresDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
     });
     console.log('ores', count);
@@ -54,7 +54,7 @@ createResourceTypes().then((response) => {
     const type = resourcesTypes.find(
       (f) => f.name === 'Refined Ore'
     ) as ResourceType;
-    const count = await prismadb.resource.createMany({
+    const count = await client.resource.createMany({
       data: oresRefinedDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
     });
     console.log('refined ores', count);
@@ -66,7 +66,7 @@ createResourceTypes().then((response) => {
     const type = resourcesTypes.find(
       (f) => f.name === 'Enmatter'
     ) as ResourceType;
-    const count = await prismadb.resource.createMany({
+    const count = await client.resource.createMany({
       data: enmatterDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
     });
 
@@ -79,7 +79,7 @@ createResourceTypes().then((response) => {
     const type = resourcesTypes.find(
       (f) => f.name === 'Refined Enmatter'
     ) as ResourceType;
-    const count = await prismadb.resource.createMany({
+    const count = await client.resource.createMany({
       data: enmatterRefinedDatas.map((e) => ({
         ...e,
         resourceTypeId: type.id,
@@ -92,11 +92,11 @@ createResourceTypes().then((response) => {
 });
 
 // function createBuyTransaction() {
-//   return prismadb.transaction.createMany({ data: buyTransactions });
+//   return client.transaction.createMany({ data: buyTransactions });
 // }
 
 // function createSellTransaction() {
-//   return prismadb.transaction.createMany({
+//   return client.transaction.createMany({
 //     data: sellTransactions,
 //   });
 // }

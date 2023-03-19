@@ -1,4 +1,5 @@
-import prismadb from '@/lib/prisma/prismadb';
+import { getUserByEmail } from '@/lib/prisma/utils/users';
+
 import bcrypt from 'bcrypt';
 import { randomBytes, randomUUID } from 'crypto';
 import NextAuth from 'next-auth';
@@ -23,10 +24,8 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        const user = await prismadb.user.findUnique({
-          where: { email: credentials?.email ?? '' },
-        });
-        console.log(user);
+        const user = await getUserByEmail(credentials?.email ?? null);
+
         if (
           user &&
           bcrypt.compareSync(credentials?.password ?? '', user.password)
