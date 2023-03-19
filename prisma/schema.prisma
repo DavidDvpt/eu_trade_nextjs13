@@ -10,14 +10,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SellStatus {
+  ENDED
+  PROGRESS
+  RETURNED
+}
+
+enum TransactionType {
+  BUY
+  SELL
+  MINING
+}
+
 model User {
-  id        String    @id @default(cuid())
-  firstname String?   @db.VarChar(50)
-  lastname  String?   @db.VarChar(50)
-  pseudo    String?   @db.VarChar(50)
-  email     String    @unique @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime?
-  isActive  Boolean   @default(true)
-  password  String    @db.VarChar(255)
+  id          String        @id @default(cuid())
+  firstname   String?       @db.VarChar(50)
+  lastname    String?       @db.VarChar(50)
+  pseudo      String?       @db.VarChar(50)
+  email       String        @unique @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?
+  isActive    Boolean       @default(true)
+  password    String        @db.VarChar(255)
+  Transaction Transaction[]
+}
+
+model ResourceType {
+  id         String     @id @default(cuid())
+  name       String     @unique
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  modifiedAt DateTime?
+  Resources  Resource[]
+}
+
+model Resource {
+  id          String        @id @default(cuid())
+  name        String        @unique
+  value       Float         @default(0)
+  imageUrlId  String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  modifiedAt  DateTime?
+  Transaction Transaction[]
+
+  resourceTypeId String
+  resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
+}
+
+model Transaction {
+  id         String          @id @default(cuid())
+  type       TransactionType
+  sellStatus SellStatus?
+  quantity   Int
+  fee        Float?
+  sellValue  Int?
+  createdAt  DateTime        @default(now())
+  modifiedAt DateTime?
+  userId     String
+  user       User            @relation(fields: [userId], references: [id])
+  resourceId String
+  resource   Resource        @relation(fields: [resourceId], references: [id])
 }
