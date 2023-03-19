@@ -2,7 +2,13 @@ import { ResourceType } from '@prisma/client';
 import encodeFnc from '../src/lib/auth/encodeFnc';
 import prismadb from '../src/lib/prisma/prismadb';
 
-import { oresDatas, oresRefinedDatas, resourceTypeDatas } from './datasForSeed';
+import {
+  enmatterDatas,
+  enmatterRefinedDatas,
+  oresDatas,
+  oresRefinedDatas,
+  resourceTypeDatas,
+} from './datasForSeed';
 
 const users = [
   {
@@ -35,6 +41,7 @@ createResourceTypes().then((response) => {
   //Ores
   async function createOres() {
     const type = resourcesTypes.find((f) => f.name === 'Ore') as ResourceType;
+    console.log(type.id);
     const count = await prismadb.resource.createMany({
       data: oresDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
     });
@@ -50,22 +57,39 @@ createResourceTypes().then((response) => {
     const count = await prismadb.resource.createMany({
       data: oresRefinedDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
     });
-    console.log('ores', count);
+    console.log('refined ores', count);
   }
   createRefinedOres();
+
+  // enmatters
+  async function createEnmatters() {
+    const type = resourcesTypes.find(
+      (f) => f.name === 'Enmatter'
+    ) as ResourceType;
+    const count = await prismadb.resource.createMany({
+      data: enmatterDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
+    });
+
+    console.log('enmatters', count);
+  }
+  createEnmatters();
+
+  // refined enmatters
+  async function createRefinedEnmatters() {
+    const type = resourcesTypes.find(
+      (f) => f.name === 'Refined Enmatter'
+    ) as ResourceType;
+    const count = await prismadb.resource.createMany({
+      data: enmatterRefinedDatas.map((e) => ({
+        ...e,
+        resourceTypeId: type.id,
+      })),
+    });
+
+    console.log('refined enmatters', count);
+  }
+  createRefinedEnmatters();
 });
-
-// function createEnmatters() {
-//   return prismadb.resource.createMany({
-//     data: enmatterDatas.map((e) => ({ ...e, resourceTypeId: 1 })),
-//   });
-// }
-
-// function createRefindedEnmatters() {
-//   return prismadb.resource.createMany({
-//     data: enmatterRefinedDatas.map((e) => ({ ...e, resourceTypeId: 2 })),
-//   });
-// }
 
 // function createBuyTransaction() {
 //   return prismadb.transaction.createMany({ data: buyTransactions });
@@ -77,35 +101,6 @@ createResourceTypes().then((response) => {
 //   });
 // }
 
-// function createResources() {
-//   return new Promise((resolve, reject) => {
-//     return createResourceType().then(
-//       (response) => {
-//         console.log('resourceTypes are added');
-//         return Promise.all([
-//           createOres(),
-//           createEnmatters(),
-//           createRefindedEnmatters(),
-//           createRefinedOres(),
-//         ]).then(
-//           (response) => {
-//             console.log('resources are added');
-//             return resolve(true);
-//           },
-//           (err) => {
-//             console.log(err);
-//             reject(err);
-//           }
-//         );
-//       },
-//       (err) => {
-//         console.log(err);
-//         reject(err);
-//       }
-//     );
-//   });
-// }
-
 // createResources().then((response) => {
 //   Promise.all([createBuyTransaction(), createSellTransaction()]).then(
 //     (response) => {
@@ -113,5 +108,3 @@ createResourceTypes().then((response) => {
 //     }
 //   );
 // });
-
-// export {};
