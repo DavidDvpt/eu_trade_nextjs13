@@ -1,4 +1,4 @@
-import Nav from '../nav';
+import Nav from '../nav/nav.client';
 import Brand from './Brand';
 
 import styles from './header.module.scss';

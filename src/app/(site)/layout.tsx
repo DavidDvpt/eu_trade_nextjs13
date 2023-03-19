@@ -1,7 +1,7 @@
 'use client';
 
-import Footer from '@/components/footer';
-import Header from '@/components/header';
+import Footer from '@/components/layoutRoot/footer';
+import Header from '@/components/layoutRoot/header';
 import { signIn, useSession } from 'next-auth/react';
 import React from 'react';
 

@@ -1,8 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { error504Traitment, InternalError } from './axiosUtils';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 export const onFullfilledRequest = (response: AxiosResponse) => {
   return response;
 };
@@ -39,7 +37,6 @@ const setResponseInterceptor = (request: AxiosInstance) => {
 
 export default function axiosInstance() {
   const request = axios.create({
-    baseURL: API_URL,
     timeout: 30000,
   });
 

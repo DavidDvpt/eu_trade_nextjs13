@@ -1,4 +1,4 @@
-@import '../../styles/main';
+@import '../../../styles/main';
 
 .navElement {
   ul {
@@ -11,12 +11,16 @@
       color: inherit;
 
       li {
-        width: 100px;
+        width: 120px;
         text-align: center;
         cursor: pointer;
         line-height: 50px;
         border-bottom: 2px solid $color_grey_03;
 
+        &.isActive {
+          border-bottom: 2px solid $nav_active;
+          font-weight: 700;
+        }
         &:hover {
           border-bottom: 2px solid $color_primary;
           background-color: $color_grey_04;
