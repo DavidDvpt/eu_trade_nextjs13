@@ -1,9 +1,11 @@
 'use client';
 
+import Button from '@/components/form/Button';
 import InputField from '@/components/form/InputField';
 import PasswordInput from '@/components/form/PasswordInput';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import styles from '../auth.module.scss';
 
 type LoginFormValues = { email: string; password: string };
 const intialLoginValues: LoginFormValues = {
@@ -29,11 +31,23 @@ function Login(): React.ReactElement {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <InputField control={control} name='email' label='Email' />
+      <section>
+        <InputField
+          control={control}
+          name='email'
+          label='Email :'
+          className={styles.fieldset}
+        />
 
-      <PasswordInput control={control} name='password' label='Mot de passe' />
+        <PasswordInput
+          control={control}
+          name='password'
+          label='Mot de passe :'
+          className={styles.fieldset}
+        />
 
-      <button type='submit'>Se connecter</button>
+        <Button content='Se connecter' type='submit' success />
+      </section>
       {/* <button type='submit'>Se connecter</button> */}
     </form>
   );

@@ -6,7 +6,12 @@
 
   .loginContent {
     form {
-      @include flex-center-center-column;
+      section {
+        @include flex-center-center-column;
+        .fieldset {
+          width: 350px;
+        }
+      }
     }
   }
 }

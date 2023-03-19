@@ -1,0 +1,55 @@
+@import './main';
+
+section {
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  background-color: $color_grey_01;
+  box-shadow: 0 0 10px $color_grey_05;
+}
+
+fieldset {
+  @include flex-between-center;
+  input {
+    padding: 10px 5px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid $input_border_color;
+    color: $input_font_color;
+
+    &:focus {
+      outline-color: $input_border_color_focus;
+      background-color: $input_background_color_focus;
+      color: $color_black;
+    }
+  }
+}
+
+button {
+  cursor: pointer;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  height: 40px;
+  width: 200px;
+  font-size: 1em;
+
+  &.info {
+    background-color: $button_primary;
+    color: $color_white;
+  }
+
+  &.error {
+    background-color: $color_error;
+  }
+
+  &.warning {
+    background-color: $color_warning;
+    color: $color_black;
+  }
+
+  &.success {
+    background-color: $color_success;
+  }
+}

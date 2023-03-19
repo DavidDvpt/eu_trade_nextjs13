@@ -1,6 +1,5 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import styles from './formFields.module.scss';
 
 interface IInputFieldProps {
   control: any;
@@ -21,8 +20,9 @@ function InputField({
       control={control}
       name={name}
       render={({ field }) => (
-        <fieldset className={`${styles.fieldset} ${className ?? ''}`}>
+        <fieldset className={`${className ?? ''}`}>
           <label htmlFor={name}>{label}</label>
+
           <input type={type} {...field} />
         </fieldset>
       )}

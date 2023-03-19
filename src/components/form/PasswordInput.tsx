@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
-import styles from './formFields.module.scss';
 interface IPasswordInputProps {
   control: any;
   name: string;
@@ -19,11 +18,9 @@ function PasswordInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <fieldset className={`${styles.fieldset} ${className ?? ''}`}>
+        <fieldset className={`${className ?? ''}`}>
           <label htmlFor={name}>{label}</label>
-          <div>
-            <input type={hidden ? 'password' : 'text'} {...field} />
-          </div>
+          <input type={hidden ? 'password' : 'text'} {...field} />
         </fieldset>
       )}
     />
