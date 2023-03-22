@@ -6,8 +6,8 @@ import { signIn, useSession } from 'next-auth/react';
 import React from 'react';
 
 function Layout({ children }: IChildren): React.ReactElement {
-  const { status } = useSession();
-
+  const { status, data } = useSession();
+  console.log(status, data);
   if (status === 'loading') {
     ('...loading');
   }
