@@ -1,20 +1,8 @@
-// declare module 'next-auth' {
-//   interface User {
-//     id: string;
-//     firstname?: string;
-//     lastname?: string;
-//     pseudo?: string;
-//     email: string;
-//     createdAt: DateTime;
-//     updatedAt?: DateTime;
-//     isActive: boolean;
-//     password: string;
-//   }
-
-//   interface Session extends DefaultSession {
-//     user?: User;
-//   }
-// }
+type SelectType = {
+  value: string;
+  label: string | import('react').ReactElement;
+};
+type SelectTypes = SelectType[];
 
 interface IChildren {
   children: import('react').ReactNode;

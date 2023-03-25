@@ -85,26 +85,21 @@ export default NextAuth({
     // async encode({}) {},
     // async decode() {},
   },
-  // callbacks: {
-  //   async jwt({ token, user, account }) {
-  //     if (account && user) {
-  //       return {
-  //         ...token,
-  //         accessToken: account.access_token,
-  //         refreshToken: account.refreshToken,
-  //       };
-  //     }
-
-  //     return token;
-  //   },
-  // },
-
-  //   async session({ session, token }) {
-  //     session.accessToken = token.accessToken;
-  //     session.refreshToken = token.refreshToken;
-  //     session.accessTokenExpires = token.accessTokenExpires;
-
-  //     return session;
-  //   },
-  // },
+  callbacks: {
+    // async jwt({ token, user, profile }) {
+    //   if (user) {
+    //     return {
+    //       ...token,
+    //     };
+    //   }
+    //   return token;
+    // },
+    // async session({ session, token, user }) {
+    //   if (token && session.user) {
+    //   }
+    //   // session.refreshToken = token.refreshToken;
+    //   // session.accessTokenExpires = token.accessTokenExpires;
+    //   return session;
+    // },
+  },
 });
