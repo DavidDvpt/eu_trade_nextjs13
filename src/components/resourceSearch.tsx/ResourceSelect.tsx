@@ -30,13 +30,19 @@ function ResourceSelect({
   const [items, setItems] = useState<SelectTypes>([]);
   console.log(value);
   const getDatas = async () => {
-    const result = await fetchDatas(`/api/resources/{}`);
+    const result = await fetchDatas(
+      `/api/resourceType/${value.type}/resources`
+    );
     setItems(selectItemParser(result.data));
   };
 
   useEffect(() => {
-    getDatas();
-  }, []);
+    if (value.type) {
+      getDatas();
+    } else {
+      setItems([]);
+    }
+  }, [value.type]);
 
   return cloneElement(children as ReactElement<ChildrenProps>, {
     items,
