@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { error504Traitment, InternalError } from './axiosUtils';
 
 export const onFullfilledRequest = (response: AxiosResponse) => {
@@ -45,9 +45,12 @@ export default function axiosInstance() {
   return request;
 }
 
-export const fetchDatas = async (endpoint: string, params?: QueryAndParams) => {
+export const fetchDatas = async (
+  endpoint: string,
+  params?: AxiosRequestConfig
+) => {
   try {
-    const response = await axiosInstance().get(`${endpoint}`, { params });
+    const response = await axiosInstance().get(`${endpoint}`, params);
     return response.data ?? response;
   } catch (error) {
     return Promise.reject({ status: 500, message: 'fetchDatas error' });
@@ -55,11 +58,12 @@ export const fetchDatas = async (endpoint: string, params?: QueryAndParams) => {
 };
 
 // get one
-export const fetchDataById = async (idIri: string, params?: QueryAndParams) => {
+export const fetchDataById = async (
+  idIri: string,
+  params?: AxiosRequestConfig
+) => {
   try {
-    const response: AxiosResponse = await axiosInstance().get(idIri, {
-      params: params,
-    });
+    const response: AxiosResponse = await axiosInstance().get(idIri, params);
 
     return response.data;
   } catch (error: any) {
@@ -74,7 +78,7 @@ export const fetchDataById = async (idIri: string, params?: QueryAndParams) => {
 // create entity
 export const postEntity = async ({ url, body, params }: PostUpdateEntity) => {
   try {
-    const response = await axiosInstance().post(url, body, { params });
+    const response = await axiosInstance().post(url, body, params);
     return response.data;
   } catch (error: any) {
     return Promise.reject({
@@ -88,7 +92,7 @@ export const postEntity = async ({ url, body, params }: PostUpdateEntity) => {
 // update entity
 export const updateEntity = async ({ url, body, params }: PostUpdateEntity) => {
   try {
-    const response = await axiosInstance().put(url, body, { params });
+    const response = await axiosInstance().put(url, body, params);
     return response.data;
   } catch (error: any) {
     return Promise.reject({

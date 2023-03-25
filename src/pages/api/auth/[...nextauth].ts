@@ -13,6 +13,7 @@ export default NextAuth({
   providers: [
     CredentialsProvider({
       id: 'credentials',
+      type: 'credentials',
       name: 'my-project',
       // The credentials is used to generate a suitable form on the sign in page.
       // You can specify whatever fields you are expecting to be submitted.
@@ -32,7 +33,12 @@ export default NextAuth({
           user &&
           bcrypt.compareSync(credentials?.password ?? '', user.password)
         ) {
-          return { id: user.id, name: user.firstname };
+          return {
+            id: user.id,
+            name: user.firstname,
+            email: user.email,
+            address: 'blable',
+          };
         } else {
           if (credentials?.email !== user?.email) {
             throw new Error('bad email');
@@ -77,18 +83,21 @@ export default NextAuth({
     // async decode() {},
   },
   callbacks: {
+    async signIn() {
+      return true;
+    },
     async jwt({ token, user }) {
-      console.log('jwt', token, user);
       if (user) {
         return {
           ...token,
+          id: user.id,
         };
       }
       return token;
     },
-    async session({ session, token, user }) {
-      console.log('session', session, token, user);
+    async session({ session, token }) {
       if (token && session.user) {
+        session.user.id = token.id as string;
       }
       // session.refreshToken = token.refreshToken;
       // session.accessTokenExpires = token.accessTokenExpires;

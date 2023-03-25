@@ -1,26 +1,23 @@
 'use client';
 
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 interface IGenericSelectProps {
+  value: string;
   items: SelectTypes;
-  onChange: (value: string) => void;
+  name: string;
+  onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
 }
+
 function GenericSelect({
+  value,
   items,
+  name,
   onChange,
 }: IGenericSelectProps): React.ReactElement {
-  const [selected, setSelected] = useState<string>('');
-
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelected(value);
-    onChange(value);
-  };
-
   return (
     <fieldset>
       <label htmlFor='resourceType'></label>
-      <select name='resourceType' value={selected} onChange={handleChange}>
+      <select value={value} onChange={onChange} name={name}>
         <option value=''>Choisissez un type</option>
         {items.map((m) => (
           <option key={m.value} value={m.value}>

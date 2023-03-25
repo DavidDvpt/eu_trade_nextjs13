@@ -1,28 +1,44 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import GenericSelect from '../form/GenericSelect.client';
+import { fetchDatas } from '@/lib/axios/AxiosInstance';
+import { selectItemParser } from '@/lib/parser/selectItemsParser';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import GenericSelect from '../form/GenericSelect';
 
 interface IResourceTypeSelectProps {
   onChange: (value: string) => void;
 }
-
+type Values = { type: string; resource: string };
 function ResourceTypeSelect({
   onChange,
 }: IResourceTypeSelectProps): React.ReactElement {
-  const [datas, setDatas] = useState<SelectTypes>([]);
+  const [values, setValues] = useState<Values>({ type: '', resource: '' });
+  const [types, setTypes] = useState<SelectTypes>([]);
 
   const getDatas = async () => {
-    const response = await fetch('http://localhost:3000/api/resourceType');
-    const result = await response.json();
-    setDatas(result.map((m: any) => ({ value: m.id, label: m.name })));
+    const result = await fetchDatas('/api/resourceType');
+
+    setTypes(selectItemParser(result.data));
   };
 
   useEffect(() => {
     getDatas();
   }, []);
 
-  return <GenericSelect items={datas} onChange={onChange} />;
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.name as keyof Values;
+    const value: string = e.target.value;
+    setValues({ ...values, [name]: value });
+  };
+
+  return (
+    <GenericSelect
+      items={types}
+      onChange={handleChange}
+      value={values.type}
+      name='type'
+    />
+  );
 }
 
 export default ResourceTypeSelect;

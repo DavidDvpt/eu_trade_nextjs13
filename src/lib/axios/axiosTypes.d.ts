@@ -5,7 +5,7 @@ type ApiType<T> = { status: ApiStatusEnum; result: T; error?: any };
 interface PostUpdateEntity {
   url: string;
   body: QueryAndParams;
-  params?: QueryAndParams;
+  params?: AxiosRequestConfig;
 }
 
 type QueryAndParams = { [x: string]: any };

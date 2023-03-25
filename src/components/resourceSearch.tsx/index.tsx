@@ -11,7 +11,7 @@ function ResourceSearch({ onChange }: IResourceSearchProps) {
   const handleTypeChange = (value: string) => {
     setType(value);
   };
-  console.log(type);
+
   return (
     <div>
       <ResourceTypeSelect onChange={handleTypeChange} />
