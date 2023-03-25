@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
-interface IPasswordInputProps {
+interface IHookFormPasswordInputProps {
   control: any;
   name: string;
   className?: string;
   label: string;
 }
-function PasswordInput({
+function HookFormPasswordInput({
   control,
   name,
   className,
   label,
-}: IPasswordInputProps): React.ReactElement {
+}: IHookFormPasswordInputProps): React.ReactElement {
   const [hidden, setHidden] = useState<boolean>(true);
   return (
     <Controller
@@ -27,4 +27,4 @@ function PasswordInput({
   );
 }
 
-export default PasswordInput;
+export default HookFormPasswordInput;

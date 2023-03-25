@@ -10,17 +10,21 @@ section {
 
 fieldset {
   @include flex-between-center;
-  input {
-    padding: 10px 5px;
-    margin: 10px;
-    border-radius: 5px;
-    border: 1px solid $input_border_color;
-    color: $input_font_color;
 
-    &:focus {
-      outline-color: $input_border_color_focus;
-      background-color: $input_background_color_focus;
-      color: $color_black;
+  input {
+    @include base-form-field;
+  }
+
+  select {
+    @include base-form-field;
+
+    cursor: pointer;
+
+    &:active {
+      cursor: pointer;
+    }
+    option {
+      padding: 20px;
     }
   }
 }

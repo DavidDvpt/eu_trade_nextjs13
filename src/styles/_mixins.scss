@@ -20,24 +20,15 @@
   align-items: center;
 }
 
-@mixin input-field-base {
-  @include flex-between-center;
-  margin: 5px 0;
-  padding: 10px;
-  border: 1px solid grey;
+@mixin base-form-field {
+  padding: 10px 5px;
+  margin: 10px;
   border-radius: 5px;
-  overflow: hidden;
-
-  input {
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    line-height: 25px;
-    font-size: 1em;
-
-    &:focus {
-      outline: none;
-      background-color: whitesmoke;
-    }
+  border: 1px solid $input_border_color;
+  color: $input_font_color;
+  &:focus {
+    outline-color: $input_border_color_focus;
+    background-color: $input_background_color_focus;
+    color: $color_black;
   }
 }

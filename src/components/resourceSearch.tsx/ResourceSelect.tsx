@@ -28,7 +28,7 @@ function ResourceSelect({
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
   const [items, setItems] = useState<SelectTypes>([]);
-  console.log(value);
+
   const getDatas = async () => {
     const result = await fetchDatas(
       `/api/resourceType/${value.type}/resources`

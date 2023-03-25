@@ -1,8 +1,8 @@
 'use client';
 
 import Button from '@/components/form/Button';
-import InputField from '@/components/form/InputField';
-import PasswordInput from '@/components/form/PasswordInput';
+import HookFormInputField from '@/components/form/HookFormInputField';
+import HookFormPasswordInput from '@/components/form/HookFormPasswordInput';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import styles from '../auth.module.scss';
@@ -32,14 +32,14 @@ function Login(): React.ReactElement {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <section>
-        <InputField
+        <HookFormInputField
           control={control}
           name='email'
           label='Email :'
           className={styles.fieldset}
         />
 
-        <PasswordInput
+        <HookFormPasswordInput
           control={control}
           name='password'
           label='Mot de passe :'

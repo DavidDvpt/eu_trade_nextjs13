@@ -1,20 +1,20 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 
-interface IInputFieldProps {
+interface IHookFormInputFieldProps {
   control: any;
   name: string;
   type?: string;
   label: string;
   className?: string;
 }
-function InputField({
+function HookFormInputField({
   control,
   name,
   type = 'text',
   label,
   className,
-}: IInputFieldProps): React.ReactElement {
+}: IHookFormInputFieldProps): React.ReactElement {
   return (
     <Controller
       control={control}
@@ -30,4 +30,4 @@ function InputField({
   );
 }
 
-export default InputField;
+export default HookFormInputField;

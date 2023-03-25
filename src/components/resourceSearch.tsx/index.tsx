@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useState } from 'react';
 import GenericSelect from '../form/GenericSelect';
+import styles from './resourceSearch.module.scss';
 import ResourceSelect from './ResourceSelect';
 import ResourceTypeSelect from './ResourceTypeSelect';
 
@@ -27,7 +28,7 @@ function ResourceSearch({ onChange }: IResourceSearchProps) {
   };
 
   return (
-    <div>
+    <section className={styles.resourceSearch}>
       <ResourceTypeSelect onChange={handleTypeChange} value={values.type}>
         <GenericSelect
           items={undefined as never}
@@ -44,7 +45,7 @@ function ResourceSearch({ onChange }: IResourceSearchProps) {
           value={undefined as never}
         />
       </ResourceSelect>
-    </div>
+    </section>
   );
 }
 
