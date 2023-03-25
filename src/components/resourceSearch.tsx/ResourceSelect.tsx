@@ -19,18 +19,18 @@ type ChildrenProps = {
 
 interface IResourceTypeSelectProps extends IChildren {
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
-  value: string;
+  value: ResourceSelectValue;
 }
 
-function ResourceTypeSelect({
+function ResourceSelect({
   value,
   onChange,
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
   const [items, setItems] = useState<SelectTypes>([]);
-
+  console.log(value);
   const getDatas = async () => {
-    const result = await fetchDatas('/api/resourceType');
+    const result = await fetchDatas(`/api/resources/{}`);
     setItems(selectItemParser(result.data));
   };
 
@@ -40,10 +40,10 @@ function ResourceTypeSelect({
 
   return cloneElement(children as ReactElement<ChildrenProps>, {
     items,
-    value: value,
+    value: value.resource,
     onChange,
-    name: 'type',
+    name: 'resource',
   });
 }
 
-export default ResourceTypeSelect;
+export default ResourceSelect;
