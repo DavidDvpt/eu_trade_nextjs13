@@ -14,7 +14,7 @@ function Nav({ className }: INavProps) {
     <nav className={`${styles.navElement} ${className}`}>
       <ul>
         {navLinks.map((m) => (
-          <Link key={nanoid()} href={''} onClick={() => setIsActive(m.url)}>
+          <Link key={nanoid()} href={m.url} onClick={() => setIsActive(m.url)}>
             <li className={isActive === m.url ? styles.isActive : ''}>
               {m.label}
             </li>

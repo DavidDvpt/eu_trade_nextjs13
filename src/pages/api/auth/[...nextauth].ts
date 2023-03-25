@@ -6,11 +6,13 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 export default NextAuth({
-  // adapter: PrismaAdapter(prisma),
+  secret: process.env.JWT_SECRET,
+  pages: {
+    signIn: '/login',
+  },
   providers: [
     CredentialsProvider({
       id: 'credentials',
-      // The name to display on the sign in form (e.g. 'Sign in with...')
       name: 'my-project',
       // The credentials is used to generate a suitable form on the sign in page.
       // You can specify whatever fields you are expecting to be submitted.
@@ -35,6 +37,7 @@ export default NextAuth({
           if (credentials?.email !== user?.email) {
             throw new Error('bad email');
           }
+
           if (
             bcrypt.compareSync(
               credentials?.password ?? '',
@@ -48,22 +51,10 @@ export default NextAuth({
         }
       },
     }),
-    // ...add more providers here
   ],
-  secret: process.env.JWT_SECRET,
-  pages: {
-    signIn: '/login',
-  },
-  session: {
-    // Choose how you want to save the user session.
-    // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
-    // If you use an `adapter` however, we default it to `"database"` instead.
-    // You can still force a JWT session by explicitly defining `"jwt"`.
-    // When using `"database"`, the session cookie will only contain a `sessionToken` value,
-    // which is used to look up the session in the database.
-    strategy: 'jwt',
 
-    // Seconds - How long until an idle session expires and is no longer valid.
+  session: {
+    strategy: 'jwt',
     maxAge: 6 * 60 * 60, // 12 hours
 
     // Seconds - Throttle how frequently to write to database to extend a session.
@@ -86,20 +77,22 @@ export default NextAuth({
     // async decode() {},
   },
   callbacks: {
-    // async jwt({ token, user, profile }) {
-    //   if (user) {
-    //     return {
-    //       ...token,
-    //     };
-    //   }
-    //   return token;
-    // },
-    // async session({ session, token, user }) {
-    //   if (token && session.user) {
-    //   }
-    //   // session.refreshToken = token.refreshToken;
-    //   // session.accessTokenExpires = token.accessTokenExpires;
-    //   return session;
-    // },
+    async jwt({ token, user }) {
+      console.log('jwt', token, user);
+      if (user) {
+        return {
+          ...token,
+        };
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      console.log('session', session, token, user);
+      if (token && session.user) {
+      }
+      // session.refreshToken = token.refreshToken;
+      // session.accessTokenExpires = token.accessTokenExpires;
+      return session;
+    },
   },
 });
