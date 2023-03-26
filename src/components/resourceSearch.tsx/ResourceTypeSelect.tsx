@@ -15,6 +15,7 @@ type ChildrenProps = {
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
   value: string;
   name: string;
+  noValue: string;
 };
 
 interface IResourceTypeSelectProps extends IChildren {
@@ -43,6 +44,7 @@ function ResourceTypeSelect({
     value: value,
     onChange,
     name: 'type',
+    noValue: 'Choisissez un type',
   });
 }
 

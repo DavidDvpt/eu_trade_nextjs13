@@ -1,9 +1,7 @@
 // middleware.ts
 import { getToken } from 'next-auth/jwt';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
 
@@ -14,5 +12,5 @@ export async function middleware(req: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: '/api/resourceType/:path*',
+  matcher: ['/api/resourceType/:path*', '/api/resource/:path*'],
 };

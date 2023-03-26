@@ -2,6 +2,7 @@
 
 import { fetchDatas } from '@/lib/axios/AxiosInstance';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
+import { Resource } from '@prisma/client';
 import React, {
   ChangeEvent,
   cloneElement,
@@ -15,10 +16,11 @@ type ChildrenProps = {
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
   value: string;
   name: string;
+  noValue: string;
 };
 
 interface IResourceTypeSelectProps extends IChildren {
-  onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (value: Resource) => void;
   value: ResourceSelectValue;
 }
 
@@ -27,15 +29,20 @@ function ResourceSelect({
   onChange,
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
-  const [items, setItems] = useState<SelectTypes>([]);
+  const [items, setItems] = useState<Resource[]>([]);
 
   const getDatas = async () => {
     const result = await fetchDatas(
       `/api/resourceType/${value.type}/resources`
     );
-    setItems(selectItemParser(result.data));
+    setItems(result.data);
   };
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const id = e.target.value;
+    const item = items.find((f) => f.id === id) as Resource;
 
+    onChange(item);
+  };
   useEffect(() => {
     if (value.type) {
       getDatas();
@@ -45,10 +52,12 @@ function ResourceSelect({
   }, [value.type]);
 
   return cloneElement(children as ReactElement<ChildrenProps>, {
-    items,
+    items: selectItemParser(items),
     value: value.resource,
-    onChange,
+    onChange: handleChange,
     name: 'resource',
+
+    noValue: 'Choisissez une Ressource',
   });
 }
 

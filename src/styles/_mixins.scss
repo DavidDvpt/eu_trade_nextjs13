@@ -20,6 +20,12 @@
   align-items: center;
 }
 
+@mixin flex-around-center {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 @mixin base-form-field {
   padding: 10px 5px;
   margin: 10px;

@@ -1,1 +1,4 @@
-type ResourceSelectValue = { type: string; resource: string };
+type ResourceSelectValue = {
+  type: string;
+  resource: string;
+};

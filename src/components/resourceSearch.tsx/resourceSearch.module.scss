@@ -1,7 +1,12 @@
 @import '../../styles/main';
 
 .resourceSearch {
-  @include flex-center-center;
-  select {
+  @include flex-around-center;
+  fieldset {
+    width: 40%;
+    max-width: 350px;
+    select {
+      width: 100%;
+    }
   }
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { Resource } from '@prisma/client';
 import { ChangeEvent, useState } from 'react';
 import GenericSelect from '../form/GenericSelect';
 import styles from './resourceSearch.module.scss';
@@ -7,7 +8,7 @@ import ResourceSelect from './ResourceSelect';
 import ResourceTypeSelect from './ResourceTypeSelect';
 
 interface IResourceSearchProps {
-  onChange: (value: string) => void;
+  onChange: (value: Resource) => void;
 }
 const inisitalValues = {
   type: '',
@@ -18,13 +19,13 @@ function ResourceSearch({ onChange }: IResourceSearchProps) {
   const [values, setValues] = useState<ResourceSelectValue>(inisitalValues);
 
   const handleTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const name = e.target.name as keyof ResourceSelectValue;
     const value = e.target.value;
-    setValues({ ...values, [name]: value });
+    setValues({ ...values, type: value });
+  };
 
-    if (value === 'resource') {
-      onChange(value);
-    }
+  const handleResourceChange = (value: Resource) => {
+    setValues({ ...values, resource: value.id });
+    onChange(value);
   };
 
   return (
@@ -35,14 +36,16 @@ function ResourceSearch({ onChange }: IResourceSearchProps) {
           name={undefined as never}
           onChange={undefined as never}
           value={undefined as never}
+          noValue={undefined as never}
         />
       </ResourceTypeSelect>
-      <ResourceSelect onChange={handleTypeChange} value={values}>
+      <ResourceSelect onChange={handleResourceChange} value={values}>
         <GenericSelect
           items={undefined as never}
           name={undefined as never}
           onChange={undefined as never}
           value={undefined as never}
+          noValue={undefined as never}
         />
       </ResourceSelect>
     </section>

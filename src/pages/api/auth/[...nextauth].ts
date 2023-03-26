@@ -37,7 +37,6 @@ export default NextAuth({
             id: user.id,
             name: user.firstname,
             email: user.email,
-            address: 'blable',
           };
         } else {
           if (credentials?.email !== user?.email) {
@@ -99,8 +98,6 @@ export default NextAuth({
       if (token && session.user) {
         session.user.id = token.id as string;
       }
-      // session.refreshToken = token.refreshToken;
-      // session.accessTokenExpires = token.accessTokenExpires;
       return session;
     },
   },
