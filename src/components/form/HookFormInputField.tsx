@@ -7,6 +7,7 @@ interface IHookFormInputFieldProps {
   type?: string;
   label: string;
   className?: string;
+  disabled?: boolean;
 }
 function HookFormInputField({
   control,
@@ -14,6 +15,7 @@ function HookFormInputField({
   type = 'text',
   label,
   className,
+  disabled,
 }: IHookFormInputFieldProps): React.ReactElement {
   return (
     <Controller
@@ -23,7 +25,7 @@ function HookFormInputField({
         <fieldset className={`${className ?? ''}`}>
           <label htmlFor={name}>{label}</label>
 
-          <input type={type} {...field} />
+          <input type={type} {...field} disabled={disabled} />
         </fieldset>
       )}
     />

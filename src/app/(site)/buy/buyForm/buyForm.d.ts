@@ -5,3 +5,9 @@ type BuyFormType = {
   userId: string;
   transactionType: import('@prisma/client').TransactionType;
 };
+
+type CalcylatedValuesType = {
+  resourceName: string;
+  calculatedTT: number;
+  calculatedExtraCost: number;
+};

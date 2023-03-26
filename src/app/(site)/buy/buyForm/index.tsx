@@ -1,15 +1,17 @@
+import GenericInput from '@/components/form/GenericInput';
 import HookFormInputField from '@/components/form/HookFormInputField';
 import { Resource } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './buyForm.module.scss';
-import { initialValues } from './constants';
+import { initialCalculatedValues, initialValues } from './constants';
 interface IBuyFormProps {
   resource: Resource | null;
 }
 
 function BuyForm({ resource }: IBuyFormProps) {
-  const [ttCost, setTtCost] = useState<number>(0);
+  const [calculatedValues, setCalculatedValues] =
+    useState<CalcylatedValuesType>(initialCalculatedValues);
   const {
     formState: { isDirty },
     watch,
@@ -21,15 +23,37 @@ function BuyForm({ resource }: IBuyFormProps) {
   });
 
   useEffect(() => {
-    if (resource) {
-      const value = +watch('quantity');
-      setTtCost(value * resource?.value);
+    // const subbscription = watch((data) => {
+    const { quantity, buyValue } = watch();
+
+    console.log(quantity, buyValue);
+    if (+quantity * (resource?.value ?? 0) !== calculatedValues.calculatedTT) {
+      console.log(
+        +quantity * (resource?.value ?? 0) !== calculatedValues.calculatedTT
+      );
+      setCalculatedValues({
+        ...calculatedValues,
+        calculatedTT: +quantity * (resource?.value ?? 0),
+      });
     }
-  }, [watch('quantity')]);
+    if (
+      +buyValue - calculatedValues.calculatedTT !==
+      calculatedValues.calculatedExtraCost
+    ) {
+      setCalculatedValues({
+        ...calculatedValues,
+        calculatedExtraCost: +buyValue * calculatedValues.calculatedTT,
+      });
+    }
+  }, [watch(['quantity', 'buyValue'])]);
 
   useEffect(() => {
     if (resource) {
       setValue('resourceId', resource.id);
+      setCalculatedValues({
+        ...calculatedValues,
+        resourceName: resource?.name ?? '',
+      });
     }
   }, [resource]);
 
@@ -38,25 +62,23 @@ function BuyForm({ resource }: IBuyFormProps) {
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
-      <fieldset>
-        <label htmlFor='name'>Ressource</label>
-        <input type='text' name='name' value={resource?.name} disabled />
-      </fieldset>
+      <GenericInput name='resourceName' value={calculatedValues.resourceName} />
       <HookFormInputField
         control={control}
         name='quantity'
         type='number'
         label='quantité'
       />
-      <fieldset>
-        <label htmlFor='name'>Prix TT</label>
-        <input type='text' name='name' disabled value={ttCost} />
-      </fieldset>
+      <GenericInput name='calculatedTT' value={calculatedValues.calculatedTT} />
       <HookFormInputField
         control={control}
-        name='sellValue'
+        name='buyValue'
         type='number'
-        label='Prix vente'
+        label='Prix achat'
+      />
+      <GenericInput
+        name='calculatedExtraCost'
+        value={calculatedValues.calculatedTT}
       />
     </form>
   );
