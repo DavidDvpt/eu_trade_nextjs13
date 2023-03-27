@@ -31,18 +31,27 @@ function BuyForm({ resource }: IBuyFormProps) {
     name: string
   ) => {
     const { value } = e.target;
-    const calculatedTT = watch('calculatedTT');
+    const calculatedTT = +watch('calculatedTT');
     const buyValue = watch('buyValue');
 
     if (resource) {
       if (name === 'quantity') {
-        setValue('calculatedTT', +value * resource.value);
-        setValue('costPercentage', (+buyValue - +calculatedTT) * 100);
+        setValue('calculatedTT', +Number(+value * resource.value).toFixed(2));
+        setValue(
+          'costPercentage',
+          +Number((+buyValue - +calculatedTT) * 100).toFixed(2)
+        );
       }
 
-      if (name === 'buyValue') {
-        setValue('calculatedExtraCost', +value * +calculatedTT);
-        setValue('costPercentage', (+value - +calculatedTT) * 100);
+      if (name === 'buyValue' && calculatedTT > 0) {
+        setValue(
+          'calculatedExtraCost',
+          +Number(+value - calculatedTT).toFixed(2)
+        );
+        setValue(
+          'costPercentage',
+          +Number((+value / calculatedTT) * 100).toFixed(2)
+        );
       }
     }
   };
@@ -50,12 +59,14 @@ function BuyForm({ resource }: IBuyFormProps) {
   const onSubmit = (values: BuyFormType) => {
     console.log(values);
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
       <HookFormInputField
         control={control}
         name='resourceName'
         label='Ressource'
+        className={styles.resourceName}
         disabled
       />
       <HookFormInputField
@@ -63,6 +74,7 @@ function BuyForm({ resource }: IBuyFormProps) {
         name='quantity'
         type='number'
         label='quantité'
+        className={styles.quantity}
         onInputChange={handleInputChange}
       />
       <HookFormInputField
@@ -71,6 +83,7 @@ function BuyForm({ resource }: IBuyFormProps) {
         type='number'
         label='Cout TT'
         disabled
+        className={styles.calcuatedTT}
         onInputChange={handleInputChange}
       />
       <HookFormInputField
@@ -78,6 +91,7 @@ function BuyForm({ resource }: IBuyFormProps) {
         name='buyValue'
         type='number'
         label='Prix achat'
+        className={styles.buyValue}
         onInputChange={handleInputChange}
       />
       <HookFormInputField
@@ -85,6 +99,8 @@ function BuyForm({ resource }: IBuyFormProps) {
         name='calculatedExtraCost'
         type='number'
         label='Extra TT'
+        disabled
+        className={styles.calculatedExtraCost}
       />{' '}
       <HookFormInputField
         control={control}
@@ -92,6 +108,7 @@ function BuyForm({ resource }: IBuyFormProps) {
         type='number'
         label='%'
         disabled
+        className={styles.costPercentage}
       />
     </form>
   );

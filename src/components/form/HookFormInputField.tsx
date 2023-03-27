@@ -24,7 +24,6 @@ function HookFormInputField({
     onChange: any,
     name: string
   ) => {
-    console.log(e.target.name);
     onChange(e);
     onInputChange && onInputChange(e, name);
   };

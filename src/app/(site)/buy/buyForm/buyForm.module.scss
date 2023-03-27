@@ -1,6 +1,22 @@
 @import '../../../../styles/main';
 
 .buyForm {
+  @include flex-center-center;
+
+  .resourceName {
+    width: 220px;
+  }
+
+  .quantity,
+  .calculatedExtraCost,
+  .costPercentage {
+    width: 100px;
+  }
+
+  .calcuatedTT,
+  .buyValue {
+    width: 150px;
+  }
   fieldset {
     flex-direction: column;
   }

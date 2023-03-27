@@ -10,6 +10,7 @@ section {
 
 fieldset {
   @include flex-between-center;
+  margin: 5px;
 
   input {
     @include base-form-field;
