@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface IHookFormInputFieldProps {
@@ -8,6 +8,7 @@ interface IHookFormInputFieldProps {
   label: string;
   className?: string;
   disabled?: boolean;
+  onInputChange?: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
 }
 function HookFormInputField({
   control,
@@ -16,16 +17,32 @@ function HookFormInputField({
   label,
   className,
   disabled,
+  onInputChange,
 }: IHookFormInputFieldProps): React.ReactElement {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    onChange: any,
+    name: string
+  ) => {
+    console.log(e.target.name);
+    onChange(e);
+    onInputChange && onInputChange(e, name);
+  };
+
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field: { value, onChange } }) => (
         <fieldset className={`${className ?? ''}`}>
           <label htmlFor={name}>{label}</label>
 
-          <input type={type} {...field} disabled={disabled} />
+          <input
+            type={type}
+            value={value}
+            onChange={(e) => handleChange(e, onChange, name)}
+            disabled={disabled}
+          />
         </fieldset>
       )}
     />

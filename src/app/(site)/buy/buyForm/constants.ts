@@ -4,10 +4,8 @@ export const initialValues: BuyFormType = {
   buyValue: 0,
   transactionType: 'BUY',
   userId: '',
-};
-
-export const initialCalculatedValues: CalcylatedValuesType = {
   resourceName: '',
   calculatedExtraCost: 0,
   calculatedTT: 0,
+  costPercentage: 0,
 };
