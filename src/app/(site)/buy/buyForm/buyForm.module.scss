@@ -1,23 +1,29 @@
 @import '../../../../styles/main';
 
 .buyForm {
-  @include flex-center-center;
+  @include flex-center-center-column;
 
-  .resourceName {
-    width: 220px;
-  }
+  .formContent {
+    @include flex-center-center;
+    width: 100%;
 
-  .quantity,
-  .calculatedExtraCost,
-  .costPercentage {
-    width: 100px;
+    > div {
+      flex-grow: 1;
+      @include flex-center-center-column;
+
+      fieldset {
+        width: 80%;
+        justify-content: space-around;
+
+        input {
+          width: 100px;
+        }
+      }
+    }
   }
 
   .calcuatedTT,
   .buyValue {
     width: 150px;
-  }
-  fieldset {
-    flex-direction: column;
   }
 }

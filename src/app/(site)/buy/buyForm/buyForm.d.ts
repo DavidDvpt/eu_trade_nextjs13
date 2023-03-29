@@ -4,7 +4,9 @@ type BuyFormType = {
   buyValue: internal;
   userId: string;
   transactionType: import('@prisma/client').TransactionType;
-  resourceName: string;
+};
+
+type BuyFormCalculatedValues = {
   calculatedTT: number;
   calculatedExtraCost: number;
   costPercentage: number;
