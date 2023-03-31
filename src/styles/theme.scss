@@ -61,4 +61,12 @@ button {
   &.success {
     background-color: $color_success;
   }
+
+  &:hover {
+    font-weight: 700;
+  }
+
+  &:active {
+    box-shadow: 0 0 5px $color_grey_10;
+  }
 }

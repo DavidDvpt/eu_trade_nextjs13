@@ -1,6 +1,6 @@
-import client from '@/lib/prisma/prismadb';
 import { ResourceType } from '@prisma/client';
 import encodeFnc from '../src/lib/auth/encodeFnc';
+import client from '../src/lib/prisma/prismadb';
 
 import {
   enmatterDatas,

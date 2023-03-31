@@ -104,7 +104,7 @@ export const oresDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Zanderium Ore', value: 2.5, imageUrlId: '2696' },
   { name: 'Zinc Stone', value: 0.1, imageUrlId: '1547' },
 ];
-export const enmatterDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
+export const enmatterRefinedDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Root Acid', value: 1.28, imageUrlId: '1276' },
   { name: 'Alicenies Gel', value: 0.1, imageUrlId: '1373' },
   { name: 'Angelic Flakes', value: 1, imageUrlId: '364' },
@@ -130,7 +130,7 @@ export const enmatterDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Typonolic Gas', value: 0.15, imageUrlId: '1662' },
   { name: 'Inhaler', value: 0.8, imageUrlId: '1901' },
 ];
-export const enmatterRefinedDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
+export const enmatterDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Acid Root', value: 0.64, imageUrlId: '1271' },
   { name: 'Alicenies Liquid', value: 0.05, imageUrlId: '368' },
   { name: 'Angelic Grit', value: 0.5, imageUrlId: '707' },

@@ -1,7 +1,4 @@
-import React from 'react';
-
-interface IButtonProps {
-  content: string | React.ReactNode;
+interface IButtonProps extends IChildren {
   type: 'submit' | 'reset' | 'button';
   className?: string;
   primary?: boolean;
@@ -11,7 +8,7 @@ interface IButtonProps {
 }
 
 function Button({
-  content,
+  children,
   type = 'button',
   className,
   primary,
@@ -30,7 +27,7 @@ function Button({
     : '';
   return (
     <button type={type} className={`${className ?? ''} ${btnType}`}>
-      {content}
+      {children}
     </button>
   );
 }
