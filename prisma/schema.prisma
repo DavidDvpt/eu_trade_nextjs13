@@ -64,7 +64,7 @@ model Transaction {
   sellStatus SellStatus?
   quantity   Int
   fee        Float?
-  sellValue  Int?
+  value      Int
   createdAt  DateTime        @default(now())
   modifiedAt DateTime?
   userId     String

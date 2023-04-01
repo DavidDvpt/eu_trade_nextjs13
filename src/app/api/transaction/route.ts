@@ -8,10 +8,9 @@ export async function POST(req: NextRequest) {
     console.log(token);
     const res = await req.json();
     const transaction = await postTransaction({ ...res, userId: token.id });
-    console.log(transaction);
-    return NextResponse.json({ data: [] }, { status: 200 });
+
+    return NextResponse.json({ data: transaction }, { status: 200 });
   } catch (error) {
-    console.log(error);
     return NextResponse.error().status;
   }
 }

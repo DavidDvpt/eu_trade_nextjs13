@@ -41,7 +41,7 @@ createResourceTypes().then((response) => {
   //Ores
   async function createOres() {
     const type = resourcesTypes.find((f) => f.name === 'Ore') as ResourceType;
-    console.log(type.id);
+
     const count = await client.resource.createMany({
       data: oresDatas.map((e) => ({ ...e, resourceTypeId: type.id })),
     });

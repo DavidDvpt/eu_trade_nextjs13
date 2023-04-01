@@ -3,7 +3,7 @@ import HookFormInputField from '@/components/form/HookFormInputField';
 import { createTransaction } from '@/lib/axios/requests/transaction';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Resource } from '@prisma/client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,8 +21,12 @@ interface IBuyFormProps {
 }
 
 function BuyForm({ resource }: IBuyFormProps) {
+  const queryClient = useQueryClient();
   const { data, mutate, isLoading } = useMutation(createTransaction, {
-    onSuccess: (data) => data,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['transactionList'] });
+      return data;
+    },
   });
 
   const [calculatedValues, setCalculatedValues] =
