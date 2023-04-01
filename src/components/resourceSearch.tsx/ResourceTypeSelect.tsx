@@ -1,6 +1,8 @@
 'use client';
 
+import { fetchDatas } from '@/lib/axios/requests/genericRequests';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
+import { ResourceType } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import React, { ChangeEvent, cloneElement, ReactElement } from 'react';
 
@@ -25,10 +27,9 @@ function ResourceTypeSelect({
   const { data } = useQuery({
     queryKey: ['resourceTypes'],
     queryFn: async () => {
-      const response = await fetch('/api/resourceType');
-      const result = await response.json();
+      const response = await fetchDatas<ResourceType>('/api/resourceType');
 
-      return selectItemParser(result.data);
+      return response;
     },
   });
 
@@ -36,7 +37,7 @@ function ResourceTypeSelect({
     <>
       {data &&
         cloneElement(children as ReactElement<ChildrenProps>, {
-          items: data,
+          items: selectItemParser(data),
           value: value,
           onChange,
           name: 'type',

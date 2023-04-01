@@ -7,3 +7,7 @@ type SelectTypes = SelectType[];
 interface IChildren {
   children: import('react').ReactNode;
 }
+
+interface IId {
+  id: string;
+}

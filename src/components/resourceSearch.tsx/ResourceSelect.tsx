@@ -1,5 +1,6 @@
 'use client';
 
+import { fetchResourcesByTypeId } from '@/lib/axios/requests/resourse';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
 import { Resource } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
@@ -24,11 +25,10 @@ function ResourceSelect({
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
   const { data } = useQuery({
-    queryKey: ['resources'],
+    queryKey: ['resources', value.type],
     queryFn: async () => {
-      const response = await fetch(`/api/resourceType/${value.type}/resources`);
-      const result = await response.json();
-      return result.data as Resource[];
+      const response = await fetchResourcesByTypeId(value.type);
+      return response as Resource[];
     },
   });
 
@@ -40,19 +40,14 @@ function ResourceSelect({
     }
   };
 
-  return (
-    <>
-      {data &&
-        cloneElement(children as ReactElement<ChildrenProps>, {
-          items: selectItemParser(data),
-          value: value.resource,
-          onChange: handleChange,
-          name: 'resource',
+  return cloneElement(children as ReactElement<ChildrenProps>, {
+    items: data ? selectItemParser(data) : [],
+    value: value.resource,
+    onChange: handleChange,
+    name: 'resource',
 
-          noValue: 'Choisissez une Ressource',
-        })}
-    </>
-  );
+    noValue: 'Choisissez une Ressource',
+  });
 }
 
 export default ResourceSelect;

@@ -57,9 +57,7 @@ function BuyForm({ resource }: IBuyFormProps) {
     }
   }, [quantity, buyValue, resource]);
 
-  console.log(errors);
   const onSubmit = (values: BuyFormType) => {
-    console.log('errors', errors);
     if (isValid) {
       console.log(values);
     }
