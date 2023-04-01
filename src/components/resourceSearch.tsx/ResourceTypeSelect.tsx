@@ -1,14 +1,8 @@
 'use client';
 
-import { fetchDatas } from '@/lib/axios/AxiosInstance';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
-import React, {
-  ChangeEvent,
-  cloneElement,
-  ReactElement,
-  useEffect,
-  useState,
-} from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, { ChangeEvent, cloneElement, ReactElement } from 'react';
 
 type ChildrenProps = {
   items: SelectTypes;
@@ -28,24 +22,28 @@ function ResourceTypeSelect({
   onChange,
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
-  const [items, setItems] = useState<SelectTypes>([]);
+  const { data } = useQuery({
+    queryKey: ['resourceTypes'],
+    queryFn: async () => {
+      const response = await fetch('/api/resourceType');
+      const result = await response.json();
 
-  const getDatas = async () => {
-    const result = await fetchDatas('/api/resourceType');
-    setItems(selectItemParser(result.data));
-  };
-
-  useEffect(() => {
-    getDatas();
-  }, []);
-
-  return cloneElement(children as ReactElement<ChildrenProps>, {
-    items,
-    value: value,
-    onChange,
-    name: 'type',
-    noValue: 'Choisissez un type',
+      return selectItemParser(result.data);
+    },
   });
+
+  return (
+    <>
+      {data &&
+        cloneElement(children as ReactElement<ChildrenProps>, {
+          items: data,
+          value: value,
+          onChange,
+          name: 'type',
+          noValue: 'Choisissez un type',
+        })}
+    </>
+  );
 }
 
 export default ResourceTypeSelect;

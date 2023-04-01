@@ -1,15 +1,9 @@
 'use client';
 
-import { fetchDatas } from '@/lib/axios/AxiosInstance';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
 import { Resource } from '@prisma/client';
-import React, {
-  ChangeEvent,
-  cloneElement,
-  ReactElement,
-  useEffect,
-  useState,
-} from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, { ChangeEvent, cloneElement, ReactElement } from 'react';
 
 type ChildrenProps = {
   items: SelectTypes;
@@ -29,36 +23,36 @@ function ResourceSelect({
   onChange,
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
-  const [items, setItems] = useState<Resource[]>([]);
+  const { data } = useQuery({
+    queryKey: ['resources'],
+    queryFn: async () => {
+      const response = await fetch(`/api/resourceType/${value.type}/resources`);
+      const result = await response.json();
+      return result.data as Resource[];
+    },
+  });
 
-  const getDatas = async () => {
-    const result = await fetchDatas(
-      `/api/resourceType/${value.type}/resources`
-    );
-    setItems(result.data);
-  };
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value;
-    const item = items.find((f) => f.id === id) as Resource;
-
-    onChange(item);
-  };
-  useEffect(() => {
-    if (value.type) {
-      getDatas();
-    } else {
-      setItems([]);
+    if (data) {
+      const item = data.find((f) => f.id === id) as Resource;
+      onChange(item);
     }
-  }, [value.type]);
+  };
 
-  return cloneElement(children as ReactElement<ChildrenProps>, {
-    items: selectItemParser(items),
-    value: value.resource,
-    onChange: handleChange,
-    name: 'resource',
+  return (
+    <>
+      {data &&
+        cloneElement(children as ReactElement<ChildrenProps>, {
+          items: selectItemParser(data),
+          value: value.resource,
+          onChange: handleChange,
+          name: 'resource',
 
-    noValue: 'Choisissez une Ressource',
-  });
+          noValue: 'Choisissez une Ressource',
+        })}
+    </>
+  );
 }
 
 export default ResourceSelect;
