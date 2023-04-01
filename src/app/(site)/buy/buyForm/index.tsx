@@ -1,7 +1,9 @@
 import Button from '@/components/form/Button';
 import HookFormInputField from '@/components/form/HookFormInputField';
+import { createTransaction } from '@/lib/axios/requests/transaction';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Resource } from '@prisma/client';
+import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +21,10 @@ interface IBuyFormProps {
 }
 
 function BuyForm({ resource }: IBuyFormProps) {
+  const { data, mutate, isLoading } = useMutation(createTransaction, {
+    onSuccess: (data) => data,
+  });
+
   const [calculatedValues, setCalculatedValues] =
     useState<BuyFormCalculatedValues>(initialCalculatedValues);
   const {
@@ -60,6 +66,7 @@ function BuyForm({ resource }: IBuyFormProps) {
   const onSubmit = (values: BuyFormType) => {
     if (isValid) {
       console.log(values);
+      mutate(values);
     }
   };
 

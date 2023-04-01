@@ -33,18 +33,13 @@ function ResourceTypeSelect({
     },
   });
 
-  return (
-    <>
-      {data &&
-        cloneElement(children as ReactElement<ChildrenProps>, {
-          items: selectItemParser(data),
-          value: value,
-          onChange,
-          name: 'type',
-          noValue: 'Choisissez un type',
-        })}
-    </>
-  );
+  return cloneElement(children as ReactElement<ChildrenProps>, {
+    items: data ? selectItemParser(data) : [],
+    value: value,
+    onChange,
+    name: 'type',
+    noValue: 'Choisissez un type',
+  });
 }
 
 export default ResourceTypeSelect;
