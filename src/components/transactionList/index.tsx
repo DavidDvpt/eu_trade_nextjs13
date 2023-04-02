@@ -1,24 +1,14 @@
-import { fetchTransactionsByResourceId } from '@/lib/axios/requests/transaction';
-import { useQuery } from '@tanstack/react-query';
+import { Transaction } from '@prisma/client';
 import TransactionRow from './TranactionRow';
 
 interface ITransactionListProps {
-  resourceId?: string;
+  transactions?: Transaction[];
+  totalRow: TransactionListRow | null;
 }
 function TransactionList({
-  resourceId,
+  transactions,
+  totalRow,
 }: ITransactionListProps): React.ReactElement {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['transactionList', resourceId],
-    queryFn: async () => {
-      const response = await fetchTransactionsByResourceId({
-        id: resourceId,
-        type: 'BUY',
-      });
-      return response;
-    },
-  });
-
   return (
     <table>
       <thead>
@@ -32,10 +22,22 @@ function TransactionList({
         </tr>
       </thead>
       <tbody>
-        {data?.map((m) => (
+        {transactions?.map((m) => (
           <TransactionRow key={m.id} row={m} />
         ))}
       </tbody>
+      {totalRow && (
+        <tfoot>
+          <tr>
+            <td>{totalRow.name}</td>
+            <td>{totalRow.quantity}</td>
+            <td>{totalRow.ttCost}</td>
+            <td>{totalRow.ttcCost}</td>
+            <td>{Number(totalRow.extraCost).toFixed(2)}</td>
+            <td>{Number(totalRow.percentCost).toFixed(2)}</td>
+          </tr>
+        </tfoot>
+      )}
     </table>
   );
 }

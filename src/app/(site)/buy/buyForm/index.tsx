@@ -22,25 +22,27 @@ interface IBuyFormProps {
 
 function BuyForm({ resource }: IBuyFormProps) {
   const queryClient = useQueryClient();
-  const { data, mutate, isLoading } = useMutation(createTransaction, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['transactionList'] });
-      return data;
-    },
-  });
-
-  const [calculatedValues, setCalculatedValues] =
-    useState<BuyFormCalculatedValues>(initialCalculatedValues);
   const {
     formState: { isValid, errors },
     watch,
     setValue,
+    reset,
     handleSubmit,
     control,
   } = useForm<BuyFormType>({
     defaultValues: initialValues,
     resolver: yupResolver(buyFormValidation),
   });
+  const { data, mutate, isLoading } = useMutation(createTransaction, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['transactionList'] });
+      reset();
+      return data;
+    },
+  });
+
+  const [calculatedValues, setCalculatedValues] =
+    useState<BuyFormCalculatedValues>(initialCalculatedValues);
 
   useEffect(() => {
     if (resource) {
@@ -69,7 +71,6 @@ function BuyForm({ resource }: IBuyFormProps) {
 
   const onSubmit = (values: BuyFormType) => {
     if (isValid) {
-      console.log(values);
       mutate(values);
     }
   };
@@ -101,13 +102,15 @@ function BuyForm({ resource }: IBuyFormProps) {
               type='number'
               label='quantité'
               className={styles.quantity}
-            />{' '}
+              disabled={Boolean(!resource)}
+            />
             <HookFormInputField
               control={control}
               name='buyValue'
               type='number'
               label='Prix achat'
               className={styles.buyValue}
+              disabled={Boolean(!resource)}
             />
           </div>
 

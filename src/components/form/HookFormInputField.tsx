@@ -1,10 +1,11 @@
 import React, { ChangeEvent } from 'react';
 import { Controller } from 'react-hook-form';
+import GenericInput from './GenericInput';
 
 interface IHookFormInputFieldProps {
   control: any;
   name: string;
-  type?: string;
+  type?: 'text' | 'number';
   label: string;
   className?: string;
   disabled?: boolean;
@@ -33,16 +34,14 @@ function HookFormInputField({
       control={control}
       name={name}
       render={({ field: { value, onChange } }) => (
-        <fieldset className={`${className ?? ''}`}>
-          <label htmlFor={name}>{label}</label>
-
-          <input
-            type={type}
-            value={value}
-            onChange={(e) => handleChange(e, onChange, name)}
-            disabled={disabled}
-          />
-        </fieldset>
+        <GenericInput
+          className={className}
+          value={value}
+          onChange={(e) => handleChange(e, onChange, name)}
+          type={type}
+          label={label}
+          disabled={disabled}
+        />
       )}
     />
   );

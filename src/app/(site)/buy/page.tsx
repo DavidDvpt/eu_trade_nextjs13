@@ -1,11 +1,11 @@
 'use client';
 
 import ResourceSearch from '@/components/resourceSearch.tsx';
-import TransactionList from '@/components/transactionList';
 import { Resource } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
 import BuyForm from './buyForm';
+import BuyTransactionResourceList from './BuyTransactionResourceList';
 
 function Buy(): React.ReactElement {
   const [resource, setResource] = useState<Resource | null>(null);
@@ -21,7 +21,8 @@ function Buy(): React.ReactElement {
         <BuyForm resource={resource} />
       </section>
       <section>
-        <TransactionList resourceId={resource?.id ?? undefined} />
+        <h4>Liste des précédents achats</h4>
+        <BuyTransactionResourceList resourceId={resource?.id ?? undefined} />
       </section>
     </div>
   );

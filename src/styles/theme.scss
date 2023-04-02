@@ -4,6 +4,15 @@ body {
   width: 1080px;
   margin: auto;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-align: center;
+}
+
 section {
   padding: 20px;
   margin: 20px;
@@ -34,6 +43,48 @@ fieldset {
   }
 }
 
+table {
+  // border-collapse: collapse;
+  // border: solid 1px black;
+  width: 100%;
+  th,
+  td {
+    text-align: center;
+    width: 16%;
+    padding: 5px;
+
+    &:nth-child(1) {
+      width: 25%;
+    }
+    &:nth-child(5) {
+      width: 10%;
+    }
+    &:nth-child(6) {
+      width: 10%;
+    }
+  }
+
+  thead {
+    tr {
+      font-weight: 700;
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(odd) {
+        background-color: $color_white;
+      }
+      &:nth-child(even) {
+        background-color: $color_grey_01;
+      }
+    }
+
+    td {
+      border: 1px solid $color_grey_04;
+    }
+  }
+}
 button {
   cursor: pointer;
   margin: 10px 0;
