@@ -1,8 +1,8 @@
-import { Transaction } from '@prisma/client';
+import { TransactionsExtended } from '@/app/extendedAppTypes';
 import TransactionRow from './TranactionRow';
 
 interface ITransactionListProps {
-  transactions?: Transaction[];
+  transactions?: TransactionsExtended;
   totalRow: TransactionListRow | null;
 }
 function TransactionList({

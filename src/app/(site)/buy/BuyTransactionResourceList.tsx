@@ -1,3 +1,4 @@
+import { TransactionsExtended } from '@/app/extendedAppTypes';
 import TransactionList from '@/components/transactionList';
 import { fetchTransactionsByResourceId } from '@/lib/axios/requests/transaction';
 import { Resource } from '@prisma/client';
@@ -18,7 +19,7 @@ function BuyTransactionResourceList({
         type: 'BUY',
       });
 
-      return response;
+      return response as TransactionsExtended;
     },
   });
 

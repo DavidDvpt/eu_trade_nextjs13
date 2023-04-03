@@ -1,7 +1,8 @@
+import { TransactionExtended } from '@/app/extendedAppTypes';
 import React from 'react';
 
 interface ITransactionProps {
-  row: any;
+  row: TransactionExtended;
 }
 function TransactionRow({ row }: ITransactionProps): React.ReactElement {
   console.log(row);
