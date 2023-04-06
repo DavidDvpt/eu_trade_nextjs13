@@ -33,21 +33,25 @@ function BuyForm({ resource }: IBuyFormProps) {
     defaultValues: initialValues,
     resolver: yupResolver(buyFormValidation),
   });
-  const { data, mutate, isLoading } = useMutation(createTransaction, {
+  const { mutate, isLoading } = useMutation(createTransaction, {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['transactionList'] });
       reset();
+      setResource();
       return data;
     },
   });
 
+  const setResource = () => {
+    if (resource) {
+      setValue('resourceId', resource.id);
+    }
+  };
   const [calculatedValues, setCalculatedValues] =
     useState<BuyFormCalculatedValues>(initialCalculatedValues);
 
   useEffect(() => {
-    if (resource) {
-      setValue('resourceId', resource.id);
-    }
+    setResource();
   }, [resource]);
 
   const quantity = watch('quantity');

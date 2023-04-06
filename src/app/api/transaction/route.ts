@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   try {
     const token: any = await getToken({ req });
-    console.log(token);
+    console.log(token, token.id);
     const res = await req.json();
     const transaction = await postTransaction({ ...res, userId: token.id });
 

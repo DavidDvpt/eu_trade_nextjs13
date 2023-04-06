@@ -3,6 +3,7 @@ import TransactionList from '@/components/transactionList';
 import { fetchTransactionsByResourceId } from '@/lib/axios/requests/transaction';
 import { Resource } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 interface IBuyTransactionResourceListProps {
   resourceId?: string;
@@ -24,7 +25,7 @@ function BuyTransactionResourceList({
   });
 
   useEffect(() => {
-    if (data) {
+    if (data && !isEmpty(data)) {
       const row: TransactionListRow = {
         name: '',
         quantity: 0,
@@ -34,7 +35,7 @@ function BuyTransactionResourceList({
         percentCost: 0,
       };
 
-      data.forEach((e) => {
+      data?.forEach((e) => {
         const r = e.resource as Resource;
         const tt = e.quantity * r.value;
         const ec = e.value - tt;
