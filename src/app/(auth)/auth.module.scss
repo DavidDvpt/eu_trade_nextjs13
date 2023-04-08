@@ -9,7 +9,8 @@
       section {
         @include flex-center-center-column;
         .fieldset {
-          width: 350px;
+          justify-content: space-between;
+          width: 450px;
 
           input {
             width: 60%;

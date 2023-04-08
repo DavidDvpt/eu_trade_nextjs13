@@ -19,10 +19,9 @@ function GenericInput({
   className,
 }: IGenericInputProps) {
   return (
-    <fieldset>
-      {label && <label htmlFor={name}>{label}</label>}
+    <fieldset className={className}>
+      {label && <label htmlFor={name}>{`${label} :`}</label>}
       <input
-        className={className}
         type={type}
         name={name}
         disabled={disabled}

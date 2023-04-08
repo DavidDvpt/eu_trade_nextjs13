@@ -85,7 +85,6 @@ function TransactionForm({
     }
   }, [quantity, value, resource]);
 
-  console.log(watch(), errors);
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       mutate(values);
@@ -164,7 +163,7 @@ function TransactionForm({
           </div>
         </div>
         <Button type='submit' primary>
-          Acheter
+          {type === TransactionType.BUY ? 'Acheter' : 'Vendre'}
         </Button>
       </form>
     </div>
