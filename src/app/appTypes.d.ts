@@ -11,3 +11,9 @@ interface IChildren {
 interface IId {
   id: string;
 }
+
+type FormCalculatedValues = {
+  calculatedTT: number;
+  calculatedExtraCost: number;
+  markup: number;
+};

@@ -21,16 +21,16 @@ export async function getTransactionsByResourceId(
   }
 }
 export async function postTransaction(data: any) {
-  console.log(data);
   try {
     const transaction = await client.transaction.create({
       data: {
-        id: data.id,
         type: data.transactionType,
         quantity: data.quantity,
         resourceId: data.resourceId,
         userId: data.userId,
-        value: data.buyValue,
+        value: data.value,
+        sellStatus: data.sellStatus,
+        fee: data.fee,
       },
     });
 

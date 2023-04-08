@@ -1,27 +1,31 @@
-import Button from '@/components/form/Button';
-import HookFormInputField from '@/components/form/HookFormInputField';
 import { createTransaction } from '@/lib/axios/requests/transaction';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Resource } from '@prisma/client';
+import { Resource, SellStatus, TransactionType } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import styles from './buyForm.module.scss';
+import Button from '../form/Button';
+import HookFormInputField from '../form/HookFormInputField';
+import ResourceTitle from '../ResourceTitle';
 import {
-  buyFormValidation,
   initialCalculatedValues,
-  initialValues,
-} from './constants';
+  initialTransactionFormValues,
+  TransactionFormValidation,
+} from './constant';
+import styles from './transactionForm.module.scss';
 
-const IMG_URL = process.env.NEXT_PUBLIC_ENTROPEDIA_IMG_BASE_URL;
-
-interface IBuyFormProps {
+interface ITransactionFormProps {
   resource: Resource | null;
+  type: TransactionType;
 }
 
-function BuyForm({ resource }: IBuyFormProps) {
+function TransactionForm({
+  resource,
+  type,
+}: ITransactionFormProps): React.ReactElement {
   const queryClient = useQueryClient();
+  const [calculatedValues, setCalculatedValues] =
+    useState<FormCalculatedValues>(initialCalculatedValues);
   const {
     formState: { isValid, errors },
     watch,
@@ -29,73 +33,63 @@ function BuyForm({ resource }: IBuyFormProps) {
     reset,
     handleSubmit,
     control,
-  } = useForm<BuyFormType>({
-    defaultValues: initialValues,
-    resolver: yupResolver(buyFormValidation),
+  } = useForm<TransactionFormType>({
+    defaultValues: initialTransactionFormValues,
+    resolver: yupResolver(TransactionFormValidation),
   });
+
+  const setDatas = () => {
+    if (resource) {
+      setValue('resourceId', resource.id);
+    }
+    if (type) {
+      setValue('transactionType', type);
+      if (type === TransactionType.SELL) {
+        setValue('sellStatus', SellStatus.PROGRESS);
+      }
+    }
+  };
+
   const { mutate, isLoading } = useMutation(createTransaction, {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['transactionList'] });
       reset();
-      setResource();
+      setDatas();
       return data;
     },
   });
 
-  const setResource = () => {
-    if (resource) {
-      setValue('resourceId', resource.id);
-    }
-  };
-  const [calculatedValues, setCalculatedValues] =
-    useState<BuyFormCalculatedValues>(initialCalculatedValues);
-
   useEffect(() => {
-    setResource();
+    setDatas();
   }, [resource]);
 
   const quantity = watch('quantity');
-  const buyValue = watch('buyValue');
+  const value = watch('value');
 
   useEffect(() => {
     if (resource) {
       const calculatedTT = quantity * resource.value;
-      const calculatedExtraCost =
-        calculatedTT > 0 ? buyValue - calculatedTT : 0;
-      const costPercentage =
-        calculatedTT > 0 ? (buyValue / calculatedTT) * 100 : 0;
+      const calculatedExtraCost = calculatedTT > 0 ? value - calculatedTT : 0;
+      const markup = calculatedTT > 0 ? (value / calculatedTT) * 100 : 0;
 
       setCalculatedValues({
         calculatedTT,
         calculatedExtraCost,
-        costPercentage,
+        markup,
       });
     }
-  }, [quantity, buyValue, resource]);
+  }, [quantity, value, resource]);
 
-  const onSubmit = (values: BuyFormType) => {
+  console.log(watch(), errors);
+  const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       mutate(values);
     }
   };
 
   return (
-    <div className={styles.buyForm}>
-      <h4>
-        <>
-          {resource && (
-            <>
-              <Image
-                src={`${IMG_URL}${resource?.imageUrlId}Original.png`}
-                alt='ressource'
-                width={20}
-                height={20}
-              />
-              <span>{resource?.name}</span>
-            </>
-          )}
-        </>
-      </h4>
+    <div className={styles.transactionForm}>
+      <ResourceTitle resource={resource} />
 
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>
@@ -108,9 +102,19 @@ function BuyForm({ resource }: IBuyFormProps) {
               className={styles.quantity}
               disabled={Boolean(!resource)}
             />
+            {type === TransactionType.SELL && (
+              <HookFormInputField
+                control={control}
+                name='fee'
+                type='number'
+                label='Fee'
+                className={styles.fee}
+                disabled={Boolean(!resource)}
+              />
+            )}
             <HookFormInputField
               control={control}
-              name='buyValue'
+              name='value'
               type='number'
               label='Prix achat'
               className={styles.buyValue}
@@ -132,8 +136,18 @@ function BuyForm({ resource }: IBuyFormProps) {
             </p>
 
             <p>
-              <span>Extra % : </span>
-              {Number(calculatedValues.costPercentage).toFixed(2)}
+              <span>Markup TTC: </span>
+              {Number(calculatedValues.markup).toFixed(2)}
+              <span>%</span>
+            </p>
+            <p>
+              <span>Bénéfice NET: </span>
+              {Number(calculatedValues.markup).toFixed(2)}
+              <span>%</span>
+            </p>
+            <p>
+              <span>Markup NET: </span>
+              {Number(calculatedValues.markup).toFixed(2)}
               <span>%</span>
             </p>
           </div>
@@ -146,4 +160,4 @@ function BuyForm({ resource }: IBuyFormProps) {
   );
 }
 
-export default BuyForm;
+export default TransactionForm;
