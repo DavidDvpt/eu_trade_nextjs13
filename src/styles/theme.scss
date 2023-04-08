@@ -50,18 +50,7 @@ table {
   th,
   td {
     text-align: center;
-    width: 16%;
     padding: 5px;
-
-    &:nth-child(1) {
-      width: 25%;
-    }
-    &:nth-child(5) {
-      width: 10%;
-    }
-    &:nth-child(6) {
-      width: 10%;
-    }
   }
 
   thead,

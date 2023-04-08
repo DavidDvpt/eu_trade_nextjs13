@@ -6,8 +6,10 @@ interface ITransactionProps {
 }
 function TransactionRow({ row }: ITransactionProps): React.ReactElement {
   const tt = row.quantity * row.resource.value;
+
   return (
     <tr>
+      <td>{new Date(row.createdAt).toLocaleDateString('fr-FR')}</td>
       <td>{row.resource.name}</td>
       <td>{row.quantity}</td>
       <td>{Number(tt).toFixed(2)}</td>
