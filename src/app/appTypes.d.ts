@@ -16,4 +16,6 @@ type FormCalculatedValues = {
   calculatedTT: number;
   calculatedExtraCost: number;
   markup: number;
+  benefit: number;
+  markupNet: number;
 };

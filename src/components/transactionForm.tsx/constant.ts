@@ -12,6 +12,8 @@ export const initialCalculatedValues: FormCalculatedValues = {
   calculatedExtraCost: 0,
   calculatedTT: 0,
   markup: 0,
+  benefit: 0,
+  markupNet: 0,
 };
 
 export const TransactionFormValidation = yup.object({

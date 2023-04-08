@@ -65,17 +65,22 @@ function TransactionForm({
 
   const quantity = watch('quantity');
   const value = watch('value');
+  const fee = watch('fee');
 
   useEffect(() => {
     if (resource) {
       const calculatedTT = quantity * resource.value;
       const calculatedExtraCost = calculatedTT > 0 ? value - calculatedTT : 0;
       const markup = calculatedTT > 0 ? (value / calculatedTT) * 100 : 0;
+      const benefit = value - fee - calculatedTT;
+      const markupNet = ((value - fee) / calculatedTT) * 100;
 
       setCalculatedValues({
         calculatedTT,
         calculatedExtraCost,
         markup,
+        benefit,
+        markupNet,
       });
     }
   }, [quantity, value, resource]);
@@ -129,27 +134,33 @@ function TransactionForm({
               <span>ped(s)</span>
             </p>
 
-            <p>
-              <span>Extra TT : </span>
-              {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
-              <span>ped(s)</span>
-            </p>
+            {type === TransactionType.BUY && (
+              <p>
+                <span>Extra TT : </span>
+                {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
+                <span>ped(s)</span>
+              </p>
+            )}
 
             <p>
               <span>Markup TTC: </span>
               {Number(calculatedValues.markup).toFixed(2)}
               <span>%</span>
             </p>
-            <p>
-              <span>Bénéfice NET: </span>
-              {Number(calculatedValues.markup).toFixed(2)}
-              <span>%</span>
-            </p>
-            <p>
-              <span>Markup NET: </span>
-              {Number(calculatedValues.markup).toFixed(2)}
-              <span>%</span>
-            </p>
+            {type === TransactionType.SELL && (
+              <>
+                <p>
+                  <span>Bénéfice NET: </span>
+                  {Number(calculatedValues.benefit).toFixed(2)}
+                  <span>ped(s)</span>
+                </p>
+                <p>
+                  <span>Markup NET: </span>
+                  {Number(calculatedValues.markupNet).toFixed(2)}
+                  <span>%</span>
+                </p>
+              </>
+            )}
           </div>
         </div>
         <Button type='submit' primary>
