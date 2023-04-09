@@ -16,10 +16,24 @@ export const initialCalculatedValues: FormCalculatedValues = {
   markupNet: 0,
 };
 
-export const TransactionFormValidation = yup.object({
-  resourceId: yup.string().required(),
-  quantity: yup.number().required('Quantité requise').moreThan(0),
-  fee: yup.number(),
-  value: yup.number().required("Prix d'achat requis").moreThan(0),
-  transactionType: yup.string().required(),
-});
+export const TransactionFormValidation = (maxQty: number) => {
+  // console.log('yup', maxQty);
+  return yup.object({
+    resourceId: yup.string().required(),
+    quantity: yup
+      .number()
+      .required('Quantité requise')
+      .moreThan(0)
+      .when('transactionType', {
+        is: 'SELL',
+        then: (schema) => schema.max(maxQty, 'Stock insuffisant'),
+      }),
+    fee: yup.number(),
+    value: yup.number().required("Prix d'achat requis").moreThan(0),
+    transactionType: yup.string().required(),
+  });
+};
+// , {
+//   is: 'SELL',
+//   then: yup.number().max(maxQty, 'Stock insuffisant'),
+// }

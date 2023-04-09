@@ -9,6 +9,7 @@ interface IHookFormInputFieldProps {
   label: string;
   className?: string;
   disabled?: boolean;
+  trigger?: any;
   onInputChange?: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
 }
 function HookFormInputField({
@@ -18,15 +19,18 @@ function HookFormInputField({
   label,
   className,
   disabled,
+  trigger,
   onInputChange,
 }: IHookFormInputFieldProps): React.ReactElement {
-  const handleChange = (
+  const handleChange = async (
     e: ChangeEvent<HTMLInputElement>,
     onChange: any,
     name: string
   ) => {
     onChange(e);
     onInputChange && onInputChange(e, name);
+
+    await trigger([name]);
   };
 
   return (

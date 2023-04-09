@@ -17,11 +17,13 @@ import styles from './transactionForm.module.scss';
 interface ITransactionFormProps {
   resource: Resource | null;
   type: TransactionType;
+  avaliableQty?: number;
 }
 
 function TransactionForm({
   resource,
   type,
+  avaliableQty = 0,
 }: ITransactionFormProps): React.ReactElement {
   const queryClient = useQueryClient();
   const [calculatedValues, setCalculatedValues] =
@@ -32,10 +34,11 @@ function TransactionForm({
     setValue,
     reset,
     handleSubmit,
+    trigger,
     control,
   } = useForm<TransactionFormType>({
     defaultValues: initialTransactionFormValues,
-    resolver: yupResolver(TransactionFormValidation),
+    resolver: yupResolver(TransactionFormValidation(avaliableQty)),
   });
 
   const setDatas = () => {
@@ -86,11 +89,13 @@ function TransactionForm({
   }, [quantity, value, resource]);
 
   const onSubmit = (values: TransactionFormType) => {
+    console.log(values, errors);
     if (isValid) {
-      mutate(values);
+      console.log('VALID');
+      // mutate(values);
     }
   };
-
+  console.log(errors);
   return (
     <div className={styles.transactionForm}>
       <ResourceTitle resource={resource} />
@@ -105,6 +110,7 @@ function TransactionForm({
               label='quantité'
               className={styles.quantity}
               disabled={Boolean(!resource)}
+              trigger={trigger}
             />
             {type === TransactionType.SELL && (
               <HookFormInputField
