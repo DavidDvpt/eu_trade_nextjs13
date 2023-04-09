@@ -14,4 +14,15 @@
   .nav {
     flex-grow: 1;
   }
+
+  .profile {
+    @include flex-center-center;
+    margin: 0 5px;
+    font-size: 0.9rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: $color_grey_08;
+    cursor: pointer;
+  }
 }
