@@ -108,9 +108,12 @@ function TransactionForm({
               name='quantity'
               type='number'
               label='quantité'
-              className={styles.quantity}
+              className={`${styles.quantity} ${
+                errors.quantity ? styles.error : ''
+              }`}
               disabled={Boolean(!resource)}
               trigger={trigger}
+              error={errors.quantity}
             />
             {type === TransactionType.SELL && (
               <HookFormInputField

@@ -1,0 +1,40 @@
+@import '../../styles/main';
+
+fieldset {
+  @include flex-between-center;
+  margin: 5px;
+
+  div {
+    input {
+      @include base-form-field;
+    }
+
+    select {
+      @include base-form-field;
+
+      cursor: pointer;
+
+      &:active {
+        cursor: pointer;
+      }
+
+      option {
+        padding: 20px;
+      }
+    }
+
+    p {
+      color: $color_error;
+      font-size: 0.8em;
+      font-style: italic;
+      margin: 4px 0 0 10px;
+    }
+  }
+
+  &.error {
+  }
+}
+
+.fieldset {
+  width: 400px;
+}

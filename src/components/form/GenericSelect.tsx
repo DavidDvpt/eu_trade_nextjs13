@@ -1,11 +1,12 @@
-'use client';
-
 import React, { ChangeEvent } from 'react';
+import './formFields.scss';
 interface IGenericSelectProps {
   value: string;
   items: SelectTypes;
   name: string;
   noValue: string;
+  error?: string;
+  className?: string;
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
 }
 
@@ -14,19 +15,23 @@ function GenericSelect({
   items,
   name,
   noValue,
+  error,
   onChange,
 }: IGenericSelectProps): React.ReactElement {
   return (
-    <fieldset>
+    <fieldset className={error ? 'error' : ''}>
       <label htmlFor='resourceType'></label>
-      <select value={value} onChange={onChange} name={name}>
-        <option value=''>{noValue}</option>
-        {items.map((m) => (
-          <option key={m.value} value={m.value}>
-            {m.label}
-          </option>
-        ))}
-      </select>
+      <div>
+        <select value={value} onChange={onChange} name={name}>
+          <option value=''>{noValue}</option>
+          {items.map((m) => (
+            <option key={m.value} value={m.value}>
+              {m.label}
+            </option>
+          ))}
+        </select>
+        <p>{error}</p>
+      </div>
     </fieldset>
   );
 }

@@ -35,14 +35,14 @@ function Login(): React.ReactElement {
         <HookFormInputField
           control={control}
           name='email'
-          label='Email :'
+          label='Email '
           className={styles.fieldset}
         />
 
         <HookFormPasswordInput
           control={control}
           name='password'
-          label='Mot de passe :'
+          label='Mot de passe '
           className={styles.fieldset}
         />
 

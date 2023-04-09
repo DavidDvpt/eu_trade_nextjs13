@@ -5,18 +5,5 @@
   @include flex-center-center-column;
 
   .loginContent {
-    form {
-      section {
-        @include flex-center-center-column;
-        .fieldset {
-          justify-content: space-between;
-          width: 450px;
-
-          input {
-            width: 60%;
-          }
-        }
-      }
-    }
   }
 }

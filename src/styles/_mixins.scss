@@ -28,7 +28,7 @@
 
 @mixin base-form-field {
   padding: 10px 5px;
-  margin: 10px;
+  margin-left: 10px;
   border-radius: 5px;
   border: 1px solid $input_border_color;
   color: $input_font_color;

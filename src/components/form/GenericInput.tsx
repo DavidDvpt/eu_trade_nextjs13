@@ -1,13 +1,14 @@
 import { ChangeEvent } from 'react';
-
+import './formFields.scss';
 interface IGenericInputProps {
   name?: string;
   label?: string;
   value: string | number;
   onChange?: (value: ChangeEvent<HTMLInputElement>) => void;
-  type?: 'text' | 'number';
+  type?: 'text' | 'number' | 'password';
   disabled?: boolean;
   className?: string;
+  error?: string;
 }
 function GenericInput({
   name,
@@ -16,19 +17,22 @@ function GenericInput({
   type = 'text',
   label,
   disabled,
-  className,
+  error,
 }: IGenericInputProps) {
   return (
-    <fieldset className={className}>
+    <fieldset className={error ? 'error' : ''}>
       {label && <label htmlFor={name}>{`${label} :`}</label>}
-      <input
-        type={type}
-        name={name}
-        disabled={disabled}
-        value={value}
-        onChange={onChange}
-        onFocus={(e) => e.target.select()}
-      />
+      <div>
+        <input
+          type={type}
+          name={name}
+          disabled={disabled}
+          value={value}
+          onChange={onChange}
+          onFocus={(e) => e.target.select()}
+        />
+        {<p>{error}</p>}
+      </div>
     </fieldset>
   );
 }

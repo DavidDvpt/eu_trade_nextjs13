@@ -21,28 +21,6 @@ section {
   box-shadow: 0 0 10px $color_grey_05;
 }
 
-fieldset {
-  @include flex-between-center;
-  margin: 5px;
-
-  input {
-    @include base-form-field;
-  }
-
-  select {
-    @include base-form-field;
-
-    cursor: pointer;
-
-    &:active {
-      cursor: pointer;
-    }
-    option {
-      padding: 20px;
-    }
-  }
-}
-
 table {
   // border-collapse: collapse;
   // border: solid 1px black;

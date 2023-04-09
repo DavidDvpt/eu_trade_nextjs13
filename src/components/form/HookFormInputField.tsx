@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, FieldError } from 'react-hook-form';
 import GenericInput from './GenericInput';
 
 interface IHookFormInputFieldProps {
@@ -10,6 +10,7 @@ interface IHookFormInputFieldProps {
   className?: string;
   disabled?: boolean;
   trigger?: any;
+  error?: FieldError;
   onInputChange?: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
 }
 function HookFormInputField({
@@ -20,6 +21,7 @@ function HookFormInputField({
   className,
   disabled,
   trigger,
+  error,
   onInputChange,
 }: IHookFormInputFieldProps): React.ReactElement {
   const handleChange = async (
@@ -45,6 +47,7 @@ function HookFormInputField({
           type={type}
           label={label}
           disabled={disabled}
+          error={error?.message}
         />
       )}
     />
