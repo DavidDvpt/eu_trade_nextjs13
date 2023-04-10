@@ -40,6 +40,19 @@ export async function getTransactionsByResourceId(
     return Promise.reject(error);
   }
 }
+export async function getStock() {
+  try {
+    const response = await client.transaction.groupBy({
+      by: ['resourceId', 'type', 'sellStatus'],
+      _sum: { quantity: true },
+      orderBy: { resourceId: 'asc' },
+    });
+
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
 export async function getStockByResourceId(resourceId: string | null) {
   try {
     if (resourceId) {

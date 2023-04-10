@@ -42,6 +42,15 @@ export async function fetchTransactionsByResourceId({
     return Promise.reject(error);
   }
 }
+export async function fetchStock() {
+  try {
+    const stocks = await fetchDatas<Stock>(`/api/transaction/stock`);
+
+    return stocks;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
 export async function fetchStockByResourceId(resourceId: string | null) {
   try {
     if (resourceId) {

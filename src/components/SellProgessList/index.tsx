@@ -1,5 +1,6 @@
 import { fetchTransactions } from '@/lib/axios/requests/transaction';
 import { useQuery } from '@tanstack/react-query';
+import { isEmpty } from 'lodash';
 import SellProgessTable from './SellProgessTable';
 import styles from './sellProgressList.module.scss';
 function SellProgessList(): React.ReactElement {
@@ -11,10 +12,11 @@ function SellProgessList(): React.ReactElement {
       return response;
     },
   });
+
   return (
     <section className={styles.sellProgressList}>
       <h4>Ventes en cours</h4>
-      <SellProgessTable rows={data ?? []} />
+      {!isEmpty(data) ? <SellProgessTable rows={data ?? []} /> : <p>Aucune</p>}
     </section>
   );
 }

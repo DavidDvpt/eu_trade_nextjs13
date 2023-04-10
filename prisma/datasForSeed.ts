@@ -1,4 +1,3 @@
-import { SellStatus, TransactionType } from '@prisma/client';
 import { Resource } from './prismaTypes';
 
 export const resourceTypeDatas = [
@@ -56,7 +55,6 @@ export const oresRefinedDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Zanderium Ingot', value: 7.5, imageUrlId: '3050' },
   { name: 'Zinc Ingot', value: 0.3, imageUrlId: '1532' },
 ];
-
 export const oresDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Adomasite Stone', value: 0.6, imageUrlId: '1818' },
   { name: 'Alferix Stone', value: 0.95, imageUrlId: '1637' },
@@ -155,60 +153,4 @@ export const enmatterDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Solis Bean', value: 0.78, imageUrlId: '2044' },
   { name: 'Typonolic Steam', value: 0.15, imageUrlId: '1254' },
   { name: 'Vegetation Spores', value: 0.4, imageUrlId: '2307' },
-];
-
-export const buyTransactions = [
-  { id: 1, type: TransactionType.BUY, resourceId: 111, quantity: 217 },
-  { id: 2, type: TransactionType.BUY, resourceId: 111, quantity: 426 },
-  { id: 3, type: TransactionType.BUY, resourceId: 133, quantity: 325 },
-  { id: 4, type: TransactionType.BUY, resourceId: 111, quantity: 82 },
-  { id: 5, type: TransactionType.BUY, resourceId: 133, quantity: 188 },
-];
-
-export const sellTransactions = [
-  {
-    id: 6,
-    type: TransactionType.SELL,
-    resourceId: 111,
-    quantity: 100,
-    fee: 0.54,
-    sellValue: 214,
-    sellStatus: SellStatus.ENDED,
-  },
-  {
-    id: 7,
-    type: TransactionType.SELL,
-    resourceId: 111,
-    quantity: 120,
-    fee: 2.54,
-    sellValue: 247,
-    sellStatus: SellStatus.PROGRESS,
-  },
-  {
-    id: 8,
-    type: TransactionType.SELL,
-    resourceId: 133,
-    quantity: 150,
-    fee: 0.54,
-    sellValue: 214,
-    sellStatus: SellStatus.ENDED,
-  },
-  {
-    id: 9,
-    type: TransactionType.SELL,
-    resourceId: 111,
-    quantity: 100,
-    fee: 0.54,
-    sellValue: 214,
-    sellStatus: SellStatus.RETURNED,
-  },
-  {
-    id: 10,
-    type: TransactionType.SELL,
-    resourceId: 133,
-    quantity: 200,
-    fee: 0.54,
-    sellValue: 214,
-    sellStatus: SellStatus.ENDED,
-  },
 ];
