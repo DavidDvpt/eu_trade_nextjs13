@@ -55,9 +55,14 @@ function TransactionForm({
 
   const { mutate, isLoading } = useMutation(createTransaction, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['transactionList'] });
       reset();
       setDatas();
+      if (type === TransactionType.BUY) {
+        queryClient.invalidateQueries({ queryKey: ['transactionList'] });
+      }
+      if (type === TransactionType.SELL) {
+        queryClient.invalidateQueries({ queryKey: ['sellProgressList'] });
+      }
       return data;
     },
   });
@@ -89,10 +94,8 @@ function TransactionForm({
   }, [quantity, value, resource]);
 
   const onSubmit = (values: TransactionFormType) => {
-    console.log(values, errors);
     if (isValid) {
-      console.log('VALID');
-      // mutate(values);
+      mutate(values);
     }
   };
   console.log(errors);

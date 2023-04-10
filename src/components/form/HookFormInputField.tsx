@@ -32,7 +32,7 @@ function HookFormInputField({
     onChange(e);
     onInputChange && onInputChange(e, name);
 
-    await trigger([name]);
+    if (trigger) await trigger([name]);
   };
 
   return (

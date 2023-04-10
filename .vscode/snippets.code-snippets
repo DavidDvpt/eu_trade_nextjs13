@@ -22,7 +22,7 @@
       "$2",
       "}",
       "",
-      "function ${1:$TM_FILENAME_BASE}({$3}): React.ReactElement<I${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}Props> {",
+      "function ${1:$TM_FILENAME_BASE}({$3}: I${1:${TM_FILENAME_BASE/(.*)/${1:/capitalize}/}}Props): JSX.Element {",
       "return <div>${1:$TM_FILENAME_BASE}</div>;",
       "}",
       "",

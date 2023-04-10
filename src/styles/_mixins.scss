@@ -25,18 +25,3 @@
   justify-content: space-around;
   align-items: center;
 }
-
-@mixin base-form-field {
-  padding: 10px 5px;
-  margin-left: 10px;
-  border-radius: 5px;
-  border: 1px solid $input_border_color;
-  color: $input_font_color;
-  width: 100%;
-
-  &:focus {
-    outline-color: $input_border_color_focus;
-    background-color: $input_background_color_focus;
-    color: $color_black;
-  }
-}

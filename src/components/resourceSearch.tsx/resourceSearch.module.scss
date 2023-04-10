@@ -5,9 +5,12 @@
   fieldset {
     width: 40%;
     max-width: 350px;
-    select {
-      background-color: $color_white;
+    > div {
       width: 100%;
+      select {
+        background-color: $color_white;
+        width: 100%;
+      }
     }
   }
 }

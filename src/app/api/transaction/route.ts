@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    console.log(searchParams);
+
     const response = await getTransactions({
       sellStatus: searchParams.get('sellStatus') as SellStatus,
       transactionType: searchParams.get('transactionType') as TransactionType,

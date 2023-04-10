@@ -4,7 +4,7 @@ interface IGenericSelectProps {
   value: string;
   items: SelectTypes;
   name: string;
-  noValue: string;
+  noValue?: string;
   error?: string;
   className?: string;
   onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
@@ -23,7 +23,7 @@ function GenericSelect({
       <label htmlFor='resourceType'></label>
       <div>
         <select value={value} onChange={onChange} name={name}>
-          <option value=''>{noValue}</option>
+          {noValue && <option value=''>{noValue}</option>}
           {items.map((m) => (
             <option key={m.value} value={m.value}>
               {m.label}

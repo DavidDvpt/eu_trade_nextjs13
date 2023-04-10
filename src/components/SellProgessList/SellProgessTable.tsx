@@ -1,7 +1,8 @@
-import { Transaction } from '@prisma/client';
+import { TransactionsExtended } from '@/app/extendedAppTypes';
+import SellProgressRow from './SellProgressRow';
 
 interface ISellProgessTableProps {
-  rows: Transaction[];
+  rows: TransactionsExtended;
 }
 
 function SellProgessTable({ rows }: ISellProgessTableProps): JSX.Element {
@@ -9,13 +10,18 @@ function SellProgessTable({ rows }: ISellProgessTableProps): JSX.Element {
     <table>
       <thead>
         <tr>
+          <th>Date</th>
           <th>Nom</th>
           <th>Quantité</th>
           <th>Prix</th>
           <th></th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        {rows.map((row) => (
+          <SellProgressRow key={row.id} row={row} />
+        ))}
+      </tbody>
     </table>
   );
 }

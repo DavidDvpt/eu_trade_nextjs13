@@ -1,6 +1,7 @@
+import { TransactionExtended } from '@/app/extendedAppTypes';
 import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import axios from 'axios';
-import { fetchDatas, postEntity } from './genericRequests';
+import { fetchDatas, postEntity, updateEntity } from './genericRequests';
 
 interface IfetchTransactionsByResourceIdProps {
   id?: string;
@@ -15,7 +16,7 @@ export async function fetchTransactions({
   transactionType?: TransactionType;
 }) {
   try {
-    const response = await fetchDatas<Transaction>('/api/transaction', {
+    const response = await fetchDatas<TransactionExtended>('/api/transaction', {
       params: { sellStatus, transactionType },
     });
     return response;
@@ -41,7 +42,19 @@ export async function fetchTransactionsByResourceId({
     return Promise.reject(error);
   }
 }
+export async function fetchStockByResourceId(resourceId: string | null) {
+  try {
+    if (resourceId) {
+      const response = await axios.get<{ data: number }>(
+        `/api/resource/${resourceId}/stock`
+      );
 
+      return response.data.data;
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
 export async function createTransaction(body: any) {
   try {
     const response = await postEntity<Transaction>({
@@ -54,16 +67,14 @@ export async function createTransaction(body: any) {
     return Promise.reject(error);
   }
 }
-
-export async function fetchStockByResourceId(resourceId: string | null) {
+export async function updateTransaction(transaction: TransactionExtended) {
   try {
-    if (resourceId) {
-      const response = await axios.get<{ data: number }>(
-        `/api/resource/${resourceId}/stock`
-      );
+    const response = await updateEntity({
+      url: `/api/transaction/${transaction.id}`,
+      body: transaction,
+    });
 
-      return response.data.data;
-    }
+    return response;
   } catch (error) {
     return Promise.reject(error);
   }

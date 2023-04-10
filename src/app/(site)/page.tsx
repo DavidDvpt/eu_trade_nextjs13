@@ -1,14 +1,15 @@
 'use client';
 
 import SellProgessList from '@/components/SellProgessList';
+import styles from './home.module.scss';
 
 export default function Home(): React.ReactElement {
   return (
-    <>
-      <section></section>
-      <section>
+    <div className={styles.home}>
+      <div></div>
+      <div>
         <SellProgessList />
-      </section>
-    </>
+      </div>
+    </div>
   );
 }

@@ -1,0 +1,41 @@
+@import '../../styles/_main';
+
+.sellProgressList {
+  table {
+    td,
+    th {
+      &:nth-child(1) {
+        width: 15%;
+      }
+      &:nth-child(2) {
+        width: 25%;
+      }
+      &:nth-child(3) {
+        width: 15%;
+      }
+      &:nth-child(5) {
+        width: 20%;
+      }
+    }
+
+    .updateSelect {
+      padding: 0;
+      vertical-align: middle;
+      padding: 3px 0 0 0;
+
+      fieldset {
+        justify-content: center;
+      }
+      fieldset,
+      select,
+      option {
+        margin: auto;
+        padding: 0;
+      }
+
+      select {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
