@@ -1,7 +1,7 @@
 import { fetchStock } from '@/lib/axios/requests/transaction';
 import { useQuery } from '@tanstack/react-query';
+import styles from './stockList.module.scss';
 import StockTable from './StockTable';
-
 function StockList(): JSX.Element {
   const { data } = useQuery({
     queryKey: ['stockList'],
@@ -13,7 +13,7 @@ function StockList(): JSX.Element {
   });
 
   return (
-    <section>
+    <section className={styles.stockList}>
       <h4>Stock</h4>
       <StockTable stock={data ?? []} />
     </section>

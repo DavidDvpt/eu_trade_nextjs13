@@ -3,6 +3,7 @@
 .home {
   @include flex-between-center;
   padding: 10px 0;
+  height: 100%;
 
   > div {
     width: 48%;
