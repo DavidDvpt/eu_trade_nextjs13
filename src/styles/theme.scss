@@ -13,9 +13,12 @@ h6 {
   text-align: center;
 }
 
+main {
+  height: 100%;
+}
 section {
   padding: 20px;
-  margin: 20px;
+  // margin: 20px;
   border-radius: 10px;
   background-color: $color_grey_01;
   box-shadow: 0 0 10px $color_grey_05;

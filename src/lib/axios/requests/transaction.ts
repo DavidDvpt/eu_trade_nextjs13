@@ -1,10 +1,27 @@
-import { Transaction } from '@prisma/client';
+import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import axios from 'axios';
 import { fetchDatas, postEntity } from './genericRequests';
 
 interface IfetchTransactionsByResourceIdProps {
   id?: string;
   type?: 'BUY' | 'SELL' | 'MINING';
+}
+
+export async function fetchTransactions({
+  sellStatus,
+  transactionType,
+}: {
+  sellStatus?: SellStatus;
+  transactionType?: TransactionType;
+}) {
+  try {
+    const response = await fetchDatas<Transaction>('/api/transaction', {
+      params: { sellStatus, transactionType },
+    });
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
 }
 export async function fetchTransactionsByResourceId({
   id,

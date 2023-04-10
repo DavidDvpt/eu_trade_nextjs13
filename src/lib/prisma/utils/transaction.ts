@@ -1,4 +1,25 @@
+import { SellStatus, TransactionType } from '@prisma/client';
 import client from '../prismadb';
+
+export async function getTransactions(params: {
+  sellStatus?: SellStatus;
+  transactionType?: TransactionType;
+}) {
+  try {
+    const response = await client.transaction.findMany({
+      where: {
+        sellStatus: params?.sellStatus ?? undefined,
+        type: params?.transactionType ?? undefined,
+      },
+    });
+
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error);
+  }
+}
 
 export async function getTransactionsByResourceId(
   id: string,

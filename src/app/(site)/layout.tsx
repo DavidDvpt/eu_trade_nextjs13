@@ -3,6 +3,7 @@
 import Footer from '@/components/layoutRoot/footer';
 import Header from '@/components/layoutRoot/header';
 import { signIn, useSession } from 'next-auth/react';
+import styles from './home.module.scss';
 
 function Layout({ children }: IChildren): React.ReactElement {
   const { status, data } = useSession();
@@ -18,7 +19,7 @@ function Layout({ children }: IChildren): React.ReactElement {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main className={styles.home}>{children}</main>
       <Footer />
     </>
   );
