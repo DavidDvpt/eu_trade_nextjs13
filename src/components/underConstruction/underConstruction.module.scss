@@ -1,0 +1,11 @@
+@import '../../styles/main';
+
+.underConstruction {
+  @include flex-center-center;
+  height: 100%;
+
+  img {
+    width: 80%;
+    height: auto;
+  }
+}
