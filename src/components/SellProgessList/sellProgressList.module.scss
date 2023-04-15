@@ -7,19 +7,28 @@
   }
 
   table {
+    width: auto;
     td,
     th {
       &:nth-child(1) {
         width: 15%;
       }
       &:nth-child(2) {
-        width: 25%;
+        width: 50%;
       }
       &:nth-child(3) {
         width: 15%;
       }
       &:nth-child(5) {
         width: 20%;
+      }
+
+      select {
+        // height: 20px;
+        padding-bottom: 2px;
+      }
+      p {
+        margin: 0;
       }
     }
 
@@ -29,18 +38,21 @@
       padding: 3px 0 0 0;
 
       fieldset {
+        // width: 100%;
+        margin: 0;
         justify-content: center;
-      }
-      fieldset,
-      select,
-      option {
-        margin: auto;
-        padding: 0;
-      }
 
-      select {
-        font-size: 0.8rem;
+        div {
+          width: 100%;
+          select {
+            height: 20px;
+            margin: 0 0 3px 0;
+            padding: 0;
+            font-size: 0.8rem;
+          }
+        }
       }
+      // fieldset,
     }
   }
 }
