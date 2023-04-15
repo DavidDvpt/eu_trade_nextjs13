@@ -22,4 +22,10 @@ export const getStockLeft = async (value: string) => {
   console.log(stock);
 };
 
-getStockLeft('clg87cpgc000spt1mbwfhwlw8');
+// getStockLeft('clg87cpgc000spt1mbwfhwlw8');
+const getResources = async () => {
+  console.log('coucou');
+  const res = await client.resourceType.findMany();
+  console.log(res);
+};
+getResources();
