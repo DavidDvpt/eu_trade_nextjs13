@@ -6,7 +6,6 @@ interface IStockTableProps {
 }
 
 function StockTable({ stock }: IStockTableProps): JSX.Element {
-  console.log(stock);
   return (
     <table>
       <thead>
@@ -14,7 +13,6 @@ function StockTable({ stock }: IStockTableProps): JSX.Element {
           <th>Nom</th>
           <th>Quantité</th>
           <th>Valeur</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -22,7 +20,6 @@ function StockTable({ stock }: IStockTableProps): JSX.Element {
           stock.map((row) => <StockRow key={row.resourceId} row={row} />)}
       </tbody>
       <tfoot>
-        {' '}
         <tr>
           <td></td>
           <td></td>
@@ -33,8 +30,7 @@ function StockTable({ stock }: IStockTableProps): JSX.Element {
                   return (t += c.value);
                 }, 0)
               ).toFixed(2)}
-          </td>{' '}
-          <td></td>
+          </td>
         </tr>
       </tfoot>
     </table>

@@ -53,7 +53,7 @@ function TransactionForm({
     }
   };
 
-  const { mutate, isLoading } = useMutation(createTransaction, {
+  const { mutate } = useMutation(createTransaction, {
     onSuccess: (data) => {
       reset();
       setDatas();
@@ -81,7 +81,8 @@ function TransactionForm({
       const calculatedExtraCost = calculatedTT > 0 ? value - calculatedTT : 0;
       const markup = calculatedTT > 0 ? (value / calculatedTT) * 100 : 0;
       const benefit = value - fee - calculatedTT;
-      const markupNet = ((value - fee) / calculatedTT) * 100;
+      const markupNet =
+        calculatedTT > 0 ? ((value - fee) / calculatedTT) * 100 : 0;
 
       setCalculatedValues({
         calculatedTT,
@@ -91,14 +92,14 @@ function TransactionForm({
         markupNet,
       });
     }
-  }, [quantity, value, resource]);
+  }, [quantity, value, fee, resource]);
 
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       mutate(values);
     }
   };
-  console.log(errors);
+
   return (
     <div className={styles.transactionForm}>
       <ResourceTitle resource={resource} />
@@ -132,7 +133,7 @@ function TransactionForm({
               control={control}
               name='value'
               type='number'
-              label='Prix achat'
+              label='Prix de vente'
               className={styles.buyValue}
               disabled={Boolean(!resource)}
             />

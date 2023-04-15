@@ -1,7 +1,17 @@
 @import '../../styles/main';
 
 .stockList {
-  .nameCell {
-    text-align: left;
+  table {
+    tbody {
+      tr {
+        td {
+          width: 25%;
+        }
+        .nameCell {
+          text-align: left;
+          width: 50%;
+        }
+      }
+    }
   }
 }

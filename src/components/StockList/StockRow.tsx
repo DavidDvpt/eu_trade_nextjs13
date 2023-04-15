@@ -9,7 +9,6 @@ function StockRow({ row }: IStockRowProps): JSX.Element {
       <td className={styles.nameCell}>{row.resourceName}</td>
       <td>{row.quantity}</td>
       <td>{Number(row.value).toFixed(2)}</td>
-      <td>détail btn</td>
     </tr>
   );
 }
