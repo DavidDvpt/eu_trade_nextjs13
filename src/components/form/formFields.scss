@@ -47,6 +47,11 @@ fieldset {
   }
 
   &.error {
+    input,
+    select {
+      background-color: $input_bg_color_error;
+      border: 1px solid $color_error;
+    }
   }
 }
 

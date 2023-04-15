@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "env-cmd -f config/.env.dev next dev",
-    "build": "env-cmd -f config/.env.prod next build",
+    "build": "env-cmd -f config/.env.dev next build",
     "start": "env-cmd -f config/.env.prod next start",
     "lint": "next lint",
     "pg": "npx prisma generate",

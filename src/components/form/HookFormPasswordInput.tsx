@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, FieldError } from 'react-hook-form';
 import GenericInput from './GenericInput';
 interface IHookFormPasswordInputProps {
   control: any;
@@ -7,7 +7,7 @@ interface IHookFormPasswordInputProps {
   className?: string;
   label: string;
   disabled?: boolean;
-  error?: string;
+  error?: FieldError;
   onInputChange?: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
 }
 function HookFormPasswordInput({
@@ -40,7 +40,7 @@ function HookFormPasswordInput({
           type={hidden ? 'password' : 'text'}
           label={label}
           disabled={disabled}
-          error={error}
+          error={error?.message}
         />
       )}
     />

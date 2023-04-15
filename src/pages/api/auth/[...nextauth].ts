@@ -44,7 +44,7 @@ export default NextAuth({
           }
 
           if (
-            bcrypt.compareSync(
+            !bcrypt.compareSync(
               credentials?.password ?? '',
               user?.password ?? ''
             )

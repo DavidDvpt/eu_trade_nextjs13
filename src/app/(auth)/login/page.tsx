@@ -4,6 +4,7 @@ import Button from '@/components/form/Button';
 import HookFormInputField from '@/components/form/HookFormInputField';
 import HookFormPasswordInput from '@/components/form/HookFormPasswordInput';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import styles from '../auth.module.scss';
 
@@ -14,19 +15,43 @@ const intialLoginValues: LoginFormValues = {
 };
 
 function Login(): React.ReactElement {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormValues>({ defaultValues: intialLoginValues });
 
   const onSubmit = async (values: LoginFormValues) => {
-    await signIn('credentials', {
+    signIn('credentials', {
       email: values.email,
       password: values.password,
-      redirect: true,
+      redirect: false,
       callbackUrl: '/',
-    });
+    })
+      .then((response: any) => {
+        if (response.status === 200) {
+          router.push('/');
+        }
+        if (response.status === 401) {
+          switch (response.error) {
+            case 'bad email':
+              setError('email', { message: 'Mail inconnu' });
+              break;
+            case 'bad password':
+              setError('password', { message: 'Mauvais mot de passe' });
+              break;
+            default:
+              break;
+          }
+        }
+
+        console.log('response', response);
+      })
+      .catch((error: any) => {
+        console.log('error', error);
+      });
   };
 
   return (
@@ -36,6 +61,7 @@ function Login(): React.ReactElement {
         name='email'
         label='Email '
         className={styles.fieldset}
+        error={errors['email']}
       />
 
       <HookFormPasswordInput
@@ -43,6 +69,7 @@ function Login(): React.ReactElement {
         name='password'
         label='Mot de passe '
         className={styles.fieldset}
+        error={errors['password']}
       />
       <div className={styles.buttonContainer}>
         <Button type='submit' primary>
