@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import StockRow from './StockRow';
 
 interface IStockTableProps {
@@ -5,6 +6,7 @@ interface IStockTableProps {
 }
 
 function StockTable({ stock }: IStockTableProps): JSX.Element {
+  console.log(stock);
   return (
     <table>
       <thead>
@@ -16,9 +18,8 @@ function StockTable({ stock }: IStockTableProps): JSX.Element {
         </tr>
       </thead>
       <tbody>
-        {stock.map((row) => (
-          <StockRow key={row.resourceId} row={row} />
-        ))}
+        {!isEmpty(stock) &&
+          stock.map((row) => <StockRow key={row.resourceId} row={row} />)}
       </tbody>
       <tfoot>
         {' '}
@@ -26,11 +27,12 @@ function StockTable({ stock }: IStockTableProps): JSX.Element {
           <td></td>
           <td></td>
           <td>
-            {Number(
-              stock.reduce((t, c) => {
-                return (t += c.value);
-              }, 0)
-            ).toFixed(2)}
+            {!isEmpty(stock) &&
+              Number(
+                stock.reduce((t, c) => {
+                  return (t += c.value);
+                }, 0)
+              ).toFixed(2)}
           </td>{' '}
           <td></td>
         </tr>
