@@ -9,8 +9,8 @@ import styles from '../auth.module.scss';
 
 type LoginFormValues = { email: string; password: string };
 const intialLoginValues: LoginFormValues = {
-  email: 'appmail@gmail.com',
-  password: 'david',
+  email: '',
+  password: '',
 };
 
 function Login(): React.ReactElement {
@@ -31,25 +31,24 @@ function Login(): React.ReactElement {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <section>
-        <HookFormInputField
-          control={control}
-          name='email'
-          label='Email '
-          className={styles.fieldset}
-        />
+      <HookFormInputField
+        control={control}
+        name='email'
+        label='Email '
+        className={styles.fieldset}
+      />
 
-        <HookFormPasswordInput
-          control={control}
-          name='password'
-          label='Mot de passe '
-          className={styles.fieldset}
-        />
-
+      <HookFormPasswordInput
+        control={control}
+        name='password'
+        label='Mot de passe '
+        className={styles.fieldset}
+      />
+      <div className={styles.buttonContainer}>
         <Button type='submit' primary>
           Se connecter
         </Button>
-      </section>
+      </div>
     </form>
   );
 }

@@ -9,12 +9,19 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+    const token = await getToken({ req });
 
-    const response = await getTransactions({
-      sellStatus: searchParams.get('sellStatus') as SellStatus,
-      transactionType: searchParams.get('transactionType') as TransactionType,
-    });
-    return NextResponse.json({ data: response }, { status: 200 });
+    if (token?.id) {
+      console.log(token.id);
+      const response = await getTransactions({
+        sellStatus: searchParams.get('sellStatus') as SellStatus,
+        transactionType: searchParams.get('transactionType') as TransactionType,
+        userId: token.id as string,
+      });
+      return NextResponse.json({ data: response }, { status: 200 });
+    } else {
+      return NextResponse.json(null, { status: 401 });
+    }
   } catch (error) {
     return NextResponse.error().status;
   }

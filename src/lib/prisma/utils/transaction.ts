@@ -4,12 +4,14 @@ import client from '../prismadb';
 export async function getTransactions(params: {
   sellStatus?: SellStatus;
   transactionType?: TransactionType;
+  userId: string;
 }) {
   try {
     const response = await client.transaction.findMany({
       where: {
         sellStatus: params?.sellStatus ?? undefined,
         type: params?.transactionType ?? undefined,
+        userId: params.userId,
       },
       include: { resource: true },
     });
@@ -40,12 +42,13 @@ export async function getTransactionsByResourceId(
     return Promise.reject(error);
   }
 }
-export async function getStock() {
+export async function getStock(userId: string) {
   try {
     const response = await client.transaction.groupBy({
       by: ['resourceId', 'type', 'sellStatus'],
       _sum: { quantity: true },
       orderBy: { resourceId: 'asc' },
+      where: { userId },
     });
 
     return response;

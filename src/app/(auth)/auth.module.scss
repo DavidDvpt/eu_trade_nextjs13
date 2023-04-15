@@ -5,5 +5,13 @@
   @include flex-center-center-column;
 
   .loginContent {
+    width: 400px;
+    form {
+      padding: 10px;
+
+      .buttonContainer {
+        @include flex-center-center;
+      }
+    }
   }
 }

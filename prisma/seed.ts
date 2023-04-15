@@ -17,6 +17,12 @@ const users = [
     firstname: 'David',
     lastname: 'MOSCA',
   },
+  {
+    email: 'test@test.com',
+    password: encodeFnc('test'),
+    firstname: 'test',
+    lastname: 'test',
+  },
 ];
 
 async function createAdmin() {
