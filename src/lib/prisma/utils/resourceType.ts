@@ -1,4 +1,4 @@
-import client from '../prismadb';
+import client from '../../../../prisma/prismadb';
 
 export const getResourceTypes = async () => {
   try {

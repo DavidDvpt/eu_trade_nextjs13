@@ -1,5 +1,5 @@
 import { MissingParamsError } from '@/lib/axios/axiosUtils';
-import client from '../prismadb';
+import client from '../../../../prisma/prismadb';
 
 export const getUserByEmail = async (email: string | null) => {
   try {

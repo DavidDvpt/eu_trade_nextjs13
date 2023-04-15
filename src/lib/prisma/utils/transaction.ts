@@ -1,5 +1,5 @@
 import { SellStatus, Transaction, TransactionType } from '@prisma/client';
-import client from '../prismadb';
+import client from '../../../../prisma/prismadb';
 
 export async function getTransactions(params: {
   sellStatus?: SellStatus;

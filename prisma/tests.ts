@@ -1,4 +1,4 @@
-import client from '../src/lib/prisma/prismadb';
+import client from './prismadb';
 
 export const getStockLeft = async (value: string) => {
   const response = await client.transaction.groupBy({
