@@ -47,8 +47,7 @@ export async function getTransactionsBenefit(userId: string) {
       }
     });
 
-    result.total = result.buy - result.feeLost - result.sellBenefit;
-    console.log('prisma', result);
+    result.total = result.sellBenefit - result.feeLost - result.buy;
 
     return result;
   } catch (error) {

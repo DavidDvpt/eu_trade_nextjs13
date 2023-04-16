@@ -13,6 +13,10 @@
     }
 
     &.total {
+      .negative {
+        color: $color_error;
+      }
+
       margin-top: 20px;
       font-weight: 700;
     }

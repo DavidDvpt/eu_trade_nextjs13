@@ -27,7 +27,9 @@ function BenefitHomeSection(): React.ReactElement {
       </p>
       <p className={styles.total}>
         <span>Total :</span>
-        <span>{getFixedNumber(2, data?.total)}</span>
+        <span className={data?.total < 0 ? styles.negative : ''}>
+          {getFixedNumber(2, data?.total)}
+        </span>
       </p>
     </section>
   );
