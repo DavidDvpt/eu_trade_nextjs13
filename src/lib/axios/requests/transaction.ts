@@ -1,7 +1,12 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
 import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import axios from 'axios';
-import { fetchDatas, postEntity, updateEntity } from './genericRequests';
+import {
+  fetchDatas,
+  fetchSingleData,
+  postEntity,
+  updateEntity,
+} from './genericRequests';
 
 interface IfetchTransactionsByResourceIdProps {
   id?: string;
@@ -19,6 +24,17 @@ export async function fetchTransactions({
     const response = await fetchDatas<TransactionExtended>('/api/transaction', {
       params: { sellStatus, transactionType },
     });
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+export async function fetchTransactionsBenefit() {
+  try {
+    const response = await fetchSingleData<TransactionBenefitResult>(
+      '/api/transaction/benefit'
+    );
+
     return response;
   } catch (error) {
     return Promise.reject(error);

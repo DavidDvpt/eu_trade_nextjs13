@@ -1,0 +1,20 @@
+@import '../../styles/main';
+
+.homeBenefitSection {
+  p {
+    @include flex-between-center;
+    margin: 0 5px;
+    span {
+      width: 50%;
+
+      &:nth-child(2) {
+        text-align: center;
+      }
+    }
+
+    &.total {
+      margin-top: 20px;
+      font-weight: 700;
+    }
+  }
+}

@@ -19,3 +19,10 @@ type FormCalculatedValues = {
   benefit: number;
   markupNet: number;
 };
+
+type TransactionBenefitResult = {
+  buy: number;
+  feeLost: number;
+  sellBenefit: number;
+  total;
+};

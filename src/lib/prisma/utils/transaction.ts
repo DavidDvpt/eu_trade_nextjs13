@@ -18,7 +18,40 @@ export async function getTransactions(params: {
 
     return response;
   } catch (error) {
-    console.log(error);
+    return Promise.reject(error);
+  }
+}
+export async function getTransactionsBenefit(userId: string) {
+  try {
+    const result: TransactionBenefitResult = {
+      buy: 0,
+      feeLost: 0,
+      sellBenefit: 0,
+      total: 0,
+    };
+    const response = await getTransactions({
+      userId,
+    });
+
+    response.forEach((t) => {
+      const b = t.value - t.resource.value * t.quantity;
+
+      if (t.type === 'BUY') {
+        result.buy += b;
+      } else {
+        if (t.sellStatus === 'RETURNED') {
+          result.feeLost += t.fee ?? 0;
+        } else {
+          result.sellBenefit += b - (t.fee ?? 0);
+        }
+      }
+    });
+
+    result.total = result.buy - result.feeLost - result.sellBenefit;
+    console.log('prisma', result);
+
+    return result;
+  } catch (error) {
     return Promise.reject(error);
   }
 }
