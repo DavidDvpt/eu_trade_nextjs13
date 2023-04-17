@@ -21,39 +21,17 @@ export async function getTransactions(params: {
     return Promise.reject(error);
   }
 }
-export async function getTransactionsBenefit(userId: string) {
-  try {
-    const result: TransactionBenefitResult = {
-      buy: 0,
-      feeLost: 0,
-      sellBenefit: 0,
-      total: 0,
-    };
-    const response = await getTransactions({
-      userId,
-    });
+// export async function getTransactionsBenefit(userId: string) {
+//   try {
 
-    response.forEach((t) => {
-      const b = t.value - t.resource.value * t.quantity;
+//     const response = await getTransactions({
+//       userId,
+//     });
 
-      if (t.type === 'BUY') {
-        result.buy += b;
-      } else {
-        if (t.sellStatus === 'RETURNED') {
-          result.feeLost += t.fee ?? 0;
-        } else {
-          result.sellBenefit += b - (t.fee ?? 0);
-        }
-      }
-    });
-
-    result.total = result.sellBenefit - result.feeLost - result.buy;
-
-    return result;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
+//   } catch (error) {
+//     return Promise.reject(error);
+//   }
+// }
 export async function getTransactionsByResourceId(
   id: string,
   type?: 'BUY' | 'SELL' | 'MINING'
@@ -131,7 +109,6 @@ export async function postTransaction(data: any) {
 
     return transaction;
   } catch (error) {
-    console.log(error);
     return Promise.reject(error);
   }
 }
@@ -153,7 +130,6 @@ export async function putTransaction(data: Transaction) {
 
     return transaction;
   } catch (error) {
-    console.log(error);
     return Promise.reject(error);
   }
 }

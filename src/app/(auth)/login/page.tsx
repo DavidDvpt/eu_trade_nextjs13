@@ -46,8 +46,6 @@ function Login(): React.ReactElement {
               break;
           }
         }
-
-        console.log('response', response);
       })
       .catch((error: any) => {
         console.log('error', error);

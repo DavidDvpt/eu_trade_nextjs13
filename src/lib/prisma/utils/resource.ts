@@ -17,7 +17,7 @@ export const getResourcesByTypeId = async (typeId: string) => {
         resourceTypeId: typeId,
       },
     });
-    console.log(typeId, resources);
+
     return resources;
   } catch (error) {
     Promise.reject(error);

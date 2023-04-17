@@ -18,8 +18,14 @@ function UpdateTransactionButton({
   const items = Object.values(SellStatus).map((m) => ({ value: m, label: m }));
 
   const { mutate } = useMutation(updateTransaction, {
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['sellProgressList'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['sellProgressList'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['totalBenefit'],
+      });
+    },
   });
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {

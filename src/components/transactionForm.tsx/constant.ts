@@ -17,7 +17,6 @@ export const initialCalculatedValues: FormCalculatedValues = {
 };
 
 export const TransactionFormValidation = (maxQty: number) => {
-  // console.log('yup', maxQty);
   return yup.object({
     resourceId: yup.string().required(),
     quantity: yup

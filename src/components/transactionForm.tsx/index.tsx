@@ -58,10 +58,20 @@ function TransactionForm({
       reset();
       setDatas();
       if (type === TransactionType.BUY) {
-        queryClient.invalidateQueries({ queryKey: ['transactionList'] });
+        queryClient.invalidateQueries({
+          queryKey: ['transactionList'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['totalBenefit'],
+        });
       }
       if (type === TransactionType.SELL) {
-        queryClient.invalidateQueries({ queryKey: ['sellProgressList'] });
+        queryClient.invalidateQueries({
+          queryKey: ['sellProgressList'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['totalBenefit'],
+        });
       }
       return data;
     },
