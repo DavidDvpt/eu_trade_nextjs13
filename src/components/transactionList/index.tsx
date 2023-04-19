@@ -37,7 +37,7 @@ function TransactionList({
             <td>{Number(totalRow.ttCost).toFixed(2)}</td>
             <td>{totalRow.ttcCost}</td>
             <td>{Number(totalRow.extraCost).toFixed(2)}</td>
-            <td>{Number(totalRow.percentCost).toFixed(2)}</td>
+            <td>{Number(totalRow.markup).toFixed(2)}</td>
           </tr>
         </tfoot>
       )}
