@@ -1,17 +1,20 @@
-interface TransactionListRow {
+interface TransactionRow {
   date: string;
-  name: string;
+  name: '';
   quantity: number;
   ttCost: number;
   ttcCost: number;
   extraCost: number;
   markup: number;
 }
-interface TransactionListRowForTable extends TransactionListRow {
+interface TransactionRowForTable extends TransactionRow {
+  name: string;
+  quantity: string;
   ttCost: string;
+  ttcCost: string;
   extraCost: string;
   markup: string;
 }
 
-type TransactionListRows = TransactionListRow[];
-type TransactionListRowsForTable = TransactionListRowForTable[];
+type TransactionListRows = TransactionRow[];
+type TransactionRowsForTable = TransactionRowForTable[];

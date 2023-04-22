@@ -4,7 +4,7 @@ import styles from './transaction.module.scss';
 
 interface ITransactionListProps {
   transactions?: TransactionsExtended;
-  totalRow: TransactionListRow | null;
+  totalRow: TransactionRow | null;
 }
 function TransactionList({
   transactions,

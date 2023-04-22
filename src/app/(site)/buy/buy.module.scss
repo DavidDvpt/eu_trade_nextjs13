@@ -9,4 +9,18 @@
       flex-grow: 1;
     }
   }
+
+  .buyResourceTableContainer {
+    table {
+      th,
+      td {
+        &:nth-child(1) {
+          width: 10%;
+        }
+        &:nth-child(2) {
+          width: 30%;
+        }
+      }
+    }
+  }
 }

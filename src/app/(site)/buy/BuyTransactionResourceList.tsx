@@ -1,13 +1,12 @@
 import { TransactionsExtended } from '@/app/extendedAppTypes';
-import GenericTable, {
-  GenericHeadersTableType,
-} from '@/components/common/GenericTable';
+import GenericTable from '@/components/genericTable';
 import { fetchTransactionsByResourceId } from '@/lib/axios/requests/transaction';
 import { useQuery } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-
-const header: GenericHeadersTableType<TransactionListRowForTable> = [
+import styles from './buy.module.scss';
+import { buyFooterRowParser, buyRowParser } from './buyLib';
+const header: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Date', key: 'date' },
   { name: 'Nom', key: 'name' },
   { name: 'Quantité', key: 'quantity' },
@@ -22,9 +21,9 @@ interface IBuyTransactionResourceListProps {
 function BuyTransactionResourceList({
   resourceId,
 }: IBuyTransactionResourceListProps) {
-  const [totalRow, setTotalRow] = useState<TransactionListRowForTable>();
-  const [rows, setRows] = useState<TransactionListRowsForTable>([]);
-  const { data, isLoading, isError } = useQuery({
+  const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
+  const [rows, setRows] = useState<TransactionRowsForTable>([]);
+  const { data } = useQuery({
     queryKey: ['transactionList', resourceId],
     queryFn: async () => {
       const response = await fetchTransactionsByResourceId({
@@ -38,7 +37,9 @@ function BuyTransactionResourceList({
 
   useEffect(() => {
     if (data && !isEmpty(data)) {
-      const row: TransactionListRow = {
+      const resource = data[0].resource;
+
+      const footerRow: TransactionRow = {
         date: '',
         name: '',
         quantity: 0,
@@ -48,7 +49,7 @@ function BuyTransactionResourceList({
         markup: 0,
       };
 
-      const tempRows: TransactionListRowsForTable = [];
+      const parsedRows: TransactionRowsForTable = [];
 
       data?.forEach((e) => {
         const r = e.resource;
@@ -56,37 +57,33 @@ function BuyTransactionResourceList({
         const ec = e.value - tt;
 
         //create displayed row
-        const parsedRow: TransactionListRowForTable = {
-          date: new Date(e.createdAt).toLocaleDateString('fr-FR'),
-          name: e.resource.name,
-          quantity: e.quantity,
-          ttCost: Number(tt).toFixed(2),
-          ttcCost: e.value,
-          extraCost: Number(e.value - tt).toFixed(2),
-          markup: tt > 0 ? Number((e.value / tt) * 100).toFixed(2) : '-',
-        };
+        const tableRow = buyRowParser(e, tt);
 
-        tempRows.push(parsedRow);
+        parsedRows.push(tableRow);
 
         // create footer row
-        row.quantity = row.quantity + e.quantity;
-        row.ttCost = row.ttCost + tt;
-        row.ttcCost = row.ttcCost + e.value;
-        row.extraCost = row.extraCost + ec;
+        footerRow.quantity = footerRow.quantity + e.quantity;
+        footerRow.ttCost = footerRow.ttCost + tt;
+        footerRow.ttcCost = footerRow.ttcCost + e.value;
+        footerRow.extraCost = footerRow.extraCost + ec;
       });
 
-      row.markup = (row.ttcCost / row.ttCost) * 100;
+      footerRow.markup = (footerRow.ttcCost / footerRow.ttCost) * 100;
 
-      setRows(tempRows);
-      // setTotalRow(row);
+      const parsedFooterRow: TransactionRowForTable = buyFooterRowParser(
+        footerRow,
+        resource.value
+      );
+
+      setRows(parsedRows);
+      setTotalRow(parsedFooterRow);
     }
   }, [data]);
 
   return (
-    <>
-      {/* <TransactionList transactions={data} totalRow={totalRow} />{' '} */}
+    <div className={styles.buyResourceTableContainer}>
       <GenericTable header={header} rows={rows ?? []} footerRow={totalRow} />
-    </>
+    </div>
   );
 }
 
