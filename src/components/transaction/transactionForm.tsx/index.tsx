@@ -1,3 +1,4 @@
+import { TransactionExtended } from '@/app/extendedAppTypes';
 import { createTransaction } from '@/lib/axios/requests/transaction';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Resource, SellStatus, TransactionType } from '@prisma/client';
@@ -18,12 +19,14 @@ interface ITransactionFormProps {
   resource: Resource | null;
   type: TransactionType;
   avaliableQty?: number;
+  lastSoldItem?: TransactionExtended;
 }
 
 function TransactionForm({
   resource,
   type,
   avaliableQty = 0,
+  lastSoldItem,
 }: ITransactionFormProps): React.ReactElement {
   const queryClient = useQueryClient();
   const [calculatedValues, setCalculatedValues] =
@@ -59,9 +62,6 @@ function TransactionForm({
       setDatas();
       if (type === TransactionType.BUY) {
         queryClient.invalidateQueries({
-          queryKey: ['transactionList'],
-        });
-        queryClient.invalidateQueries({
           queryKey: ['totalBenefit'],
         });
       }
@@ -75,6 +75,9 @@ function TransactionForm({
       }
       queryClient.invalidateQueries({
         queryKey: ['availableResourceQuantity'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['transactionList'],
       });
       return data;
     },
@@ -107,6 +110,21 @@ function TransactionForm({
     }
   }, [quantity, value, fee, resource]);
 
+  const handleUseLastSold = () => {
+    if (lastSoldItem) {
+      const { fee, quantity, resourceId, value } = lastSoldItem;
+      const t = {
+        fee,
+        quantity,
+        resourceId,
+        transactionType: TransactionType.SELL,
+        sellStatus: SellStatus.PROGRESS,
+        value,
+      };
+
+      mutate(t);
+    }
+  };
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       mutate(values);
@@ -114,87 +132,111 @@ function TransactionForm({
   };
 
   return (
-    <section>
-      <div className={styles.transactionForm}>
-        <ResourceTitle resource={resource} />
+    <div className={styles.transactionForm}>
+      <ResourceTitle resource={resource} />
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
-          <div className={styles.formContent}>
-            <div className={styles.formValues}>
-              <HookFormInputField
-                control={control}
-                name='quantity'
-                type='number'
-                label='quantité'
-                className={`${styles.quantity} ${
-                  errors.quantity ? styles.error : ''
-                }`}
-                disabled={Boolean(!resource)}
-                trigger={trigger}
-                error={errors.quantity}
-              />
-              {type === TransactionType.SELL && (
-                <HookFormInputField
-                  control={control}
-                  name='fee'
-                  type='number'
-                  label='Fee'
-                  className={styles.fee}
-                  disabled={Boolean(!resource)}
-                />
-              )}
-              <HookFormInputField
-                control={control}
-                name='value'
-                type='number'
-                label='Prix de vente'
-                className={styles.buyValue}
-                disabled={Boolean(!resource)}
-              />
+      <div className={styles.lastSell}>
+        {lastSoldItem && (
+          <>
+            <h5>Vente à partir de l&#0039;ancienne transaction</h5>
+            <div>
+              <table>
+                <tr>
+                  <th>Quantité</th>
+                  <th>Fee</th>
+                  <th>Valeur</th>
+                </tr>
+                <tr>
+                  <td>{lastSoldItem?.quantity}</td>
+                  <td>{lastSoldItem?.fee}</td>
+                  <td>{lastSoldItem?.value}</td>
+                </tr>
+              </table>
+              <Button type='button' onClick={handleUseLastSold} primary>
+                Créer vente
+              </Button>
             </div>
+          </>
+        )}
+      </div>
 
-            <div className={styles.calculatedValues}>
+      <h5>Nouvelle vente</h5>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
+        <div className={styles.formContent}>
+          <div className={styles.formValues}>
+            <HookFormInputField
+              control={control}
+              name='quantity'
+              type='number'
+              label='quantité'
+              className={`${styles.quantity} ${
+                errors.quantity ? styles.error : ''
+              }`}
+              disabled={Boolean(!resource)}
+              trigger={trigger}
+              error={errors.quantity}
+            />
+            {type === TransactionType.SELL && (
+              <HookFormInputField
+                control={control}
+                name='fee'
+                type='number'
+                label='Fee'
+                className={styles.fee}
+                disabled={Boolean(!resource)}
+              />
+            )}
+            <HookFormInputField
+              control={control}
+              name='value'
+              type='number'
+              label='Prix de vente'
+              className={styles.buyValue}
+              disabled={Boolean(!resource)}
+            />
+          </div>
+
+          <div className={styles.calculatedValues}>
+            <p>
+              <span>Cout TT : </span>
+              {Number(calculatedValues.calculatedTT).toFixed(2)}
+              <span>ped(s)</span>
+            </p>
+
+            {type === TransactionType.BUY && (
               <p>
-                <span>Cout TT : </span>
-                {Number(calculatedValues.calculatedTT).toFixed(2)}
+                <span>Extra TT : </span>
+                {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
                 <span>ped(s)</span>
               </p>
+            )}
 
-              {type === TransactionType.BUY && (
+            <p>
+              <span>Markup TTC: </span>
+              {Number(calculatedValues.markup).toFixed(2)}
+              <span>%</span>
+            </p>
+            {type === TransactionType.SELL && (
+              <>
                 <p>
-                  <span>Extra TT : </span>
-                  {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
+                  <span>Bénéfice NET: </span>
+                  {Number(calculatedValues.benefit).toFixed(2)}
                   <span>ped(s)</span>
                 </p>
-              )}
-
-              <p>
-                <span>Markup TTC: </span>
-                {Number(calculatedValues.markup).toFixed(2)}
-                <span>%</span>
-              </p>
-              {type === TransactionType.SELL && (
-                <>
-                  <p>
-                    <span>Bénéfice NET: </span>
-                    {Number(calculatedValues.benefit).toFixed(2)}
-                    <span>ped(s)</span>
-                  </p>
-                  <p>
-                    <span>Markup NET: </span>
-                    {Number(calculatedValues.markupNet).toFixed(2)}
-                    <span>%</span>
-                  </p>
-                </>
-              )}
-            </div>
+                <p>
+                  <span>Markup NET: </span>
+                  {Number(calculatedValues.markupNet).toFixed(2)}
+                  <span>%</span>
+                </p>
+              </>
+            )}
           </div>
-          <Button type='submit' primary>
-            {type === TransactionType.BUY ? 'Acheter' : 'Vendre'}
-          </Button>
-        </form>
-      </div>
-    </section>
+        </div>
+        <Button type='submit' primary>
+          {type === TransactionType.BUY ? 'Acheter' : 'Vendre'}
+        </Button>
+      </form>
+    </div>
   );
 }
 

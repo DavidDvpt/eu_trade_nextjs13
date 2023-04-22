@@ -4,11 +4,26 @@
   h4 {
     @include flex-center-center;
     height: 30px;
-
     img {
       margin-right: 20px;
       height: 30px;
       width: auto;
+    }
+  }
+  h5 {
+    margin: 20px 0;
+  }
+
+  .lastSell {
+    > div {
+      @include flex-around-center;
+      table {
+        width: auto;
+        td,
+        th {
+          width: 100px;
+        }
+      }
     }
   }
 

@@ -21,24 +21,15 @@ export async function getTransactions(params: {
     return Promise.reject(error);
   }
 }
-// export async function getTransactionsBenefit(userId: string) {
-//   try {
-
-//     const response = await getTransactions({
-//       userId,
-//     });
-
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// }
 export async function getTransactionsByResourceId(
+  userId: string,
   id: string,
   type?: 'BUY' | 'SELL' | 'MINING'
 ) {
   try {
     const transactions = client.transaction.findMany({
       where: {
+        userId,
         resourceId: id,
         type: type ?? undefined,
       },
@@ -66,7 +57,10 @@ export async function getStock(userId: string) {
     return Promise.reject(error);
   }
 }
-export async function getStockByResourceId(resourceId: string | null) {
+export async function getStockByResourceId(
+  userId: string,
+  resourceId: string | null
+) {
   try {
     if (resourceId) {
       const response = await client.transaction.groupBy({
@@ -74,7 +68,7 @@ export async function getStockByResourceId(resourceId: string | null) {
         _sum: {
           quantity: true,
         },
-        where: { resourceId },
+        where: { resourceId, userId },
       });
 
       let stock = 0;

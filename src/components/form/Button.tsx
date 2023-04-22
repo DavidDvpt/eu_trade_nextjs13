@@ -5,6 +5,7 @@ interface IButtonProps extends IChildren {
   warning?: boolean;
   error?: boolean;
   success?: boolean;
+  onClick?: () => void;
 }
 
 function Button({
@@ -15,6 +16,7 @@ function Button({
   error,
   success,
   warning,
+  onClick,
 }: IButtonProps) {
   const btnType = primary
     ? 'info'
@@ -26,7 +28,11 @@ function Button({
     ? 'warning'
     : '';
   return (
-    <button type={type} className={`${className ?? ''} ${btnType}`}>
+    <button
+      type={type}
+      className={`${className ?? ''} ${btnType}`}
+      onClick={onClick}
+    >
       {children}
     </button>
   );

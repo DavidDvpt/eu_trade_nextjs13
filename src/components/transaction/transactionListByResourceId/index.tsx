@@ -20,10 +20,12 @@ const header: GenericHeadersTableType<TransactionRowForTable> = [
 interface IBuyTransactionResourceListProps {
   resourceId: string;
   type: TransactionType;
+  exportList?: (datas: TransactionsExtended) => void;
 }
 function TransactionListByResourceId({
   resourceId,
   type,
+  exportList,
 }: IBuyTransactionResourceListProps) {
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
@@ -41,6 +43,7 @@ function TransactionListByResourceId({
 
   useEffect(() => {
     if (data && !isEmpty(data)) {
+      exportList && exportList(data);
       const footerRow: TransactionRow = {
         date: '',
         name: '',
