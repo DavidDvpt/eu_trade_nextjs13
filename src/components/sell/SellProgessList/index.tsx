@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
 import SellProgessTable from './SellProgessTable';
 import styles from './sellProgressList.module.scss';
+
 function SellProgessList(): React.ReactElement {
   const { data } = useQuery({
     queryKey: ['sellProgressList'],

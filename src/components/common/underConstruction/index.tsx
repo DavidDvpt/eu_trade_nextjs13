@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import underConstruction from '../../assets/images/page-en-construction.png';
+import underConstruction from '../../../assets/images/page-en-construction.png';
 import styles from './underConstruction.module.scss';
 function UnderConstruction(): React.ReactElement {
   return (

@@ -1,9 +1,10 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
+import GenericSelect from '@/components/form/GenericSelect';
 import { updateTransaction } from '@/lib/axios/requests/transaction';
 import { SellStatus } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChangeEvent, useState } from 'react';
-import GenericSelect from '../form/GenericSelect';
+
 interface IUpdateTransactionSelectProps {
   transaction: TransactionExtended;
 }

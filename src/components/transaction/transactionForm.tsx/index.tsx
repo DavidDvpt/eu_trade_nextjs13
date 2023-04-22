@@ -4,7 +4,7 @@ import { Resource, SellStatus, TransactionType } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ResourceTitle from '../../ResourceTitle';
+import ResourceTitle from '../../common/ResourceTitle';
 import Button from '../../form/Button';
 import HookFormInputField from '../../form/HookFormInputField';
 import {
