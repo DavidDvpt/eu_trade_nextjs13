@@ -72,7 +72,9 @@ export async function fetchStockByResourceId(resourceId: string | null) {
         `/api/resource/${resourceId}/stock`
       );
 
-      return response.data.data;
+      return response.data.data ?? 0;
+    } else {
+      return Promise.reject({ status: 422, message: 'param missing' });
     }
   } catch (error) {
     return Promise.reject(error);

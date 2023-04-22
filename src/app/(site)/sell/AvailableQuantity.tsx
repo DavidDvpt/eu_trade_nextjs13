@@ -12,11 +12,11 @@ function AvailableQuantity({
   setQuantity,
 }: IAvailableQuantityProps): JSX.Element {
   const { data, status } = useQuery({
-    queryKey: ['availableResourceQuantity', resourceId],
+    queryKey: ['availableResourceQuantity', resourceId ?? ''],
     queryFn: async () => {
       const response = await fetchStockByResourceId(resourceId);
 
-      setQuantity(response ?? 0);
+      setQuantity(response);
       return response;
     },
   });
