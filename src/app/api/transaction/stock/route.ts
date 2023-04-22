@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       const resources = await getResources();
 
       const result: Stocks = [];
-      let c: Stock | null = null;
+      let c: IStock | null = null;
       let cr: Resource | null = null;
       for (let i = 0; i < stocks.length; i++) {
         const e = stocks[i];

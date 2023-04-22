@@ -60,7 +60,7 @@ export async function fetchTransactionsByResourceId({
 }
 export async function fetchStock() {
   try {
-    const stocks = await fetchDatas<Stock>(`/api/transaction/stock`);
+    const stocks = await fetchDatas<IStock>(`/api/transaction/stock`);
 
     return stocks;
   } catch (error) {
