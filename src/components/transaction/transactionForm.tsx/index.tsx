@@ -73,6 +73,9 @@ function TransactionForm({
           queryKey: ['totalBenefit'],
         });
       }
+      queryClient.invalidateQueries({
+        queryKey: ['availableResourceQuantity'],
+      });
       return data;
     },
   });
