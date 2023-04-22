@@ -14,6 +14,12 @@ const users = [
   {
     email: 'appmail@gmail.com',
     password: encodeFnc('david'),
+    firstname: 'admin',
+    lastname: 'site',
+  },
+  {
+    email: 'david.mosca69@gmail.com',
+    password: encodeFnc('Gauloise42'),
     firstname: 'David',
     lastname: 'MOSCA',
   },
