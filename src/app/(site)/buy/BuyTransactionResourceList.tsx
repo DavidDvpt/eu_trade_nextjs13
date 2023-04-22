@@ -70,10 +70,8 @@ function BuyTransactionResourceList({
 
       footerRow.markup = (footerRow.ttcCost / footerRow.ttCost) * 100;
 
-      const parsedFooterRow: TransactionRowForTable = buyFooterRowParser(
-        footerRow,
-        resource.value
-      );
+      const parsedFooterRow: TransactionRowForTable =
+        buyFooterRowParser(footerRow);
 
       setRows(parsedRows);
       setTotalRow(parsedFooterRow);

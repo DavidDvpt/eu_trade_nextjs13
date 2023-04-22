@@ -18,8 +18,7 @@ export const buyRowParser = (
 };
 
 export const buyFooterRowParser = (
-  row: TransactionRow,
-  resourceValue: number
+  row: TransactionRow
 ): TransactionRowForTable => {
   const parsedRow = {
     ...row,
@@ -29,7 +28,7 @@ export const buyFooterRowParser = (
     extraCost: Number(row.extraCost).toFixed(2),
     markup:
       row.ttCost > 0
-        ? Number((resourceValue / row.ttCost) * 100).toFixed(2)
+        ? Number((row.ttcCost / row.ttCost) * 100).toFixed(2)
         : '-',
   };
 
