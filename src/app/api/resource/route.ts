@@ -3,8 +3,10 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const resourcesTypes = await getResources();
-    return NextResponse.json({ data: resourcesTypes }, { status: 200 });
+    const resourceTypes = await getResources();
+
+    console.log('api', resourceTypes);
+    return NextResponse.json({ data: resourceTypes }, { status: 200 });
   } catch (error) {
     return NextResponse.error().status;
   }

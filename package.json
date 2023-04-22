@@ -6,6 +6,7 @@
     "dev": "env-cmd -f config/.env.dev next dev",
     "build": "env-cmd -f config/.env.dev next build",
     "start": "env-cmd -f config/.env.prod next start",
+    "eutruc": "env-cmd -f .env next start",
     "lint": "next lint",
     "pg": "npx prisma generate",
     "pm": "npx prisma migrate dev",
