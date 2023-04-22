@@ -4,13 +4,13 @@ import { Resource, SellStatus, TransactionType } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../form/Button';
-import HookFormInputField from '../form/HookFormInputField';
-import ResourceTitle from '../ResourceTitle';
+import ResourceTitle from '../../ResourceTitle';
+import Button from '../../form/Button';
+import HookFormInputField from '../../form/HookFormInputField';
 import {
+  TransactionFormValidation,
   initialCalculatedValues,
   initialTransactionFormValues,
-  TransactionFormValidation,
 } from './constant';
 import styles from './transactionForm.module.scss';
 
@@ -111,85 +111,87 @@ function TransactionForm({
   };
 
   return (
-    <div className={styles.transactionForm}>
-      <ResourceTitle resource={resource} />
+    <section>
+      <div className={styles.transactionForm}>
+        <ResourceTitle resource={resource} />
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
-        <div className={styles.formContent}>
-          <div className={styles.formValues}>
-            <HookFormInputField
-              control={control}
-              name='quantity'
-              type='number'
-              label='quantité'
-              className={`${styles.quantity} ${
-                errors.quantity ? styles.error : ''
-              }`}
-              disabled={Boolean(!resource)}
-              trigger={trigger}
-              error={errors.quantity}
-            />
-            {type === TransactionType.SELL && (
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
+          <div className={styles.formContent}>
+            <div className={styles.formValues}>
               <HookFormInputField
                 control={control}
-                name='fee'
+                name='quantity'
                 type='number'
-                label='Fee'
-                className={styles.fee}
+                label='quantité'
+                className={`${styles.quantity} ${
+                  errors.quantity ? styles.error : ''
+                }`}
+                disabled={Boolean(!resource)}
+                trigger={trigger}
+                error={errors.quantity}
+              />
+              {type === TransactionType.SELL && (
+                <HookFormInputField
+                  control={control}
+                  name='fee'
+                  type='number'
+                  label='Fee'
+                  className={styles.fee}
+                  disabled={Boolean(!resource)}
+                />
+              )}
+              <HookFormInputField
+                control={control}
+                name='value'
+                type='number'
+                label='Prix de vente'
+                className={styles.buyValue}
                 disabled={Boolean(!resource)}
               />
-            )}
-            <HookFormInputField
-              control={control}
-              name='value'
-              type='number'
-              label='Prix de vente'
-              className={styles.buyValue}
-              disabled={Boolean(!resource)}
-            />
-          </div>
+            </div>
 
-          <div className={styles.calculatedValues}>
-            <p>
-              <span>Cout TT : </span>
-              {Number(calculatedValues.calculatedTT).toFixed(2)}
-              <span>ped(s)</span>
-            </p>
-
-            {type === TransactionType.BUY && (
+            <div className={styles.calculatedValues}>
               <p>
-                <span>Extra TT : </span>
-                {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
+                <span>Cout TT : </span>
+                {Number(calculatedValues.calculatedTT).toFixed(2)}
                 <span>ped(s)</span>
               </p>
-            )}
 
-            <p>
-              <span>Markup TTC: </span>
-              {Number(calculatedValues.markup).toFixed(2)}
-              <span>%</span>
-            </p>
-            {type === TransactionType.SELL && (
-              <>
+              {type === TransactionType.BUY && (
                 <p>
-                  <span>Bénéfice NET: </span>
-                  {Number(calculatedValues.benefit).toFixed(2)}
+                  <span>Extra TT : </span>
+                  {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
                   <span>ped(s)</span>
                 </p>
-                <p>
-                  <span>Markup NET: </span>
-                  {Number(calculatedValues.markupNet).toFixed(2)}
-                  <span>%</span>
-                </p>
-              </>
-            )}
+              )}
+
+              <p>
+                <span>Markup TTC: </span>
+                {Number(calculatedValues.markup).toFixed(2)}
+                <span>%</span>
+              </p>
+              {type === TransactionType.SELL && (
+                <>
+                  <p>
+                    <span>Bénéfice NET: </span>
+                    {Number(calculatedValues.benefit).toFixed(2)}
+                    <span>ped(s)</span>
+                  </p>
+                  <p>
+                    <span>Markup NET: </span>
+                    {Number(calculatedValues.markupNet).toFixed(2)}
+                    <span>%</span>
+                  </p>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-        <Button type='submit' primary>
-          {type === TransactionType.BUY ? 'Acheter' : 'Vendre'}
-        </Button>
-      </form>
-    </div>
+          <Button type='submit' primary>
+            {type === TransactionType.BUY ? 'Acheter' : 'Vendre'}
+          </Button>
+        </form>
+      </div>
+    </section>
   );
 }
 

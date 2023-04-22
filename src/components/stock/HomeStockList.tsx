@@ -1,10 +1,10 @@
-import GenericTable from '@/components/genericTable';
+import GenericTable from '@/components/generic/genericTable';
 import { fetchStock } from '@/lib/axios/requests/transaction';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import styles from './home.module.scss';
+import styles from './stock.module.scss';
 
-type HomeStockTableRow = Omit<IStockForTable, 'resourceId'>;
+type HomeStockTableRow = Omit<IHomeStockForTable, 'resourceId'>;
 const homeStockTableHeader: GenericHeadersTableType<HomeStockTableRow> = [
   { name: 'Nom', key: 'resourceName' },
   { name: 'Quantité', key: 'quantity' },
@@ -54,7 +54,7 @@ function HomeStockList(): JSX.Element {
   }, [data]);
 
   return (
-    <section className={styles.stockList}>
+    <section className={styles.homeStockList}>
       <GenericTable
         title='Stock'
         header={homeStockTableHeader}

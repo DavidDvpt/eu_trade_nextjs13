@@ -6,10 +6,10 @@ interface IStock {
 }
 type Stocks = IStock[];
 
-interface IStockForTable extends IStock {
+interface IHomeStockForTable extends IStock {
   value: string;
   quantity: string;
 }
 
-type HomeStockTableRow = Omit<IStockForTable, 'resourceId'>;
+type HomeStockTableRow = Omit<IHomeStockForTable, 'resourceId'>;
 type HomeStockTableRows = HomeStockTableRow[];

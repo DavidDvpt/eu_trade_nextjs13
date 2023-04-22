@@ -1,11 +1,13 @@
 import { TransactionsExtended } from '@/app/extendedAppTypes';
-import GenericTable from '@/components/genericTable';
+import GenericTable from '@/components/generic/genericTable';
 import { fetchTransactionsByResourceId } from '@/lib/axios/requests/transaction';
+import { TransactionType } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-import styles from './buy.module.scss';
 import { buyFooterRowParser, buyRowParser } from './buyLib';
+import styles from './transactionListByResourceId.module.scss';
+
 const header: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Date', key: 'date' },
   { name: 'Nom', key: 'name' },
@@ -16,10 +18,12 @@ const header: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Markup', key: 'markup' },
 ];
 interface IBuyTransactionResourceListProps {
-  resourceId?: string;
+  resourceId: string;
+  type: TransactionType;
 }
-function BuyTransactionResourceList({
+function TransactionListByResourceId({
   resourceId,
+  type,
 }: IBuyTransactionResourceListProps) {
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
@@ -28,7 +32,7 @@ function BuyTransactionResourceList({
     queryFn: async () => {
       const response = await fetchTransactionsByResourceId({
         id: resourceId,
-        type: 'BUY',
+        type,
       });
 
       return response as TransactionsExtended;
@@ -37,8 +41,6 @@ function BuyTransactionResourceList({
 
   useEffect(() => {
     if (data && !isEmpty(data)) {
-      const resource = data[0].resource;
-
       const footerRow: TransactionRow = {
         date: '',
         name: '',
@@ -79,10 +81,10 @@ function BuyTransactionResourceList({
   }, [data]);
 
   return (
-    <div className={styles.buyResourceTableContainer}>
+    <div className={styles.transactionByResourceIdTableContainer}>
       <GenericTable header={header} rows={rows ?? []} footerRow={totalRow} />
     </div>
   );
 }
 
-export default BuyTransactionResourceList;
+export default TransactionListByResourceId;

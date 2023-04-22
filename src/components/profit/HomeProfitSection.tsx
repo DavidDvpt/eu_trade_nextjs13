@@ -1,8 +1,9 @@
 import { fetchTransactionsBenefit } from '@/lib/axios/requests/transaction';
 import { getFixedNumber } from '@/lib/numberTools';
 import { useQuery } from '@tanstack/react-query';
-import styles from './benefit.module.scss';
-function BenefitHomeSection(): React.ReactElement {
+import styles from './profit.module.scss';
+
+function HomeProfitSection(): React.ReactElement {
   const { data } = useQuery({
     queryKey: ['totalBenefit'],
     queryFn: async () => {
@@ -35,4 +36,4 @@ function BenefitHomeSection(): React.ReactElement {
   );
 }
 
-export default BenefitHomeSection;
+export default HomeProfitSection;

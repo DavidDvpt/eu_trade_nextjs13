@@ -1,4 +1,4 @@
-import UnderConstruction from '@/components/underConstruction';
+import UnderConstruction from '@/components/common/underConstruction';
 
 function Stock(): React.ReactElement {
   return (

@@ -8,11 +8,6 @@ import {
   updateEntity,
 } from './genericRequests';
 
-interface IfetchTransactionsByResourceIdProps {
-  id?: string;
-  type?: 'BUY' | 'SELL' | 'MINING';
-}
-
 export async function fetchTransactions({
   sellStatus,
   transactionType,
@@ -43,7 +38,10 @@ export async function fetchTransactionsBenefit() {
 export async function fetchTransactionsByResourceId({
   id,
   type,
-}: IfetchTransactionsByResourceIdProps) {
+}: {
+  id: string;
+  type: TransactionType;
+}) {
   try {
     if (id) {
       const response = await fetchDatas<Transaction>(

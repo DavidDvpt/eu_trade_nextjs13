@@ -2,14 +2,15 @@
 
 import { Resource } from '@prisma/client';
 import { ChangeEvent, useState } from 'react';
-import GenericSelect from '../form/GenericSelect';
-import styles from './resourceSearch.module.scss';
+import GenericSelect from '../../form/GenericSelect';
 import ResourceSelect from './ResourceSelect';
 import ResourceTypeSelect from './ResourceTypeSelect';
+import styles from './resourceSearch.module.scss';
 
 interface IResourceSearchProps {
   onChange: (value: Resource) => void;
 }
+
 const inisitalValues = {
   type: '',
   resource: '',
