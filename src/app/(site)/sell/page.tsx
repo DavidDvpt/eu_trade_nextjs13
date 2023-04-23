@@ -8,6 +8,18 @@ import { Resource, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import AvailableQuantity from './AvailableQuantity';
 import styles from './sell.module.scss';
+
+const headers: GenericHeadersTableType<TransactionRowForTable> = [
+  { name: 'Date', key: 'date' },
+  { name: 'Nom', key: 'name' },
+  { name: 'Quantité', key: 'quantity' },
+  { name: 'Prix TT', key: 'ttCost' },
+  { name: 'Fee', key: 'fee' },
+  { name: 'Prix TTC', key: 'ttcCost' },
+  { name: 'Marge', key: 'extraCost' },
+  { name: 'Markup', key: 'markup' },
+];
+
 function Sell(): React.ReactElement {
   const [soldList, setSoldList] = useState<TransactionsExtended>([]);
   const [resource, setResource] = useState<Resource | null>(null);
@@ -43,6 +55,7 @@ function Sell(): React.ReactElement {
       {resource && (
         <section>
           <TransactionListByResourceId
+            headers={headers}
             resourceId={resource.id}
             type={TransactionType.SELL}
             exportList={handleExportList}

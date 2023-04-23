@@ -1,6 +1,6 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
 
-export const buyRowParser = (
+export const transactionRowParser = (
   e: TransactionExtended,
   ttCost: number
 ): TransactionRowForTable => {
@@ -10,19 +10,22 @@ export const buyRowParser = (
     quantity: e.quantity.toString(),
     ttCost: Number(ttCost).toFixed(2),
     ttcCost: Number(e.value).toFixed(2),
-    extraCost: Number(e.value - ttCost).toFixed(2),
+    extraCost: Number(e.value - ttCost - (e.fee ?? 0)).toFixed(2),
     markup: ttCost > 0 ? Number((e.value / ttCost) * 100).toFixed(2) : '-',
   };
+
+  if (e.fee) parsedRow.fee = Number(e.fee).toFixed(2);
 
   return parsedRow;
 };
 
-export const buyFooterRowParser = (
+export const transactionFooterRowParser = (
   row: TransactionRow
 ): TransactionRowForTable => {
-  const parsedRow = {
+  const parsedRow: TransactionRowForTable = {
     ...row,
     quantity: String(row.quantity),
+    fee: undefined,
     ttCost: Number(row.ttCost).toFixed(2),
     ttcCost: Number(row.ttcCost).toFixed(2),
     extraCost: Number(row.extraCost).toFixed(2),
@@ -31,6 +34,8 @@ export const buyFooterRowParser = (
         ? Number((row.ttcCost / row.ttCost) * 100).toFixed(2)
         : '-',
   };
+
+  if (row.fee) parsedRow.fee = Number(row.fee).toFixed(2);
 
   return parsedRow;
 };

@@ -5,20 +5,15 @@ import { TransactionType } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-import { buyFooterRowParser, buyRowParser } from './buyLib';
+import {
+  transactionFooterRowParser,
+  transactionRowParser,
+} from './transactionLib';
 import styles from './transactionListByResourceId.module.scss';
 
-const header: GenericHeadersTableType<TransactionRowForTable> = [
-  { name: 'Date', key: 'date' },
-  { name: 'Nom', key: 'name' },
-  { name: 'Quantité', key: 'quantity' },
-  { name: 'Cout TT', key: 'ttCost' },
-  { name: 'Cout TTC', key: 'ttcCost' },
-  { name: 'Cout Extra', key: 'extraCost' },
-  { name: 'Markup', key: 'markup' },
-];
 interface IBuyTransactionResourceListProps {
   resourceId: string;
+  headers: GenericHeadersTableType<TransactionRowForTable>;
   type: TransactionType;
   exportList?: (datas: TransactionsExtended) => void;
 }
@@ -26,6 +21,7 @@ function TransactionListByResourceId({
   resourceId,
   type,
   exportList,
+  headers,
 }: IBuyTransactionResourceListProps) {
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
@@ -53,16 +49,17 @@ function TransactionListByResourceId({
         extraCost: 0,
         markup: 0,
       };
+      if (type === TransactionType.SELL) footerRow.fee = 0;
 
       const parsedRows: TransactionRowsForTable = [];
 
       data?.forEach((e) => {
         const r = e.resource;
         const tt = e.quantity * r.value;
-        const ec = e.value - tt;
+        const ec = e.value - tt - (e.fee ?? 0);
 
         //create displayed row
-        const tableRow = buyRowParser(e, tt);
+        const tableRow = transactionRowParser(e, tt);
 
         parsedRows.push(tableRow);
 
@@ -71,12 +68,15 @@ function TransactionListByResourceId({
         footerRow.ttCost = footerRow.ttCost + tt;
         footerRow.ttcCost = footerRow.ttcCost + e.value;
         footerRow.extraCost = footerRow.extraCost + ec;
+        if (type === TransactionType.SELL && e.fee) {
+          footerRow.fee = (footerRow.fee as number) + e.fee;
+        }
       });
 
       footerRow.markup = (footerRow.ttcCost / footerRow.ttCost) * 100;
 
       const parsedFooterRow: TransactionRowForTable =
-        buyFooterRowParser(footerRow);
+        transactionFooterRowParser(footerRow);
 
       setRows(parsedRows);
       setTotalRow(parsedFooterRow);
@@ -85,7 +85,7 @@ function TransactionListByResourceId({
 
   return (
     <div className={styles.transactionByResourceIdTableContainer}>
-      <GenericTable header={header} rows={rows ?? []} footerRow={totalRow} />
+      <GenericTable header={headers} rows={rows ?? []} footerRow={totalRow} />
     </div>
   );
 }

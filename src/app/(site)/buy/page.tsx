@@ -7,6 +7,17 @@ import { Resource, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
 
+const headers: GenericHeadersTableType<TransactionRowForTable> = [
+  { name: 'Date', key: 'date' },
+  { name: 'Nom', key: 'name' },
+  { name: 'Quantité', key: 'quantity' },
+  { name: 'Cout TT', key: 'ttCost' },
+  { name: 'Cout TT', key: 'ttCost' },
+  { name: 'Cout TTC', key: 'ttcCost' },
+  { name: 'Cout Extra', key: 'extraCost' },
+  { name: 'Markup', key: 'markup' },
+];
+
 function Buy(): React.ReactElement {
   const [resource, setResource] = useState<Resource | null>(null);
   const handleChange = (value: Resource) => {
@@ -25,6 +36,7 @@ function Buy(): React.ReactElement {
         <section>
           <h4>Liste des précédents achats</h4>
           <TransactionListByResourceId
+            headers={headers}
             resourceId={resource?.id ?? ''}
             type={TransactionType.BUY}
           />

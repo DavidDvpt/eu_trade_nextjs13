@@ -125,7 +125,7 @@ export const enmatterRefinedDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
   { name: 'Magerian Spray', value: 0.5, imageUrlId: '1660' },
   { name: 'Melchi Crystal', value: 0.04, imageUrlId: '1904' },
   { name: 'Chalmon', value: 1.56, imageUrlId: '1730' },
-  { name: 'Typonolic Gas', value: 0.15, imageUrlId: '1662' },
+  { name: 'Typonolic Gas', value: 0.3, imageUrlId: '1662' },
   { name: 'Inhaler', value: 0.8, imageUrlId: '1901' },
 ];
 export const enmatterDatas: Omit<Resource, 'resourceTypeId' | 'id'>[] = [
