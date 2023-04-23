@@ -159,8 +159,8 @@ function TransactionForm({
           </>
         )}
       </div>
+      {lastSoldItem && <h5>Nouvelle vente</h5>}
 
-      <h5>Nouvelle vente</h5>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>
           <div className={styles.formValues}>
@@ -190,7 +190,9 @@ function TransactionForm({
               control={control}
               name='value'
               type='number'
-              label='Prix de vente'
+              label={
+                type === TransactionType.SELL ? 'Prix de vente' : "Prix d'achat"
+              }
               className={styles.buyValue}
               disabled={Boolean(!resource)}
             />
@@ -233,7 +235,7 @@ function TransactionForm({
           </div>
         </div>
         <Button type='submit' primary>
-          {type === TransactionType.BUY ? 'Acheter' : 'Vendre'}
+          {type === TransactionType.BUY ? 'Acheter' : 'Mettre en vente'}
         </Button>
       </form>
     </div>

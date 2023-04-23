@@ -17,7 +17,9 @@ function Buy(): React.ReactElement {
     <div className={styles.buy}>
       <ResourceSearch onChange={handleChange} />
 
-      <TransactionForm resource={resource} type={TransactionType.BUY} />
+      <section>
+        <TransactionForm resource={resource} type={TransactionType.BUY} />
+      </section>
 
       {resource && (
         <section>
