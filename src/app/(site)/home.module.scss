@@ -1,12 +1,12 @@
 @import '../../styles/main';
 
 .home {
-  @include flex-between-center;
+  @include flex-around-center;
   padding: 10px 0;
   height: 100%;
 
   > div {
-    width: 48%;
+    width: 49%;
     height: 100%;
   }
 }

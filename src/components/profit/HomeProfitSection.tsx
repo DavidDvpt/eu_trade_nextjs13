@@ -1,13 +1,13 @@
-import { fetchTransactionsBenefit } from '@/lib/axios/requests/transaction';
+import { fetchTransactionsProfit } from '@/lib/axios/requests/transaction';
 import { getFixedNumber } from '@/lib/numberTools';
 import { useQuery } from '@tanstack/react-query';
 import styles from './profit.module.scss';
 
 function HomeProfitSection(): React.ReactElement {
   const { data } = useQuery({
-    queryKey: ['totalBenefit'],
+    queryKey: ['totalProfit'],
     queryFn: async () => {
-      const response = await fetchTransactionsBenefit();
+      const response = await fetchTransactionsProfit();
       return response;
     },
   });

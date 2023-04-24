@@ -24,7 +24,7 @@ function UpdateTransactionButton({
         queryKey: ['sellProgressList'],
       });
       queryClient.invalidateQueries({
-        queryKey: ['totalBenefit'],
+        queryKey: ['totalProfit'],
       });
     },
   });

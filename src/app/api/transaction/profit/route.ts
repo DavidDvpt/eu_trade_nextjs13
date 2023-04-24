@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
       };
 
       const response = await getTransactions({ userId: token.id as string });
-
       response.forEach((t) => {
         t;
         const b = t.value - t.resource.value * t.quantity;
@@ -30,6 +29,7 @@ export async function GET(req: NextRequest) {
             result.sellBenefit += b - (t.fee ?? 0);
           }
         }
+        // console.log(result);
       });
 
       result.total = result.sellBenefit - result.feeLost - result.buy;

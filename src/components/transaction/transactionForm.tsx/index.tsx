@@ -62,7 +62,7 @@ function TransactionForm({
       setDatas();
       if (type === TransactionType.BUY) {
         queryClient.invalidateQueries({
-          queryKey: ['totalBenefit'],
+          queryKey: ['totalProfit'],
         });
       }
       if (type === TransactionType.SELL) {
@@ -70,7 +70,7 @@ function TransactionForm({
           queryKey: ['sellProgressList'],
         });
         queryClient.invalidateQueries({
-          queryKey: ['totalBenefit'],
+          queryKey: ['totalProfit'],
         });
       }
       queryClient.invalidateQueries({

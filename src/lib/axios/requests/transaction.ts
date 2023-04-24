@@ -24,10 +24,10 @@ export async function fetchTransactions({
     return Promise.reject(error);
   }
 }
-export async function fetchTransactionsBenefit() {
+export async function fetchTransactionsProfit() {
   try {
     const response = await fetchSingleData<TransactionBenefitResult>(
-      '/api/transaction/benefit'
+      '/api/transaction/profit'
     );
 
     return response;
