@@ -1,6 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import resourceReducer from '../resource/resourceSlice';
+import resourceTypeReducer from '../resourceType/resourceTypeSlice';
 
-const combinedReducers = combineReducers({});
+const combinedReducers = combineReducers({
+  resource: resourceReducer,
+  resourceType: resourceTypeReducer,
+});
 
 const rootReducer = (state: any, action: any) => {
   if (action.type === 'app/resetAll') {
