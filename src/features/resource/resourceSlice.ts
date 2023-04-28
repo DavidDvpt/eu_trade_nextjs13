@@ -2,7 +2,7 @@ import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: ResourceState = {
-  resources: { status: ApiStatusEnum.IDLE, result: null },
+  resources: { status: ApiStatusEnum.IDLE, result: null, error: null },
 };
 const resourceSlice = createSlice({
   name: 'resource',
