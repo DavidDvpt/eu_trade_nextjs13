@@ -16,6 +16,7 @@ export const getResourcesByTypeId = async (typeId: string) => {
       where: {
         resourceTypeId: typeId,
       },
+      orderBy: [{ name: 'asc' }],
     });
 
     return resources;

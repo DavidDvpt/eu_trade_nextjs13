@@ -8,7 +8,6 @@ export const fetchResourceTypesThunk = createAsyncThunk(
     try {
       const response = await fetchDatas<ResourceType>('/api/resourceType');
 
-      console.log(response);
       return response;
     } catch (error) {
       return Promise.reject(error);
