@@ -5,17 +5,18 @@ import { useEffect, useState } from 'react';
 import styles from './stock.module.scss';
 
 type HomeStockTableRow = Omit<IHomeStockForTable, 'resourceId'>;
+
 const homeStockTableHeader: GenericHeadersTableType<HomeStockTableRow> = [
-  { name: 'Nom', key: 'resourceName' },
+  { name: 'Nom', key: 'name' },
   { name: 'Quantité', key: 'quantity' },
-  { name: 'Valeur', key: 'value' },
+  { name: 'Valeur', key: 'price' },
 ];
 
 function HomeStockList(): JSX.Element {
   const [footerRow, setFooterRow] = useState<HomeStockTableRow>({
-    resourceName: '',
+    name: '',
     quantity: '',
-    value: '0',
+    price: '0',
   });
   const [rows, setRows] = useState<HomeStockTableRows>([]);
   const { data } = useQuery({
@@ -35,7 +36,7 @@ function HomeStockList(): JSX.Element {
         const temp: HomeStockTableRow = {
           ...e,
           quantity: String(e.quantity),
-          value: Number(e.value).toFixed(2),
+          price: Number(e.price).toFixed(2),
         };
         tempRows.push(temp);
       });
@@ -45,11 +46,11 @@ function HomeStockList(): JSX.Element {
       //footerRow
       const total = Number(
         data.reduce((t, c) => {
-          return (t += c.value);
+          return (t += c.price);
         }, 0)
       ).toFixed(2);
 
-      setFooterRow({ ...footerRow, value: total });
+      setFooterRow({ ...footerRow, price: total });
     }
   }, [data]);
 

@@ -20,6 +20,7 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 
 function Buy(): React.ReactElement {
   const [resource, setResource] = useState<Resource | null>(null);
+
   const handleChange = (value: Resource) => {
     setResource(value);
   };

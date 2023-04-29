@@ -10,12 +10,12 @@ import { useForm } from 'react-hook-form';
 import ResourceTitle from '../../common/ResourceTitle';
 import Button from '../../form/Button';
 import HookFormInputField from '../../form/HookFormInputField';
+import LastTransaction from './LastTransaction';
 import {
+  TransactionFormValidation,
   initialCalculatedValues,
   initialTransactionFormValues,
-  TransactionFormValidation,
 } from './constant';
-import LastTransaction from './LastTransaction';
 import styles from './transactionForm.module.scss';
 
 interface ITransactionFormProps {
@@ -92,6 +92,7 @@ function TransactionForm({
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       dispatch(postTransactionThunk(values));
+      reset();
     }
   };
 
@@ -99,7 +100,7 @@ function TransactionForm({
     <div className={styles.transactionForm}>
       <ResourceTitle resource={resource} />
 
-      {lastTransaction && (
+      {lastTransaction && type === TransactionType.SELL && (
         <>
           <LastTransaction item={lastTransaction} />
           <h5>Nouvelle vente</h5>

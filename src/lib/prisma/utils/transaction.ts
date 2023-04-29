@@ -1,30 +1,31 @@
+import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import client from '../../../../prisma/prismadb';
 
-// export async function getTransactions(params: {
-//   sellStatus?: SellStatus;
-//   transactionType?: TransactionType;
-//   userId: string;
-// }) {
-//   try {
-//     const response = await client.transaction.findMany({
-//       where: {
-//         sellStatus: params?.sellStatus ?? undefined,
-//         type: params?.transactionType ?? undefined,
-//         userId: params.userId,
-//       },
-//       include: { resource: true },
-//       orderBy: [{ createdAt: 'asc' }],
-//     });
+export async function getTransactions(params: {
+  sellStatus?: SellStatus;
+  transactionType?: TransactionType;
+  userId: string;
+}) {
+  try {
+    const response = await client.transaction.findMany({
+      where: {
+        sellStatus: params?.sellStatus ?? undefined,
+        type: params?.transactionType ?? undefined,
+        userId: params.userId,
+      },
+      include: { resource: true },
+      orderBy: [{ createdAt: 'asc' }],
+    });
 
-//     return response;
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// }
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
 export async function getTransactionsByResourceId(
   userId: string,
   resourceId: string,
-  type?: 'BUY' | 'SELL' | 'MINING'
+  type?: TransactionType
 ) {
   try {
     const transactions = await client.transaction.findMany({
@@ -87,43 +88,43 @@ export async function getStockByResourceId(
     return Promise.reject(error);
   }
 }
-// export async function postTransaction(data: any) {
-//   try {
-//     const transaction = await client.transaction.create({
-//       data: {
-//         type: data.transactionType,
-//         quantity: data.quantity,
-//         resourceId: data.resourceId,
-//         userId: data.userId,
-//         value: data.value,
-//         sellStatus: data.sellStatus,
-//         fee: data.fee,
-//       },
-//     });
+export async function postTransaction(data: any) {
+  try {
+    const transaction = await client.transaction.create({
+      data: {
+        type: data.transactionType,
+        quantity: data.quantity,
+        resourceId: data.resourceId,
+        userId: data.userId,
+        value: data.value,
+        sellStatus: data.sellStatus,
+        fee: data.fee,
+      },
+    });
 
-//     return transaction;
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// }
-// export async function putTransaction(data: Transaction) {
-//   try {
-//     const transaction = await client.transaction.update({
-//       where: { id: data.id },
-//       data: {
-//         type: data.type,
-//         quantity: data.quantity,
-//         resourceId: data.resourceId,
-//         userId: data.userId,
-//         value: data.value,
-//         sellStatus: data.sellStatus,
-//         fee: data.fee,
-//         modifiedAt: new Date().toISOString(),
-//       },
-//     });
+    return transaction;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+export async function putTransaction(data: Transaction) {
+  try {
+    const transaction = await client.transaction.update({
+      where: { id: data.id },
+      data: {
+        type: data.type,
+        quantity: data.quantity,
+        resourceId: data.resourceId,
+        userId: data.userId,
+        value: data.value,
+        sellStatus: data.sellStatus,
+        fee: data.fee,
+        modifiedAt: new Date().toISOString(),
+      },
+    });
 
-//     return transaction;
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// }
+    return transaction;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}

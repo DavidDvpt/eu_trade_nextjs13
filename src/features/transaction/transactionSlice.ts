@@ -3,7 +3,7 @@ import {
   TransactionsExtended,
 } from '@/app/extendedAppTypes';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
 import {
   fetchTransactionsThunk,
@@ -23,7 +23,6 @@ const transactionSlice = createSlice({
     builder
       .addCase(fetchTransactionsThunk.pending, (state) => {
         state.transactions.status = ApiStatusEnum.PENDING;
-        state.transactions.result = null;
         state.transactions.error = null;
       })
       .addCase(
@@ -38,7 +37,6 @@ const transactionSlice = createSlice({
         fetchTransactionsThunk.rejected,
         (state, action: PayloadAction<any>) => {
           state.transactions.status = ApiStatusEnum.REJECTED;
-          state.transactions.result = null;
           state.transactions.error = action.payload;
         }
       )

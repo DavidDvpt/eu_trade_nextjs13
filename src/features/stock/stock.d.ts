@@ -11,10 +11,10 @@ type StockState = {
   simpleStockList: ApiType<SimpleStocks | null>;
 };
 
-// interface IStock {
-//   resourceId: string;
-//   resourceName: string;
-//   quantity: number;
-//   value: number;
-// }
-// type Stocks = IStock[];
+interface IHomeStockForTable extends SimpleStock {
+  quantity: string;
+  price: string;
+}
+
+type HomeStockTableRow = Omit<IHomeStockForTable, 'resourceId'>;
+type HomeStockTableRows = HomeStockTableRow[];

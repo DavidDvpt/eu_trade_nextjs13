@@ -1,6 +1,6 @@
+import { putTransaction } from '@/lib/prisma/utils/transaction';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
-import client from '../../../../../prisma/prismadb';
 
 export async function PUT(
   req: NextRequest,
@@ -9,29 +9,9 @@ export async function PUT(
   try {
     const token: any = await getToken({ req });
     const res = await req.json();
-    console.log(
-      token.id,
-      res.userId,
-      token.id === res.userId,
-      params.id,
-      res.id,
-      params.id === res.id
-    );
 
     if (token.id === res.userId && params.id === res.id) {
-      const transaction = await client.transaction.update({
-        where: { id: params.id },
-        data: {
-          type: res.type,
-          quantity: res.quantity,
-          resourceId: res.resourceId,
-          userId: res.userId,
-          value: res.value,
-          sellStatus: res.sellStatus,
-          fee: res.fee,
-          modifiedAt: new Date().toISOString(),
-        },
-      });
+      const transaction = await putTransaction(res);
 
       return NextResponse.json({ data: transaction }, { status: 200 });
     } else {

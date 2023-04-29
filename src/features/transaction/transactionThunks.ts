@@ -23,7 +23,7 @@ export const fetchTransactionsThunk = createAsyncThunk(
       const response = await fetchDatas<TransactionExtended>(url, {
         params: { sellStatus, type },
       });
-
+      console.log('thunk', response);
       return response;
     } catch (error) {
       return Promise.reject(error);
@@ -39,7 +39,12 @@ export const postTransactionThunk = createAsyncThunk(
         body: params,
       });
 
-      tools.dispatch(fetchTransactionsThunk({ type: TransactionType.BUY }));
+      tools.dispatch(
+        fetchTransactionsThunk({
+          type: params.transactionType,
+          resourceId: params.resourceId,
+        })
+      );
       if (params.transactionType === TransactionType.SELL) {
         tools.dispatch(stockActions.singleQtySubstract(params.quantity));
       }
