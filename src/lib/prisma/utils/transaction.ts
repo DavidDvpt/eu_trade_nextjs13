@@ -1,4 +1,4 @@
-import { SellStatus, Transaction, TransactionType } from '@prisma/client';
+import { SellStatus, TransactionType } from '@prisma/client';
 import client from '../../../../prisma/prismadb';
 
 export async function getTransactions(params: {
@@ -107,24 +107,24 @@ export async function postTransaction(data: any) {
     return Promise.reject(error);
   }
 }
-export async function putTransaction(data: Transaction) {
-  try {
-    const transaction = await client.transaction.update({
-      where: { id: data.id },
-      data: {
-        type: data.type,
-        quantity: data.quantity,
-        resourceId: data.resourceId,
-        userId: data.userId,
-        value: data.value,
-        sellStatus: data.sellStatus,
-        fee: data.fee,
-        modifiedAt: new Date().toISOString(),
-      },
-    });
+// export async function putTransaction(data: Transaction) {
+//   try {
+//     const transaction = await client.transaction.update({
+//       where: { id: data.id },
+//       data: {
+//         type: data.type,
+//         quantity: data.quantity,
+//         resourceId: data.resourceId,
+//         userId: data.userId,
+//         value: data.value,
+//         sellStatus: data.sellStatus,
+//         fee: data.fee,
+//         modifiedAt: new Date().toISOString(),
+//       },
+//     });
 
-    return transaction;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
+//     return transaction;
+//   } catch (error) {
+//     return Promise.reject(error);
+//   }
+// }

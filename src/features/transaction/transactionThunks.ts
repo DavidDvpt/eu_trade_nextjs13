@@ -1,6 +1,10 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
-import { fetchDatas, postEntity } from '@/lib/axios/requests/genericRequests';
-import { TransactionType } from '@prisma/client';
+import {
+  fetchDatas,
+  postEntity,
+  updateEntity,
+} from '@/lib/axios/requests/genericRequests';
+import { SellStatus, TransactionType } from '@prisma/client';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { stockActions } from '../stock/stockSlice';
 
@@ -26,7 +30,6 @@ export const fetchTransactionsThunk = createAsyncThunk(
     }
   }
 );
-
 export const postTransactionThunk = createAsyncThunk(
   'transaction/postTransactionThunk',
   async (params: TransactionFormType, tools) => {
@@ -43,6 +46,36 @@ export const postTransactionThunk = createAsyncThunk(
       if (params.transactionType === TransactionType.BUY) {
       }
       return response;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+);
+export const updateTransactionThunk = createAsyncThunk(
+  'transaction/updateTransactionThunk',
+  async (
+    params: { transaction: TransactionExtended; sellStatus?: SellStatus },
+    tools
+  ) => {
+    try {
+      console.log(params);
+      const { transaction, sellStatus } = params;
+      if (transaction.id) {
+        const response = await updateEntity({
+          url: `/api/transaction/${transaction.id}`,
+          body: transaction,
+        });
+
+        tools.dispatch(
+          fetchTransactionsThunk({ type: transaction.type, sellStatus })
+        );
+
+        if (transaction.type === TransactionType.SELL) {
+        }
+        if (transaction.type === TransactionType.BUY) {
+        }
+        return response;
+      }
     } catch (error) {
       return Promise.reject(error);
     }
