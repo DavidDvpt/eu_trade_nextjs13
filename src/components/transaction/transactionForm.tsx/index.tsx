@@ -1,9 +1,10 @@
-import { TransactionExtended } from '@/app/extendedAppTypes';
-import { useAppDispatch } from '@/features/store/hooks';
+import { getStockState } from '@/features/stock/stockSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
+import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Resource, SellStatus, TransactionType } from '@prisma/client';
-import { useQueryClient } from '@tanstack/react-query';
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ResourceTitle from '../../common/ResourceTitle';
@@ -14,24 +15,27 @@ import {
   initialTransactionFormValues,
   TransactionFormValidation,
 } from './constant';
+import LastTransaction from './LastTransaction';
 import styles from './transactionForm.module.scss';
 
 interface ITransactionFormProps {
   resource: Resource | null;
   type: TransactionType;
-  avaliableQty?: number;
-  lastSoldItem?: TransactionExtended;
 }
 
 function TransactionForm({
   resource,
   type,
-  avaliableQty = 0,
-  lastSoldItem,
 }: ITransactionFormProps): React.ReactElement {
-  const queryClient = useQueryClient();
+  const { singleResourceQty } = useAppSelector(getStockState);
+  const { transactions } = useAppSelector(getTransactionState);
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
+
+  const lastTransaction =
+    transactions.result && !isEmpty(transactions.result)
+      ? transactions.result[0]
+      : undefined;
   const {
     formState: { isValid, errors },
     watch,
@@ -42,7 +46,7 @@ function TransactionForm({
     control,
   } = useForm<TransactionFormType>({
     defaultValues: initialTransactionFormValues,
-    resolver: yupResolver(TransactionFormValidation(avaliableQty)),
+    resolver: yupResolver(TransactionFormValidation(singleResourceQty.result)),
   });
 
   const dispatch = useAppDispatch();
@@ -57,33 +61,6 @@ function TransactionForm({
       }
     }
   };
-
-  // const { mutate } = useMutation(createTransaction, {
-  //   onSuccess: (data) => {
-  //     reset();
-  //     setDatas();
-  //     if (type === TransactionType.BUY) {
-  //       queryClient.invalidateQueries({
-  //         queryKey: ['totalProfit'],
-  //       });
-  //     }
-  //     if (type === TransactionType.SELL) {
-  //       queryClient.invalidateQueries({
-  //         queryKey: ['sellProgressList'],
-  //       });
-  //       queryClient.invalidateQueries({
-  //         queryKey: ['totalProfit'],
-  //       });
-  //     }
-  //     queryClient.invalidateQueries({
-  //       queryKey: ['availableResourceQuantity'],
-  //     });
-  //     queryClient.invalidateQueries({
-  //       queryKey: ['transactionList'],
-  //     });
-  //     return data;
-  //   },
-  // });
 
   useEffect(() => {
     setDatas();
@@ -112,21 +89,6 @@ function TransactionForm({
     }
   }, [quantity, value, fee, resource]);
 
-  const handleUseLastSold = () => {
-    if (lastSoldItem) {
-      const { fee, quantity, resourceId, value } = lastSoldItem;
-      const t = {
-        fee: fee ?? 0,
-        quantity,
-        resourceId,
-        transactionType: TransactionType.SELL,
-        sellStatus: SellStatus.PROGRESS,
-        value,
-      };
-
-      dispatch(postTransactionThunk(t));
-    }
-  };
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       dispatch(postTransactionThunk(values));
@@ -137,31 +99,12 @@ function TransactionForm({
     <div className={styles.transactionForm}>
       <ResourceTitle resource={resource} />
 
-      <div className={styles.lastSell}>
-        {lastSoldItem && (
-          <>
-            <h5>Vente à partir de l&#0039;ancienne transaction</h5>
-            <div>
-              <table>
-                <tr>
-                  <th>Quantité</th>
-                  <th>Fee</th>
-                  <th>Valeur</th>
-                </tr>
-                <tr>
-                  <td>{lastSoldItem?.quantity}</td>
-                  <td>{lastSoldItem?.fee}</td>
-                  <td>{lastSoldItem?.value}</td>
-                </tr>
-              </table>
-              <Button type='button' onClick={handleUseLastSold} primary>
-                Créer vente
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-      {lastSoldItem && <h5>Nouvelle vente</h5>}
+      {lastTransaction && (
+        <>
+          <LastTransaction item={lastTransaction} />
+          <h5>Nouvelle vente</h5>
+        </>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>

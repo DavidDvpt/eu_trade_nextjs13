@@ -21,8 +21,9 @@ export const TransactionFormValidation = (maxQty: number) => {
     resourceId: yup.string().required(),
     quantity: yup
       .number()
+      .transform((value) => (isNaN(value) ? 0 : value))
       .required('Quantité requise')
-      .moreThan(0)
+      .min(0, 'La valeur ne peut pas être négative')
       .when('transactionType', {
         is: 'SELL',
         then: (schema) => schema.max(maxQty, 'Stock insuffisant'),

@@ -2,6 +2,7 @@ import { TransactionExtended } from '@/app/extendedAppTypes';
 import { fetchDatas, postEntity } from '@/lib/axios/requests/genericRequests';
 import { TransactionType } from '@prisma/client';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { stockActions } from '../stock/stockSlice';
 
 export const fetchTransactionsThunk = createAsyncThunk(
   'transaction/fetchTransactionsThunk',
@@ -35,10 +36,11 @@ export const postTransactionThunk = createAsyncThunk(
         body: params,
       });
 
+      tools.dispatch(fetchTransactionsThunk({ type: TransactionType.BUY }));
       if (params.transactionType === TransactionType.SELL) {
+        tools.dispatch(stockActions.singleQtySubstract(params.quantity));
       }
       if (params.transactionType === TransactionType.BUY) {
-        tools.dispatch(fetchTransactionsThunk({ type: TransactionType.BUY }));
       }
       return response;
     } catch (error) {

@@ -21,30 +21,17 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 
 function Sell(): React.ReactElement {
   const [resource, setResource] = useState<Resource | null>(null);
-  const [avaliableQuantity, setAvaliableQuantity] = useState(0);
 
   const handleChange = (value: Resource) => {
     setResource(value);
-  };
-
-  const handleQuantity = (value: number) => {
-    setAvaliableQuantity(value);
   };
 
   return (
     <div className={styles.sell}>
       <ResourceSearch onChange={handleChange} />
       <section>
-        <AvailableQuantity
-          resourceId={resource?.id ?? null}
-          setQuantity={handleQuantity}
-        />
-        <TransactionForm
-          resource={resource}
-          type={TransactionType.SELL}
-          avaliableQty={avaliableQuantity}
-          lastSoldItem={undefined}
-        />
+        <AvailableQuantity resourceId={resource?.id ?? null} />
+        <TransactionForm resource={resource} type={TransactionType.SELL} />
       </section>
       {resource && (
         <section>
