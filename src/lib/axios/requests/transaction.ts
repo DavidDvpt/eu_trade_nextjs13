@@ -1,5 +1,5 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
-import { fetchDatas, fetchSingleData, updateEntity } from './genericRequests';
+import { fetchSingleData, updateEntity } from './genericRequests';
 
 export async function fetchTransactionsProfit() {
   try {
@@ -12,15 +12,15 @@ export async function fetchTransactionsProfit() {
     return Promise.reject(error);
   }
 }
-export async function fetchStock() {
-  try {
-    const stocks = await fetchDatas<SimpleStock>(`/api/transaction/stock`);
+// export async function fetchStock() {
+//   try {
+//     const stocks = await fetchDatas<SimpleStock>(`/api/transaction/stock`);
 
-    return stocks;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
+//     return stocks;
+//   } catch (error) {
+//     return Promise.reject(error);
+//   }
+// }
 export async function updateTransaction(transaction: TransactionExtended) {
   try {
     const response = await updateEntity({

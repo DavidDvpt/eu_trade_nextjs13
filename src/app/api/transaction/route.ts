@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const token = await getToken({ req });
 
     if (token?.id) {
-      const response = getTransactions({
+      const response = await getTransactions({
         sellStatus: (searchParams.get('sellStatus') as SellStatus) ?? undefined,
         transactionType:
           (searchParams.get('transactionType') as TransactionType) ?? undefined,

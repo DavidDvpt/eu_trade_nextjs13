@@ -1,6 +1,7 @@
 import GenericTable from '@/components/generic/genericTable';
-import { fetchStock } from '@/lib/axios/requests/transaction';
-import { useQuery } from '@tanstack/react-query';
+import { getStockState, stockActions } from '@/features/stock/stockSlice';
+import { fetchSimpleStockListThunk } from '@/features/stock/stockThunks';
+import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { useEffect, useState } from 'react';
 import styles from './stock.module.scss';
 
@@ -12,27 +13,29 @@ const homeStockTableHeader: GenericHeadersTableType<HomeStockTableRow> = [
   { name: 'Valeur', key: 'price' },
 ];
 
-function HomeStockList(): JSX.Element {
+function SimpleStockList(): JSX.Element {
+  const { simpleStockList } = useAppSelector(getStockState);
+  const dispatch = useAppDispatch();
   const [footerRow, setFooterRow] = useState<HomeStockTableRow>({
     name: '',
     quantity: '',
     price: '0',
   });
   const [rows, setRows] = useState<HomeStockTableRows>([]);
-  const { data } = useQuery({
-    queryKey: ['homeStockList'],
-    queryFn: async () => {
-      const response = await fetchStock();
-
-      return response;
-    },
-  });
 
   useEffect(() => {
-    if (data) {
+    dispatch(fetchSimpleStockListThunk());
+
+    return () => {
+      dispatch(stockActions.simpleStockListReset());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (simpleStockList.result) {
       const tempRows: HomeStockTableRows = [];
 
-      data.forEach((e) => {
+      simpleStockList.result.forEach((e) => {
         const temp: HomeStockTableRow = {
           ...e,
           quantity: String(e.quantity),
@@ -45,14 +48,14 @@ function HomeStockList(): JSX.Element {
 
       //footerRow
       const total = Number(
-        data.reduce((t, c) => {
+        simpleStockList.result.reduce((t, c) => {
           return (t += c.price);
         }, 0)
       ).toFixed(2);
 
       setFooterRow({ ...footerRow, price: total });
     }
-  }, [data]);
+  }, [simpleStockList.result]);
 
   return (
     <section className={styles.homeStockList}>
@@ -66,4 +69,4 @@ function HomeStockList(): JSX.Element {
   );
 }
 
-export default HomeStockList;
+export default SimpleStockList;
