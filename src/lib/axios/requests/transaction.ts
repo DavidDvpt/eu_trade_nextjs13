@@ -1,5 +1,5 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
-import { SellStatus, Transaction, TransactionType } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import axios from 'axios';
 import {
   fetchDatas,
@@ -8,22 +8,6 @@ import {
   updateEntity,
 } from './genericRequests';
 
-export async function fetchTransactions({
-  sellStatus,
-  transactionType,
-}: {
-  sellStatus?: SellStatus;
-  transactionType?: TransactionType;
-}) {
-  try {
-    const response = await fetchDatas<TransactionExtended>('/api/transaction', {
-      params: { sellStatus, transactionType },
-    });
-    return response;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
 export async function fetchTransactionsProfit() {
   try {
     const response = await fetchSingleData<TransactionBenefitResult>(
@@ -31,27 +15,6 @@ export async function fetchTransactionsProfit() {
     );
 
     return response;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
-export async function fetchTransactionsByResourceId({
-  id,
-  type,
-}: {
-  id: string;
-  type: TransactionType;
-}) {
-  try {
-    if (id) {
-      const response = await fetchDatas<Transaction>(
-        `/api/resource/${id}/transactions`,
-        { params: { type } }
-      );
-      return response;
-    } else {
-      return [];
-    }
   } catch (error) {
     return Promise.reject(error);
   }

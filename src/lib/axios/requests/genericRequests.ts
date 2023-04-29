@@ -3,7 +3,6 @@ import axiosInstance from '../AxiosInstance';
 
 export async function fetchDatas<T>(
   endpoint: string,
-
   params?: AxiosRequestConfig
 ) {
   try {
@@ -20,7 +19,6 @@ export async function fetchDatas<T>(
 
 export async function fetchSingleData<T>(
   endpoint: string,
-
   params?: AxiosRequestConfig
 ) {
   try {

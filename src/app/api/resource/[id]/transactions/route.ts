@@ -8,6 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { searchParams } = new URL(req.url);
+
   const type = searchParams.get('type');
   const token: any = await getToken({ req });
 

@@ -2,7 +2,6 @@ import {
   getTransactions,
   postTransaction,
 } from '@/lib/prisma/utils/transaction';
-import { SellStatus, TransactionType } from '@prisma/client';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -13,8 +12,8 @@ export async function GET(req: NextRequest) {
 
     if (token?.id) {
       const response = await getTransactions({
-        sellStatus: searchParams.get('sellStatus') as SellStatus,
-        transactionType: searchParams.get('transactionType') as TransactionType,
+        sellStatus: searchParams.get('sellStatus') as any,
+        transactionType: searchParams.get('transactionType') as any,
         userId: token.id as string,
       });
       return NextResponse.json({ data: response }, { status: 200 });

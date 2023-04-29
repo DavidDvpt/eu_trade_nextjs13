@@ -23,15 +23,15 @@ export async function getTransactions(params: {
 }
 export async function getTransactionsByResourceId(
   userId: string,
-  id: string,
+  resourceId: string,
   type?: 'BUY' | 'SELL' | 'MINING'
 ) {
   try {
-    const transactions = client.transaction.findMany({
+    const transactions = await client.transaction.findMany({
       where: {
         userId,
-        resourceId: id,
-        type: type ?? undefined,
+        resourceId,
+        type: type,
       },
       include: {
         resource: true,

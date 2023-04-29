@@ -1,8 +1,6 @@
-import { TransactionsExtended } from '@/app/extendedAppTypes';
 import GenericTable from '@/components/generic/genericTable';
-import { fetchTransactionsByResourceId } from '@/lib/axios/requests/transaction';
+import useTransactions from '@/features/transaction/useTransaction';
 import { TransactionType } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import {
@@ -15,31 +13,18 @@ interface IBuyTransactionResourceListProps {
   resourceId: string;
   headers: GenericHeadersTableType<TransactionRowForTable>;
   type: TransactionType;
-  exportList?: (datas: TransactionsExtended) => void;
 }
 function TransactionListByResourceId({
   resourceId,
   type,
-  exportList,
   headers,
 }: IBuyTransactionResourceListProps) {
+  const { transactions } = useTransactions({ resourceId, type });
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
-  const { data } = useQuery({
-    queryKey: ['transactionList', resourceId],
-    queryFn: async () => {
-      const response = await fetchTransactionsByResourceId({
-        id: resourceId,
-        type,
-      });
-
-      return response as TransactionsExtended;
-    },
-  });
 
   useEffect(() => {
-    if (data && !isEmpty(data)) {
-      exportList && exportList(data);
+    if (transactions && !isEmpty(transactions)) {
       const footerRow: TransactionRow = {
         date: '',
         name: '',
@@ -49,11 +34,12 @@ function TransactionListByResourceId({
         extraCost: 0,
         markup: 0,
       };
+
       if (type === TransactionType.SELL) footerRow.fee = 0;
 
       const parsedRows: TransactionRowsForTable = [];
 
-      data?.forEach((e) => {
+      transactions?.forEach((e) => {
         const r = e.resource;
         const tt = e.quantity * r.value;
         const ec = e.value - tt - (e.fee ?? 0);
@@ -61,7 +47,7 @@ function TransactionListByResourceId({
         //create displayed row
         const tableRow = transactionRowParser(e, tt);
 
-        parsedRows.push(tableRow);
+        parsedRows.unshift(tableRow);
 
         // create footer row
         footerRow.quantity = footerRow.quantity + e.quantity;
@@ -81,7 +67,7 @@ function TransactionListByResourceId({
       setRows(parsedRows);
       setTotalRow(parsedFooterRow);
     }
-  }, [data]);
+  }, [transactions]);
 
   return (
     <div className={styles.transactionByResourceIdTableContainer}>
