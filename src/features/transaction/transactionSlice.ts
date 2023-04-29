@@ -1,13 +1,20 @@
-import { TransactionsExtended } from '@/app/extendedAppTypes';
+import {
+  TransactionExtended,
+  TransactionsExtended,
+} from '@/app/extendedAppTypes';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
-import { fetchTransactionsThunk } from './transactionThunks';
+import {
+  fetchTransactionsThunk,
+  postTransactionThunk,
+} from './transactionThunks';
 
 const initialState: TransactionState = {
   transactions: { status: ApiStatusEnum.IDLE, result: null, error: null },
-  mutateStatus: ApiStatusEnum.IDLE,
+  mutateStatus: { status: ApiStatusEnum.IDLE, result: null, error: null },
 };
+
 const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
@@ -33,6 +40,27 @@ const transactionSlice = createSlice({
           state.transactions.status = ApiStatusEnum.REJECTED;
           state.transactions.result = null;
           state.transactions.error = action.payload;
+        }
+      )
+      .addCase(postTransactionThunk.pending, (state) => {
+        state.mutateStatus.status = ApiStatusEnum.PENDING;
+        state.mutateStatus.result = null;
+        state.mutateStatus.error = null;
+      })
+      .addCase(
+        postTransactionThunk.fulfilled,
+        (state, action: PayloadAction<TransactionExtended>) => {
+          state.mutateStatus.status = ApiStatusEnum.PENDING;
+          state.mutateStatus.result = action.payload;
+          state.mutateStatus.error = null;
+        }
+      )
+      .addCase(
+        postTransactionThunk.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.mutateStatus.status = ApiStatusEnum.PENDING;
+          state.mutateStatus.result = null;
+          state.mutateStatus.error = action.payload;
         }
       );
   },

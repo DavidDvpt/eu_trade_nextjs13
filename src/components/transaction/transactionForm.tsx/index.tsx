@@ -1,17 +1,18 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
-import { createTransaction } from '@/lib/axios/requests/transaction';
+import { useAppDispatch } from '@/features/store/hooks';
+import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Resource, SellStatus, TransactionType } from '@prisma/client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ResourceTitle from '../../common/ResourceTitle';
 import Button from '../../form/Button';
 import HookFormInputField from '../../form/HookFormInputField';
 import {
-  TransactionFormValidation,
   initialCalculatedValues,
   initialTransactionFormValues,
+  TransactionFormValidation,
 } from './constant';
 import styles from './transactionForm.module.scss';
 
@@ -44,6 +45,7 @@ function TransactionForm({
     resolver: yupResolver(TransactionFormValidation(avaliableQty)),
   });
 
+  const dispatch = useAppDispatch();
   const setDatas = () => {
     if (resource) {
       setValue('resourceId', resource.id);
@@ -56,32 +58,32 @@ function TransactionForm({
     }
   };
 
-  const { mutate } = useMutation(createTransaction, {
-    onSuccess: (data) => {
-      reset();
-      setDatas();
-      if (type === TransactionType.BUY) {
-        queryClient.invalidateQueries({
-          queryKey: ['totalProfit'],
-        });
-      }
-      if (type === TransactionType.SELL) {
-        queryClient.invalidateQueries({
-          queryKey: ['sellProgressList'],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ['totalProfit'],
-        });
-      }
-      queryClient.invalidateQueries({
-        queryKey: ['availableResourceQuantity'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['transactionList'],
-      });
-      return data;
-    },
-  });
+  // const { mutate } = useMutation(createTransaction, {
+  //   onSuccess: (data) => {
+  //     reset();
+  //     setDatas();
+  //     if (type === TransactionType.BUY) {
+  //       queryClient.invalidateQueries({
+  //         queryKey: ['totalProfit'],
+  //       });
+  //     }
+  //     if (type === TransactionType.SELL) {
+  //       queryClient.invalidateQueries({
+  //         queryKey: ['sellProgressList'],
+  //       });
+  //       queryClient.invalidateQueries({
+  //         queryKey: ['totalProfit'],
+  //       });
+  //     }
+  //     queryClient.invalidateQueries({
+  //       queryKey: ['availableResourceQuantity'],
+  //     });
+  //     queryClient.invalidateQueries({
+  //       queryKey: ['transactionList'],
+  //     });
+  //     return data;
+  //   },
+  // });
 
   useEffect(() => {
     setDatas();
@@ -114,7 +116,7 @@ function TransactionForm({
     if (lastSoldItem) {
       const { fee, quantity, resourceId, value } = lastSoldItem;
       const t = {
-        fee,
+        fee: fee ?? 0,
         quantity,
         resourceId,
         transactionType: TransactionType.SELL,
@@ -122,12 +124,12 @@ function TransactionForm({
         value,
       };
 
-      mutate(t);
+      dispatch(postTransactionThunk(t));
     }
   };
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
-      mutate(values);
+      dispatch(postTransactionThunk(values));
     }
   };
 

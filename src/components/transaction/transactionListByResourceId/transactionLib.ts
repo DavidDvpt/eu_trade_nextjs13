@@ -9,6 +9,7 @@ export const transactionRowParser = (
     name: e.resource.name,
     quantity: e.quantity.toString(),
     ttCost: Number(ttCost).toFixed(2),
+    fee: Number(e.fee ?? 0).toFixed(2),
     ttcCost: Number(e.value).toFixed(2),
     extraCost: Number(e.value - ttCost - (e.fee ?? 0)).toFixed(2),
     markup: ttCost > 0 ? Number((e.value / ttCost) * 100).toFixed(2) : '-',

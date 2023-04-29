@@ -1,6 +1,6 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
 import { fetchDatas, postEntity } from '@/lib/axios/requests/genericRequests';
-import { Transaction, TransactionType } from '@prisma/client';
+import { TransactionType } from '@prisma/client';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchTransactionsThunk = createAsyncThunk(
@@ -30,7 +30,7 @@ export const postTransactionThunk = createAsyncThunk(
   'transaction/postTransactionThunk',
   async (params: TransactionFormType, tools) => {
     try {
-      const response = await postEntity<Transaction>({
+      const response = await postEntity<TransactionExtended>({
         url: '/api/transaction',
         body: params,
       });
@@ -38,6 +38,7 @@ export const postTransactionThunk = createAsyncThunk(
       if (params.transactionType === TransactionType.SELL) {
       }
       if (params.transactionType === TransactionType.BUY) {
+        tools.dispatch(fetchTransactionsThunk({ type: TransactionType.BUY }));
       }
       return response;
     } catch (error) {

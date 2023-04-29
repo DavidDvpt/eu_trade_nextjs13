@@ -2,7 +2,9 @@ type TransactionState = {
   transactions: ApiType<
     import('@/app/extendedAppTypes').TransactionsExtended | null
   >;
-  mutateStatus: import('@/lib/axios/apiTypes').ApiStatusEnum;
+  mutateStatus: ApiType<
+    import('@/app/extendedAppTypes').TransactionExtended | null
+  >;
 };
 
 interface IFetchTransactionsParams {

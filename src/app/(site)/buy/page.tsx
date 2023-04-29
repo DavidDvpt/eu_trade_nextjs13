@@ -12,7 +12,7 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Nom', key: 'name' },
   { name: 'Quantité', key: 'quantity' },
   { name: 'Cout TT', key: 'ttCost' },
-  { name: 'Cout TT', key: 'ttCost' },
+  // { name: 'Fee', key: 'fee' },
   { name: 'Cout TTC', key: 'ttcCost' },
   { name: 'Cout Extra', key: 'extraCost' },
   { name: 'Markup', key: 'markup' },

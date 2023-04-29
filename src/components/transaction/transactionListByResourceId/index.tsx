@@ -30,6 +30,7 @@ function TransactionListByResourceId({
         name: '',
         quantity: 0,
         ttCost: 0,
+        // fee: 0,
         ttcCost: 0,
         extraCost: 0,
         markup: 0,

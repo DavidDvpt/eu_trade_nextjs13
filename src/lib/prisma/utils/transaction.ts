@@ -14,6 +14,7 @@ export async function getTransactions(params: {
         userId: params.userId,
       },
       include: { resource: true },
+      orderBy: [{ createdAt: 'asc' }],
     });
 
     return response;
