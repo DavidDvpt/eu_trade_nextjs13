@@ -14,7 +14,7 @@ export async function fetchTransactionsProfit() {
 }
 export async function fetchStock() {
   try {
-    const stocks = await fetchDatas<IStock>(`/api/transaction/stock`);
+    const stocks = await fetchDatas<SimpleStock>(`/api/transaction/stock`);
 
     return stocks;
   } catch (error) {

@@ -5,6 +5,7 @@ import { fetchSingleResourceQuantity } from './stockThunks';
 
 const initialState: StockState = {
   singleResourceQty: { status: ApiStatusEnum.IDLE, result: 0, error: null },
+  simpleStockList: { status: ApiStatusEnum.IDLE, result: null, error: null },
 };
 const stockSlice = createSlice({
   name: 'stock',

@@ -11,8 +11,8 @@ export async function GET(req: NextRequest) {
       const stocks = await getStock(token.id as string);
       const resources = await getResources();
 
-      const result: Stocks = [];
-      let c: IStock | null = null;
+      const result: SimpleStocks = [];
+      let c: SimpleStock | null = null;
       let cr: Resource | null = null;
       for (let i = 0; i < stocks.length; i++) {
         const e = stocks[i];
@@ -26,9 +26,9 @@ export async function GET(req: NextRequest) {
         const setCurrent = () => {
           return {
             resourceId: e.resourceId,
-            resourceName: cr?.name ?? '',
+            name: cr?.name ?? '',
             quantity: q,
-            value: 0,
+            price: 0,
           };
         };
         if (!c) {
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
           c = setCurrent();
         } else {
           if (c.resourceId !== e.resourceId) {
-            c.value = c.quantity * (cr as Resource)?.value;
+            c.price = c.quantity * (cr as Resource)?.value;
             result.push(c);
             cr = setResource();
             c = setCurrent();
@@ -46,14 +46,12 @@ export async function GET(req: NextRequest) {
         }
 
         if (i === stocks.length - 1) {
-          c.value = c.quantity * (cr as Resource)?.value;
+          c.price = c.quantity * (cr as Resource)?.value;
           result.push(c);
         }
       }
 
-      const sorted = result.sort((a, b) =>
-        a.resourceName > b.resourceName ? 1 : -1
-      );
+      const sorted = result.sort((a, b) => (a.name > b.name ? 1 : -1));
 
       return NextResponse.json({ data: sorted }, { status: 200 });
     } else {
