@@ -6,12 +6,14 @@ import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
 import {
+  fetchTransactionsGlobalProfitThunk,
   fetchTransactionsThunk,
   postTransactionThunk,
 } from './transactionThunks';
 
 const initialState: TransactionState = {
   transactions: { status: ApiStatusEnum.IDLE, result: null, error: null },
+  transactionProfit: { status: ApiStatusEnum.IDLE, result: null, error: null },
   mutateStatus: { status: ApiStatusEnum.IDLE, result: null, error: null },
 };
 
@@ -59,6 +61,26 @@ const transactionSlice = createSlice({
           state.mutateStatus.status = ApiStatusEnum.PENDING;
           state.mutateStatus.result = null;
           state.mutateStatus.error = action.payload;
+        }
+      )
+      .addCase(fetchTransactionsGlobalProfitThunk.pending, (state) => {
+        state.transactionProfit.status = ApiStatusEnum.PENDING;
+        state.transactionProfit.error = null;
+      })
+      .addCase(
+        fetchTransactionsGlobalProfitThunk.fulfilled,
+        (state, action: PayloadAction<TransactionBenefitResult>) => {
+          state.transactionProfit.status = ApiStatusEnum.PENDING;
+          state.transactionProfit.result = action.payload;
+          state.transactionProfit.error = null;
+        }
+      )
+      .addCase(
+        fetchTransactionsGlobalProfitThunk.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.transactionProfit.status = ApiStatusEnum.PENDING;
+          state.transactionProfit.result = null;
+          state.transactionProfit.error = action.payload;
         }
       );
   },

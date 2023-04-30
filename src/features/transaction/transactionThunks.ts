@@ -1,6 +1,7 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
 import {
   fetchDatas,
+  fetchSingleData,
   postEntity,
   updateEntity,
 } from '@/lib/axios/requests/genericRequests';
@@ -24,6 +25,20 @@ export const fetchTransactionsThunk = createAsyncThunk(
         params: { sellStatus, type },
       });
       console.log('thunk', response);
+      return response;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+);
+export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
+  'transaction/fetchTransactionsGlobalProfit',
+  async () => {
+    try {
+      const response = await fetchSingleData<TransactionBenefitResult>(
+        '/api/transaction/profit'
+      );
+
       return response;
     } catch (error) {
       return Promise.reject(error);
@@ -74,11 +89,8 @@ export const updateTransactionThunk = createAsyncThunk(
         tools.dispatch(
           fetchTransactionsThunk({ type: transaction.type, sellStatus })
         );
+        tools.dispatch(fetchTransactionsGlobalProfitThunk());
 
-        if (transaction.type === TransactionType.SELL) {
-        }
-        if (transaction.type === TransactionType.BUY) {
-        }
         return response;
       }
     } catch (error) {
