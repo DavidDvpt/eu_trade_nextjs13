@@ -29,7 +29,6 @@ export async function GET(req: NextRequest) {
             result.sellBenefit += b - (t.fee ?? 0);
           }
         }
-        // console.log(result);
       });
 
       result.total = result.sellBenefit - result.feeLost - result.buy;

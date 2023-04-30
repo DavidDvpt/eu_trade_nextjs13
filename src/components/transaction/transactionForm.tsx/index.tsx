@@ -50,21 +50,27 @@ function TransactionForm({
   });
 
   const dispatch = useAppDispatch();
+
   const setDatas = () => {
     if (resource) {
       setValue('resourceId', resource.id);
     }
     if (type) {
       setValue('transactionType', type);
-      if (type === TransactionType.SELL) {
-        setValue('sellStatus', SellStatus.PROGRESS);
-      }
     }
+    if (type === TransactionType.SELL) {
+      setValue('sellStatus', SellStatus.PROGRESS);
+    }
+  };
+
+  const isFulfilled = () => {
+    reset();
+    setDatas();
   };
 
   useEffect(() => {
     setDatas();
-  }, [resource]);
+  }, [resource, type]);
 
   const quantity = watch('quantity');
   const value = watch('value');
@@ -91,8 +97,7 @@ function TransactionForm({
 
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
-      dispatch(postTransactionThunk(values));
-      reset();
+      dispatch(postTransactionThunk({ body: values, callback: isFulfilled }));
     }
   };
 

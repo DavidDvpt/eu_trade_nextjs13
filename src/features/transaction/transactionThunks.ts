@@ -24,7 +24,7 @@ export const fetchTransactionsThunk = createAsyncThunk(
       const response = await fetchDatas<TransactionExtended>(url, {
         params: { sellStatus, type },
       });
-      console.log('thunk', response);
+
       return response;
     } catch (error) {
       return Promise.reject(error);
@@ -47,23 +47,28 @@ export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
 );
 export const postTransactionThunk = createAsyncThunk(
   'transaction/postTransactionThunk',
-  async (params: TransactionFormType, tools) => {
+  async (
+    params: { body: TransactionFormType; callback?: () => void },
+    tools
+  ) => {
     try {
+      const { body, callback } = params;
       const response = await postEntity<TransactionExtended>({
         url: '/api/transaction',
-        body: params,
+        body,
       });
 
+      callback && callback();
       tools.dispatch(
         fetchTransactionsThunk({
-          type: params.transactionType,
-          resourceId: params.resourceId,
+          type: body.transactionType,
+          resourceId: body.resourceId,
         })
       );
-      if (params.transactionType === TransactionType.SELL) {
-        tools.dispatch(stockActions.singleQtySubstract(params.quantity));
+      if (body.transactionType === TransactionType.SELL) {
+        tools.dispatch(stockActions.singleQtySubstract(body.quantity));
       }
-      if (params.transactionType === TransactionType.BUY) {
+      if (body.transactionType === TransactionType.BUY) {
       }
       return response;
     } catch (error) {
@@ -78,7 +83,6 @@ export const updateTransactionThunk = createAsyncThunk(
     tools
   ) => {
     try {
-      console.log(params);
       const { transaction, sellStatus } = params;
       if (transaction.id) {
         const response = await updateEntity({

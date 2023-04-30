@@ -19,7 +19,7 @@ export async function GET(
         params.id,
         type as TransactionType
       );
-      console.log('first', transactions);
+
       return NextResponse.json({ data: transactions }, { status: 200 });
     } else {
       return NextResponse.json({ data: 'params missing' }, { status: 422 });

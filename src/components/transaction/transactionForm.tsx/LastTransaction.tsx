@@ -23,7 +23,7 @@ function LastTransaction({ item }: ILastTransactionProps): JSX.Element {
         value,
       };
 
-      dispatch(postTransactionThunk(t));
+      dispatch(postTransactionThunk({ body: t }));
     }
   };
   return (
