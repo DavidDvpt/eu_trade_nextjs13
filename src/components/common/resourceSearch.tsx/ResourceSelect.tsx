@@ -1,10 +1,17 @@
 'use client';
 
-import { fetchResourcesByTypeId } from '@/lib/axios/requests/resourse';
+import { getResourcesState } from '@/features/resource/resourceSlice';
+import { fetchResourcesByTypeIdThunk } from '@/features/resource/resourceThunks';
+import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
+
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
 import { Resource } from '@prisma/client';
-import { useQuery } from '@tanstack/react-query';
-import React, { ChangeEvent, cloneElement, ReactElement } from 'react';
+import React, {
+  ChangeEvent,
+  ReactElement,
+  cloneElement,
+  useEffect,
+} from 'react';
 
 type ChildrenProps = {
   items: SelectTypes;
@@ -24,24 +31,23 @@ function ResourceSelect({
   onChange,
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
-  const { data } = useQuery({
-    queryKey: ['resources', value.type],
-    queryFn: async () => {
-      const response = await fetchResourcesByTypeId(value.type);
-      return response as Resource[];
-    },
-  });
+  const { resources } = useAppSelector(getResourcesState);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchResourcesByTypeIdThunk({ resourceId: value.type }));
+  }, [value]);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value;
-    if (data) {
-      const item = data.find((f) => f.id === id) as Resource;
+    if (resources.result) {
+      const item = resources.result.find((f) => f.id === id) as Resource;
       onChange(item);
     }
   };
 
   return cloneElement(children as ReactElement<ChildrenProps>, {
-    items: data ? selectItemParser(data) : [],
+    items: selectItemParser(resources.result ?? []),
     value: value.resource,
     onChange: handleChange,
     name: 'resource',

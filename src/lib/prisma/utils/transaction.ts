@@ -14,6 +14,7 @@ export async function getTransactions(params: {
         userId: params.userId,
       },
       include: { resource: true },
+      orderBy: [{ createdAt: 'asc' }],
     });
 
     return response;
@@ -23,15 +24,15 @@ export async function getTransactions(params: {
 }
 export async function getTransactionsByResourceId(
   userId: string,
-  id: string,
-  type?: 'BUY' | 'SELL' | 'MINING'
+  resourceId: string,
+  type?: TransactionType
 ) {
   try {
-    const transactions = client.transaction.findMany({
+    const transactions = await client.transaction.findMany({
       where: {
         userId,
-        resourceId: id,
-        type: type ?? undefined,
+        resourceId,
+        type: type,
       },
       include: {
         resource: true,

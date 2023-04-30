@@ -8,6 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { searchParams } = new URL(req.url);
+
   const type = searchParams.get('type');
   const token: any = await getToken({ req });
 
@@ -18,6 +19,7 @@ export async function GET(
         params.id,
         type as TransactionType
       );
+
       return NextResponse.json({ data: transactions }, { status: 200 });
     } else {
       return NextResponse.json({ data: 'params missing' }, { status: 422 });

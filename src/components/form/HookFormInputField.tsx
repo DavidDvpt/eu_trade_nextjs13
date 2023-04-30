@@ -42,7 +42,7 @@ function HookFormInputField({
       render={({ field: { value, onChange } }) => (
         <GenericInput
           className={className}
-          value={value}
+          value={value ?? ''}
           onChange={(e) => handleChange(e, onChange, name)}
           type={type}
           label={label}

@@ -13,10 +13,12 @@ export async function GET(req: NextRequest) {
 
     if (token?.id) {
       const response = await getTransactions({
-        sellStatus: searchParams.get('sellStatus') as SellStatus,
-        transactionType: searchParams.get('transactionType') as TransactionType,
+        sellStatus: (searchParams.get('sellStatus') as SellStatus) ?? undefined,
+        transactionType:
+          (searchParams.get('transactionType') as TransactionType) ?? undefined,
         userId: token.id as string,
       });
+
       return NextResponse.json({ data: response }, { status: 200 });
     } else {
       return NextResponse.json(null, { status: 401 });
@@ -24,9 +26,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return NextResponse.error().status;
   }
-  // const { sellStatus, transactionType } = searchParams;
 }
-
 export async function POST(req: NextRequest) {
   try {
     const token: any = await getToken({ req });

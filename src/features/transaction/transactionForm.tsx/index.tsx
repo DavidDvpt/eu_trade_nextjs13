@@ -1,13 +1,16 @@
-import { TransactionExtended } from '@/app/extendedAppTypes';
-import { createTransaction } from '@/lib/axios/requests/transaction';
+import { getStockState } from '@/features/stock/stockSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
+import { getTransactionState } from '@/features/transaction/transactionSlice';
+import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Resource, SellStatus, TransactionType } from '@prisma/client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ResourceTitle from '../../common/ResourceTitle';
-import Button from '../../form/Button';
-import HookFormInputField from '../../form/HookFormInputField';
+import ResourceTitle from '../../../components/common/ResourceTitle';
+import Button from '../../../components/form/Button';
+import HookFormInputField from '../../../components/form/HookFormInputField';
+import LastTransaction from './LastTransaction';
 import {
   TransactionFormValidation,
   initialCalculatedValues,
@@ -18,19 +21,21 @@ import styles from './transactionForm.module.scss';
 interface ITransactionFormProps {
   resource: Resource | null;
   type: TransactionType;
-  avaliableQty?: number;
-  lastSoldItem?: TransactionExtended;
 }
 
 function TransactionForm({
   resource,
   type,
-  avaliableQty = 0,
-  lastSoldItem,
 }: ITransactionFormProps): React.ReactElement {
-  const queryClient = useQueryClient();
+  const { singleResourceQty } = useAppSelector(getStockState);
+  const { transactions } = useAppSelector(getTransactionState);
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
+
+  const lastTransaction =
+    transactions.result && !isEmpty(transactions.result)
+      ? transactions.result[0]
+      : undefined;
   const {
     formState: { isValid, errors },
     watch,
@@ -41,8 +46,10 @@ function TransactionForm({
     control,
   } = useForm<TransactionFormType>({
     defaultValues: initialTransactionFormValues,
-    resolver: yupResolver(TransactionFormValidation(avaliableQty)),
+    resolver: yupResolver(TransactionFormValidation(singleResourceQty.result)),
   });
+
+  const dispatch = useAppDispatch();
 
   const setDatas = () => {
     if (resource) {
@@ -50,42 +57,20 @@ function TransactionForm({
     }
     if (type) {
       setValue('transactionType', type);
-      if (type === TransactionType.SELL) {
-        setValue('sellStatus', SellStatus.PROGRESS);
-      }
+    }
+    if (type === TransactionType.SELL) {
+      setValue('sellStatus', SellStatus.PROGRESS);
     }
   };
 
-  const { mutate } = useMutation(createTransaction, {
-    onSuccess: (data) => {
-      reset();
-      setDatas();
-      if (type === TransactionType.BUY) {
-        queryClient.invalidateQueries({
-          queryKey: ['totalBenefit'],
-        });
-      }
-      if (type === TransactionType.SELL) {
-        queryClient.invalidateQueries({
-          queryKey: ['sellProgressList'],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ['totalBenefit'],
-        });
-      }
-      queryClient.invalidateQueries({
-        queryKey: ['availableResourceQuantity'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['transactionList'],
-      });
-      return data;
-    },
-  });
+  const isFulfilled = () => {
+    reset();
+    setDatas();
+  };
 
   useEffect(() => {
     setDatas();
-  }, [resource]);
+  }, [resource, type]);
 
   const quantity = watch('quantity');
   const value = watch('value');
@@ -110,24 +95,9 @@ function TransactionForm({
     }
   }, [quantity, value, fee, resource]);
 
-  const handleUseLastSold = () => {
-    if (lastSoldItem) {
-      const { fee, quantity, resourceId, value } = lastSoldItem;
-      const t = {
-        fee,
-        quantity,
-        resourceId,
-        transactionType: TransactionType.SELL,
-        sellStatus: SellStatus.PROGRESS,
-        value,
-      };
-
-      mutate(t);
-    }
-  };
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
-      mutate(values);
+      dispatch(postTransactionThunk({ body: values, callback: isFulfilled }));
     }
   };
 
@@ -135,31 +105,12 @@ function TransactionForm({
     <div className={styles.transactionForm}>
       <ResourceTitle resource={resource} />
 
-      <div className={styles.lastSell}>
-        {lastSoldItem && (
-          <>
-            <h5>Vente à partir de l&#0039;ancienne transaction</h5>
-            <div>
-              <table>
-                <tr>
-                  <th>Quantité</th>
-                  <th>Fee</th>
-                  <th>Valeur</th>
-                </tr>
-                <tr>
-                  <td>{lastSoldItem?.quantity}</td>
-                  <td>{lastSoldItem?.fee}</td>
-                  <td>{lastSoldItem?.value}</td>
-                </tr>
-              </table>
-              <Button type='button' onClick={handleUseLastSold} primary>
-                Créer vente
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-      {lastSoldItem && <h5>Nouvelle vente</h5>}
+      {lastTransaction && type === TransactionType.SELL && (
+        <>
+          <LastTransaction item={lastTransaction} />
+          <h5>Nouvelle vente</h5>
+        </>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>

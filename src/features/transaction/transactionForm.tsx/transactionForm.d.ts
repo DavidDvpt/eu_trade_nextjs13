@@ -3,6 +3,6 @@ type TransactionFormType = {
   quantity: number;
   sellStatus: import('@prisma/client').SellStatus | null;
   fee: number;
-  value: internal;
+  value: number;
   transactionType: import('@prisma/client').TransactionType | null;
 };

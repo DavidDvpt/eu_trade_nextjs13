@@ -1,31 +1,31 @@
 'use client';
-import { fetchStockByResourceId } from '@/lib/axios/requests/transaction';
-import { useQuery } from '@tanstack/react-query';
+import { getStockState } from '@/features/stock/stockSlice';
+import { fetchSingleResourceQuantity } from '@/features/stock/stockThunks';
+import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
+import { ApiStatusEnum } from '@/lib/axios/apiTypes';
+import { useEffect } from 'react';
 
 interface IAvailableQuantityProps {
-  setQuantity: (value: number) => void;
   resourceId: string | null;
 }
 
 function AvailableQuantity({
   resourceId,
-  setQuantity,
 }: IAvailableQuantityProps): JSX.Element {
-  const { data, status } = useQuery({
-    queryKey: ['availableResourceQuantity', resourceId ?? ''],
-    queryFn: async () => {
-      const response = await fetchStockByResourceId(resourceId);
+  const { singleResourceQty } = useAppSelector(getStockState);
+  const dispatch = useAppDispatch();
 
-      setQuantity(response);
-      return response;
-    },
-  });
+  useEffect(() => {
+    if (resourceId) {
+      dispatch(fetchSingleResourceQuantity({ resourceId }));
+    }
+  }, [resourceId]);
 
-  if (status === 'loading') {
+  if (singleResourceQty.status === ApiStatusEnum.PENDING) {
     return <div>Stock : chargement ...</div>;
   }
 
-  return <div>Stock : {data ?? 0}</div>;
+  return <div>Stock : {singleResourceQty.result}</div>;
 }
 
 export default AvailableQuantity;

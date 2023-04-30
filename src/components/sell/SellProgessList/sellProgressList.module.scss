@@ -14,17 +14,16 @@
         width: 15%;
       }
       &:nth-child(2) {
-        width: 50%;
+        width: 45%;
       }
       &:nth-child(3) {
         width: 15%;
       }
       &:nth-child(5) {
-        width: 20%;
+        width: 25%;
       }
 
       select {
-        // height: 20px;
         padding-bottom: 2px;
       }
       p {
@@ -33,12 +32,10 @@
     }
 
     .updateSelect {
-      padding: 0;
       vertical-align: middle;
-      padding: 3px 0 0 0;
+      padding: 3px 5px 0 5px;
 
       fieldset {
-        // width: 100%;
         margin: 0;
         justify-content: center;
 
@@ -52,7 +49,6 @@
           }
         }
       }
-      // fieldset,
     }
   }
 }
