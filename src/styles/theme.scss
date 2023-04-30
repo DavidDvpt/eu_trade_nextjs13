@@ -1,7 +1,8 @@
 @import './main';
 
 body {
-  width: 1080px;
+  min-width: 600px;
+  max-width: 1280px;
   margin: auto;
 }
 h1,

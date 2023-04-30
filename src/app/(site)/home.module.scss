@@ -9,4 +9,25 @@
     width: 49%;
     height: 100%;
   }
+
+  @media screen and (max-width: 800px) {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    height: auto;
+
+    > div {
+      width: 99%;
+
+      section {
+        margin-bottom: 0;
+      }
+    }
+
+    .rightColumn {
+      order: 1;
+    }
+    .leftColumn {
+      order: 2;
+    }
+  }
 }
