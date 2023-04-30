@@ -1,8 +1,8 @@
 'use client';
 
 import ResourceSearch from '@/components/common/resourceSearch.tsx';
-import TransactionForm from '@/components/transaction/transactionForm.tsx';
-import TransactionListByResourceId from '@/components/transaction/transactionListByResourceId';
+import TransactionForm from '@/features/transaction/transactionForm.tsx';
+import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
 import { Resource, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import AvailableQuantity from './AvailableQuantity';

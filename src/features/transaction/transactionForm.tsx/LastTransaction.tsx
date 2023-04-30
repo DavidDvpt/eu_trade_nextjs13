@@ -4,7 +4,7 @@ import styles from './transactionForm.module.scss';
 import { useAppDispatch } from '@/features/store/hooks';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { SellStatus, TransactionType } from '@prisma/client';
-import Button from '../../form/Button';
+import Button from '../../../components/form/Button';
 interface ILastTransactionProps {
   item: TransactionExtended;
 }

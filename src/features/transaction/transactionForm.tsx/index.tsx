@@ -7,9 +7,9 @@ import { Resource, SellStatus, TransactionType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ResourceTitle from '../../common/ResourceTitle';
-import Button from '../../form/Button';
-import HookFormInputField from '../../form/HookFormInputField';
+import ResourceTitle from '../../../components/common/ResourceTitle';
+import Button from '../../../components/form/Button';
+import HookFormInputField from '../../../components/form/HookFormInputField';
 import LastTransaction from './LastTransaction';
 import {
   TransactionFormValidation,
