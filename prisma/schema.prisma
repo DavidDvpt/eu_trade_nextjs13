@@ -19,7 +19,12 @@ enum SellStatus {
 enum TransactionType {
   BUY
   SELL
+}
+
+enum ContextType {
+  TRADE
   MINING
+  CRAFING
 }
 
 model User {
@@ -60,6 +65,7 @@ model Resource {
 
 model Transaction {
   id         String          @id @default(cuid())
+  context    ContextType     @default(TRADE)
   type       TransactionType
   sellStatus SellStatus?
   quantity   Int
