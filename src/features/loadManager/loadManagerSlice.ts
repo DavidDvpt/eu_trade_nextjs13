@@ -13,10 +13,13 @@ const loadManagerSlice = createSlice({
     setResourceType: (state, action: PayloadAction<boolean>) => {
       state.resourceType = action.payload;
     },
-    setResource: (state, action: PayloadAction<ResourceParameters | null>) => {
+    setResourceParams: (
+      state,
+      action: PayloadAction<ResourceParameters | null>
+    ) => {
       state.resourceParams = action.payload;
     },
-    setTransaction: (
+    setTransactionParams: (
       state,
       action: PayloadAction<TransactionParameters | null>
     ) => {

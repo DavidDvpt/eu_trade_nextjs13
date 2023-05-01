@@ -1,8 +1,15 @@
 import * as yup from 'yup';
+
+export const contextValues = [
+  { values: 'TRADE', label: 'Trade' },
+  { values: 'MINING', label: 'Mining' },
+  { values: 'CRAFT', label: 'Craft' },
+];
 export const initialTransactionFormValues: TransactionFormType = {
   resourceId: '',
   quantity: 0,
   sellStatus: null,
+  context: null,
   fee: 0,
   value: 0,
   transactionType: null,
