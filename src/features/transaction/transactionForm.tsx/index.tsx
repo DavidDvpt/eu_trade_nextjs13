@@ -1,10 +1,16 @@
 import HookFormRadioButtons from '@/components/form/HookFormRadioButtons';
+import { loadManagerActions } from '@/features/loadManager/loadManagerSlice';
 import { getStockState } from '@/features/stock/stockSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Resource, SellStatus, TransactionType } from '@prisma/client';
+import {
+  ContextType,
+  Resource,
+  SellStatus,
+  TransactionType,
+} from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,6 +49,7 @@ function TransactionForm({
     formState: { isValid, errors },
     watch,
     setValue,
+    getValues,
     reset,
     handleSubmit,
     trigger,
@@ -68,6 +75,13 @@ function TransactionForm({
   };
 
   const isFulfilled = () => {
+    dispatch(
+      loadManagerActions.setTransactionParams({
+        context: getValues('context') as ContextType,
+        type,
+        resourceId: resource?.id,
+      })
+    );
     reset();
     setDatas();
   };
@@ -98,7 +112,7 @@ function TransactionForm({
       });
     }
   }, [quantity, value, fee, resource]);
-  console.log(watch());
+
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       dispatch(postTransactionThunk({ body: values, callback: isFulfilled }));
@@ -119,11 +133,14 @@ function TransactionForm({
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>
           <div className={styles.formValues}>
-            <HookFormRadioButtons
-              control={control}
-              name='context'
-              values={contextValues}
-            />
+            {type !== TransactionType.BUY && (
+              <HookFormRadioButtons
+                control={control}
+                name='context'
+                values={contextValues}
+                defaultValue='TRADE'
+              />
+            )}
             <HookFormInputField
               control={control}
               name='quantity'

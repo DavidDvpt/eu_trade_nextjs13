@@ -28,6 +28,7 @@ function TransactionListByResourceId({
       const footerRow: TransactionRow = {
         date: '',
         name: '',
+        context: '',
         quantity: 0,
         ttCost: 0,
         // fee: 0,

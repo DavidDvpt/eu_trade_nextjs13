@@ -10,6 +10,7 @@ import styles from './buy.module.scss';
 const headers: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Date', key: 'date' },
   { name: 'Nom', key: 'name' },
+  { name: 'Contexte', key: 'context' },
   { name: 'Quantité', key: 'quantity' },
   { name: 'Cout TT', key: 'ttCost' },
   // { name: 'Fee', key: 'fee' },

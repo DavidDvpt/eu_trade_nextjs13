@@ -4,15 +4,21 @@ import './formFields.scss';
 interface IRadioButtonsProps {
   name: string;
   values: { label: string; value: string }[];
+  defaultValue: string;
   control: any;
 }
-function HookFormRadioButtons({ name, values, control }: IRadioButtonsProps) {
+function HookFormRadioButtons({
+  name,
+  values,
+  control,
+  defaultValue,
+}: IRadioButtonsProps) {
   return (
     <div className='radio-button-container'>
       <Controller
         control={control}
         name={name}
-        defaultValue='TRADE'
+        defaultValue={defaultValue}
         render={({ field }) => (
           <>
             {values.map((v) => (
