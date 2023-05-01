@@ -1,15 +1,15 @@
 'use client';
 
-import { getResourceTypesState } from '@/features/resourceType/resourceTypeSlice';
-import { fetchResourceTypesThunk } from '@/features/resourceType/resourceTypeThunks';
-import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
+import { loadManagerActions } from '@/features/loadManager/loadManagerSlice';
+import useResourceType from '@/features/resourceType/useResourceType';
+import { useAppDispatch } from '@/features/store/hooks';
 
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
 import React, {
   ChangeEvent,
   ReactElement,
   cloneElement,
-  useEffect,
+  useState,
 } from 'react';
 
 type ChildrenProps = {
@@ -20,27 +20,25 @@ type ChildrenProps = {
   noValue: string;
 };
 
-interface IResourceTypeSelectProps extends IChildren {
-  onChange: (value: ChangeEvent<HTMLSelectElement>) => void;
-  value: string;
-}
+type IResourceTypeSelectProps = IChildren;
 
 function ResourceTypeSelect({
-  value,
-  onChange,
   children,
 }: IResourceTypeSelectProps): React.ReactElement {
-  const { resourceTypes } = useAppSelector(getResourceTypesState);
+  const [selected, setSelected] = useState<string>('');
+  const { resourceTypes } = useResourceType();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchResourceTypesThunk());
-  }, []);
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelected(value);
+    dispatch(loadManagerActions.setResource({ resourceTypeId: value }));
+  };
 
   return cloneElement(children as ReactElement<ChildrenProps>, {
-    items: selectItemParser(resourceTypes.result ?? []),
-    value: value,
-    onChange,
+    items: selectItemParser(resourceTypes ?? []),
+    value: selected,
+    onChange: handleChange,
     name: 'type',
     noValue: 'Choisissez un type',
   });

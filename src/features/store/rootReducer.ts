@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import loadManagerReducer from '../loadManager/loadManagerSlice';
 import resourceReducer from '../resource/resourceSlice';
 import resourceTypeReducer from '../resourceType/resourceTypeSlice';
 import stockReducer from '../stock/stockSlice';
@@ -9,6 +10,7 @@ const combinedReducers = combineReducers({
   resourceType: resourceTypeReducer,
   transaction: transactionReducer,
   stock: stockReducer,
+  loadManager: loadManagerReducer,
 });
 
 const rootReducer = (state: any, action: any) => {
