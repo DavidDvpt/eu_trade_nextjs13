@@ -4,12 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  ContextType,
-  Resource,
-  SellStatus,
-  TransactionType,
-} from '@prisma/client';
+import { Resource, SellStatus, TransactionType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,6 +12,7 @@ import ResourceTitle from '../../../components/common/ResourceTitle';
 import Button from '../../../components/form/Button';
 import HookFormInputField from '../../../components/form/HookFormInputField';
 import {
+  contextValues,
   initialCalculatedValues,
   initialTransactionFormValues,
   TransactionFormValidation,
@@ -47,7 +43,6 @@ function TransactionForm({
     formState: { isValid, errors },
     watch,
     setValue,
-    getValues,
     reset,
     handleSubmit,
     trigger,
@@ -103,7 +98,7 @@ function TransactionForm({
       });
     }
   }, [quantity, value, fee, resource]);
-
+  console.log(watch());
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
       dispatch(postTransactionThunk({ body: values, callback: isFulfilled }));
@@ -127,7 +122,7 @@ function TransactionForm({
             <HookFormRadioButtons
               control={control}
               name='context'
-              values={Object.keys(ContextType)}
+              values={contextValues}
             />
             <HookFormInputField
               control={control}
