@@ -1,10 +1,10 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
 
 const initialState: LoadManagerState = {
   resourceType: true,
   resourceParams: null,
-  transaction: null,
+  transactionParams: null,
 };
 const loadManagerSlice = createSlice({
   name: 'loadManager',
@@ -20,7 +20,7 @@ const loadManagerSlice = createSlice({
       state,
       action: PayloadAction<TransactionParameters | null>
     ) => {
-      state.transaction = action.payload;
+      state.transactionParams = action.payload;
     },
   },
 });
