@@ -1,7 +1,6 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
 import GenericSelect from '@/components/form/GenericSelect';
-import { useAppDispatch } from '@/features/store/hooks';
-import { updateTransactionThunk } from '@/features/transaction/transactionThunks';
+import useTransactions from '@/features/transaction/useTransaction';
 import { SellStatus } from '@prisma/client';
 import { ChangeEvent, useState } from 'react';
 
@@ -12,10 +11,11 @@ interface IUpdateTransactionSelectProps {
 function UpdateTransactionButton({
   transaction,
 }: IUpdateTransactionSelectProps): JSX.Element {
+  const { updateTransaction } = useTransactions({});
   const [value, setValue] = useState<SellStatus>(
     transaction.sellStatus ?? SellStatus.PROGRESS
   );
-  const dispatch = useAppDispatch();
+
   const items = Object.values(SellStatus).map((m) => ({ value: m, label: m }));
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -23,12 +23,7 @@ function UpdateTransactionButton({
     setValue(value);
     const updated: TransactionExtended = { ...transaction, sellStatus: value };
 
-    dispatch(
-      updateTransactionThunk({
-        transaction: updated,
-        sellStatus: SellStatus.PROGRESS,
-      })
-    );
+    updateTransaction(updated);
   };
 
   return (

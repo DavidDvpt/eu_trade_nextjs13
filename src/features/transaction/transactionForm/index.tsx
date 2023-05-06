@@ -1,7 +1,6 @@
 import HookFormRadioButtons from '@/components/form/HookFormRadioButtons';
 import { loadManagerActions } from '@/features/loadManager/loadManagerSlice';
-import { getStockState } from '@/features/stock/stockSlice';
-import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
+import { useAppDispatch } from '@/features/store/hooks';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -25,13 +24,14 @@ import styles from './transactionForm.module.scss';
 interface ITransactionFormProps {
   resource: Resource | null;
   type: TransactionType;
+  maxQty?: number;
 }
 
 function TransactionForm({
   resource,
   type,
+  maxQty,
 }: ITransactionFormProps): React.ReactElement {
-  const { singleResourceQty } = useAppSelector(getStockState);
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
 
@@ -46,7 +46,7 @@ function TransactionForm({
     control,
   } = useForm<TransactionFormType>({
     defaultValues: initialTransactionFormValues,
-    resolver: yupResolver(TransactionFormValidation(singleResourceQty.result)),
+    resolver: yupResolver(TransactionFormValidation(maxQty ?? 0)),
   });
 
   const dispatch = useAppDispatch();

@@ -1,19 +1,23 @@
 import styles from './transactionForm/transactionForm.module.scss';
 
 import { Resource, SellStatus, TransactionType } from '@prisma/client';
+import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import Button from '../../components/form/Button';
 import useTransactions from './useTransaction';
 interface ILastTransactionProps {
   resource: Resource;
+  maxQty: number;
 }
 
 function LastTransaction({
   resource,
+  maxQty,
 }: ILastTransactionProps): JSX.Element | null {
   const { lastSoldTransaction, transactions, createTransaction } =
     useTransactions({});
 
+  const lt = transactions && transactions[0];
   useEffect(() => {
     if (resource) {
       lastSoldTransaction(resource.id);
@@ -36,11 +40,17 @@ function LastTransaction({
     }
   };
 
-  if (!transactions) {
+  console.log(transactions && transactions[0]);
+  if (
+    !transactions ||
+    isEmpty(transactions) ||
+    (!isEmpty(transactions) && lt && maxQty < lt?.quantity)
+  ) {
     return null;
   }
+
   return (
-    <div className={styles.lastSell}>
+    <section className={styles.lastSell}>
       <h5>Vente à partir de l&#0039;ancienne transaction</h5>
       <div>
         <table>
@@ -63,7 +73,7 @@ function LastTransaction({
           Créer vente
         </Button>
       </div>
-    </div>
+    </section>
   );
 }
 

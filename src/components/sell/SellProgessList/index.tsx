@@ -5,7 +5,7 @@ import SellProgessTable from './SellProgessTable';
 import styles from './sellProgressList.module.scss';
 
 function SellProgessList(): React.ReactElement {
-  const { transactions } = useTransactions({
+  const { transactions, updateTransaction } = useTransactions({
     all: true,
     sellStatus: SellStatus.PROGRESS,
   });
