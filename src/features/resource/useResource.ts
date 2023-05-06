@@ -1,11 +1,10 @@
-import { fetchDatas } from '@/lib/axios/requests/genericRequests';
-import { Resource } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import {
   getLoadManagerState,
   loadManagerActions,
 } from '../loadManager/loadManagerSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { fetchResources } from './resourceRequests';
 
 const useResource = () => {
   const [resources, setResources] = useState<Resources | null>(null);
@@ -14,14 +13,14 @@ const useResource = () => {
 
   const loadResources = async () => {
     try {
-      const response = await fetchDatas<Resource>(
-        `/api/resourceType/${resourceParams?.resourceTypeId}/resources`
-      );
+      const result = await fetchResources({
+        resourceTypeId: resourceParams?.resourceTypeId,
+      });
 
       dispatch(loadManagerActions.setResourceParams(null));
-      setResources(response);
+      setResources(result);
     } catch (error) {
-      return Promise.reject(error);
+      setResources([]);
     }
   };
 
