@@ -1,7 +1,9 @@
 'use client';
 
+import ResourceTitle from '@/components/common/ResourceTitle';
 import ResourceSearch from '@/components/common/resourceSearch.tsx';
-import TransactionForm from '@/features/transaction/transactionForm.tsx';
+import LastTransaction from '@/features/transaction/LastTransactionForm';
+import TransactionForm from '@/features/transaction/transactionForm';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
 import { Resource, TransactionType } from '@prisma/client';
 import { useState } from 'react';
@@ -29,8 +31,16 @@ function Sell(): React.ReactElement {
   return (
     <div className={styles.sell}>
       <ResourceSearch onChange={handleChange} />
+      {resource && (
+        <>
+          <ResourceTitle resource={resource} />
+          <AvailableQuantity resourceId={resource?.id ?? null} />
+          <section>
+            <LastTransaction resource={resource} />
+          </section>
+        </>
+      )}
       <section>
-        <AvailableQuantity resourceId={resource?.id ?? null} />
         <TransactionForm resource={resource} type={TransactionType.SELL} />
       </section>
       {resource && (

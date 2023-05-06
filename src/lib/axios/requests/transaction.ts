@@ -21,6 +21,7 @@ import { updateEntity } from './genericRequests';
 //     return Promise.reject(error);
 //   }
 // }
+
 export async function updateTransaction(transaction: TransactionExtended) {
   try {
     const response = await updateEntity({

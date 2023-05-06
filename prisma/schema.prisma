@@ -63,7 +63,7 @@ model Transaction {
   type       TransactionType
   sellStatus SellStatus?
   quantity   Int
-  fee        Float?
+  fee        Float           @default(0)
   value      Int
   createdAt  DateTime        @default(now())
   modifiedAt DateTime?

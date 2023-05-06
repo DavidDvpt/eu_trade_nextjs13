@@ -8,10 +8,21 @@ type TransactionState = {
   >;
 };
 
+interface PostTransactionBody {
+  resourceId: string;
+  value: number;
+  fee: number;
+  quantity: number;
+  transactionType: import('@prisma/client').TransactionType;
+  sellStatus: import('@prisma/client').SellStatus;
+}
+
 interface IFetchTransactionsParams {
   type?: TransactionType;
   sellStatus?: SellStatus;
   resourceId?: string;
+  sortKey?: keyof import('@prisma/client').Transaction;
+  order?: sortOrder;
 }
 
 interface TransactionRow {

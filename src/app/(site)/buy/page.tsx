@@ -1,7 +1,8 @@
 'use client';
 
+import ResourceTitle from '@/components/common/ResourceTitle';
 import ResourceSearch from '@/components/common/resourceSearch.tsx';
-import TransactionForm from '@/features/transaction/transactionForm.tsx';
+import TransactionForm from '@/features/transaction/transactionForm';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
 import { Resource, TransactionType } from '@prisma/client';
 import { useState } from 'react';
@@ -25,9 +26,15 @@ function Buy(): React.ReactElement {
     setResource(value);
   };
 
+  // useEffect(() => {
+
+  // }, [resource])
+
   return (
     <div className={styles.buy}>
       <ResourceSearch onChange={handleChange} />
+
+      {resource && <ResourceTitle resource={resource} />}
 
       <section>
         <TransactionForm resource={resource} type={TransactionType.BUY} />

@@ -1,6 +1,12 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { getTransactionState, transactionActions } from './transactionSlice';
+import {
+  TransactionExtended,
+  TransactionsExtended,
+} from '@/app/extendedAppTypes';
+import { fetchDatas, postEntity } from '@/lib/axios/requests/genericRequests';
+import { SellStatus } from '@prisma/client';
+import { useEffect, useState } from 'react';
+import { useAppDispatch } from '../store/hooks';
+import { transactionActions } from './transactionSlice';
 import { fetchTransactionsThunk } from './transactionThunks';
 
 interface IUseTransactions extends IFetchTransactionsParams {
@@ -12,7 +18,10 @@ const useTransactions = ({
   sellStatus,
   all,
 }: IUseTransactions) => {
-  const { transactions } = useAppSelector(getTransactionState);
+  const [transactions, setTransactions] = useState<TransactionsExtended | null>(
+    null
+  );
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -27,9 +36,37 @@ const useTransactions = ({
     };
   }, []);
 
+  const fetchLastTransaction = async (resourceId: string) => {
+    try {
+      const transac = await fetchDatas<TransactionExtended>(
+        `/api/resource/${resourceId}/transactions`,
+        {
+          params: {
+            limit: 1,
+            sortKey: 'createdAt',
+            order: 'desc',
+            sellStatus: SellStatus.ENDED,
+          },
+        }
+      );
+
+      return setTransactions(transac);
+    } catch (error) {
+      Promise.reject(error);
+    }
+  };
+
+  const createTransaction = async (body: PostTransactionBody) => {
+    try {
+      const r = await await postEntity({ url: '/api/transaction', body });
+    } catch (error) {}
+  };
+
   return {
-    transactions: transactions.result,
-    transactionsCount: transactions.result?.length ?? 0,
+    transactions: transactions,
+    transactionsCount: transactions?.length ?? 0,
+    lastSoldTransaction: fetchLastTransaction,
+    createTransaction,
   };
 };
 

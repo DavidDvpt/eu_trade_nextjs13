@@ -9,7 +9,6 @@ export const getResources = async () => {
     Promise.reject(error);
   }
 };
-
 export const getResourcesByTypeId = async (typeId: string) => {
   try {
     const resources = await client.resource.findMany({

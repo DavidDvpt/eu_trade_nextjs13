@@ -1,5 +1,5 @@
-import { getTransactionsByResourceId } from '@/lib/prisma/utils/transaction';
-import { TransactionType } from '@prisma/client';
+import { getTransactions } from '@/lib/prisma/utils/transaction';
+import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,17 +8,24 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { searchParams } = new URL(req.url);
-
   const type = searchParams.get('type');
+  const limit = searchParams.get('limit');
+  const sortKey = searchParams.get('sortKey');
+  const order = searchParams.get('order');
+  const sellStatus = searchParams.get('sellStatus');
   const token: any = await getToken({ req });
 
   try {
-    if (params.id && type && token) {
-      const transactions = await getTransactionsByResourceId(
-        token.id,
-        params.id,
-        type as TransactionType
-      );
+    if (token) {
+      const transactions = await getTransactions({
+        userId: token.id,
+        resourceId: params.id,
+        transactionType: (type as TransactionType) ?? undefined,
+        sellStatus: (sellStatus as SellStatus) ?? undefined,
+        limit: Number(limit) ?? undefined,
+        sortKey: (sortKey as keyof Transaction) ?? undefined,
+        order: (order as sortOrder) ?? undefined,
+      });
 
       return NextResponse.json({ data: transactions }, { status: 200 });
     } else {

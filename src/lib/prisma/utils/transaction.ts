@@ -1,21 +1,36 @@
+import { TransactionsExtended } from '@/app/extendedAppTypes';
 import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import client from '../../../../prisma/prismadb';
 
 export async function getTransactions(params: {
-  sellStatus?: SellStatus;
-  transactionType?: TransactionType;
   userId: string;
+  transactionType?: TransactionType;
+  resourceId?: string;
+  sellStatus?: SellStatus;
+  sortKey?: keyof Transaction;
+  order?: sortOrder;
+  limit?: number;
 }) {
   try {
-    const response = await client.transaction.findMany({
+    let request: any = {
       where: {
         sellStatus: params?.sellStatus ?? undefined,
         type: params?.transactionType ?? undefined,
         userId: params.userId,
+        resourceId: params.resourceId,
       },
       include: { resource: true },
-      orderBy: [{ createdAt: 'asc' }],
-    });
+    };
+    if (params.sortKey)
+      request = {
+        ...request,
+        orderBy: [{ [params.sortKey]: params.order ?? 'asc' }],
+      };
+
+    const response = (await client.transaction.findMany({
+      ...request,
+      take: params.limit,
+    })) as TransactionsExtended;
 
     return response;
   } catch (error) {
@@ -88,7 +103,9 @@ export async function getStockByResourceId(
     return Promise.reject(error);
   }
 }
-export async function postTransaction(data: any) {
+export async function postTransaction(
+  data: PostTransactionBody & { userId: string }
+) {
   try {
     const transaction = await client.transaction.create({
       data: {

@@ -1,6 +1,5 @@
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store/storeTypes';
 import { fetchResourceTypesThunk } from './resourceTypeThunks';
 
 const initialState: ResourceTypeState = {
@@ -38,4 +37,4 @@ const resourceTypeSlice = createSlice({
 });
 
 export default resourceTypeSlice.reducer;
-export const getResourceTypesState = (state: RootState) => state.resourceType;
+// export const getResourceTypesState = (state: RootState) => state.resourceType;

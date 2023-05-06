@@ -3,7 +3,7 @@ type SelectType = {
   label: string | import('react').ReactElement;
 };
 type SelectTypes = SelectType[];
-
+type sortOrder = 'asc' | 'desc';
 interface IChildren {
   children: import('react').ReactNode;
 }
