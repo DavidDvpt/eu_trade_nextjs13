@@ -8,7 +8,7 @@ type TransactionParameters = {
 type ResourceParameters = { resourceTypeId: string };
 
 type LoadManagerState = {
-  resourceType: boolean;
+  resourceTypeLoad: boolean;
   resourceParams: ResourceParameters | null;
   transactionParams: TransactionParameters | null;
 };

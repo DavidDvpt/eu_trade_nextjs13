@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
 
 const initialState: LoadManagerState = {
-  resourceType: true,
+  resourceTypeLoad: true,
   resourceParams: null,
   transactionParams: null,
 };
@@ -10,8 +10,8 @@ const loadManagerSlice = createSlice({
   name: 'loadManager',
   initialState,
   reducers: {
-    setResourceType: (state, action: PayloadAction<boolean>) => {
-      state.resourceType = action.payload;
+    setResourceTypeLoad: (state, action: PayloadAction<boolean>) => {
+      state.resourceTypeLoad = action.payload;
     },
     setResourceParams: (
       state,

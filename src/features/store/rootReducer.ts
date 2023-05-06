@@ -4,8 +4,6 @@ import stockReducer from '../stock/stockSlice';
 import transactionReducer from '../transaction/transactionSlice';
 
 const combinedReducers = combineReducers({
-  // resource: resourceReducer,
-  // resourceType: resourceTypeReducer,
   transaction: transactionReducer,
   stock: stockReducer,
   loadManager: loadManagerReducer,
