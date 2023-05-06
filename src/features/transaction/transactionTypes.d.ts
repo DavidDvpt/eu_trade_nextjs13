@@ -28,6 +28,7 @@ interface IFetchTransactionsParams {
 interface TransactionRow {
   date: string;
   name: '';
+  context: '';
   quantity: number;
   ttCost: number;
   fee?: number;
@@ -37,6 +38,7 @@ interface TransactionRow {
 }
 interface TransactionRowForTable extends TransactionRow {
   name: string;
+  context: string;
   quantity: string;
   ttCost: string;
   fee?: string;

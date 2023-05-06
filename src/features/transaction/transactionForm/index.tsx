@@ -1,16 +1,22 @@
+import HookFormRadioButtons from '@/components/form/HookFormRadioButtons';
+import { loadManagerActions } from '@/features/loadManager/loadManagerSlice';
 import { getStockState } from '@/features/stock/stockSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
-import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Resource, SellStatus, TransactionType } from '@prisma/client';
-import { isEmpty } from 'lodash';
+import {
+  ContextType,
+  Resource,
+  SellStatus,
+  TransactionType,
+} from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../../../components/form/Button';
 import HookFormInputField from '../../../components/form/HookFormInputField';
 import {
   TransactionFormValidation,
+  contextValues,
   initialCalculatedValues,
   initialTransactionFormValues,
 } from './constant';
@@ -26,18 +32,14 @@ function TransactionForm({
   type,
 }: ITransactionFormProps): React.ReactElement {
   const { singleResourceQty } = useAppSelector(getStockState);
-  const { transactions } = useAppSelector(getTransactionState);
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
 
-  const lastTransaction =
-    transactions.result && !isEmpty(transactions.result)
-      ? transactions.result[0]
-      : undefined;
   const {
     formState: { isValid, errors },
     watch,
     setValue,
+    getValues,
     reset,
     handleSubmit,
     trigger,
@@ -55,6 +57,7 @@ function TransactionForm({
     }
     if (type) {
       setValue('transactionType', type);
+      setValue('context', 'TRADE');
     }
     if (type === TransactionType.SELL) {
       setValue('sellStatus', SellStatus.PROGRESS);
@@ -62,6 +65,13 @@ function TransactionForm({
   };
 
   const isFulfilled = () => {
+    dispatch(
+      loadManagerActions.setTransactionParams({
+        context: getValues('context') as ContextType,
+        type,
+        resourceId: resource?.id,
+      })
+    );
     reset();
     setDatas();
   };
@@ -101,16 +111,17 @@ function TransactionForm({
 
   return (
     <div className={styles.transactionForm}>
-      {/* {lastTransaction && type === TransactionType.SELL && (
-        <>
-          <LastTransaction item={lastTransaction} />
-          <h5>Nouvelle vente</h5>
-        </>
-      )} */}
-
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>
           <div className={styles.formValues}>
+            {type !== TransactionType.BUY && (
+              <HookFormRadioButtons
+                control={control}
+                name='context'
+                values={contextValues}
+                defaultValue='TRADE'
+              />
+            )}
             <HookFormInputField
               control={control}
               name='quantity'

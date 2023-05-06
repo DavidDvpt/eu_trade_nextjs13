@@ -18,7 +18,7 @@ const useResource = () => {
         `/api/resourceType/${resourceParams?.resourceTypeId}/resources`
       );
 
-      dispatch(loadManagerActions.setResource(null));
+      dispatch(loadManagerActions.setResourceParams(null));
       setResources(response);
     } catch (error) {
       return Promise.reject(error);

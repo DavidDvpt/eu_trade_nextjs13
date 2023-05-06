@@ -7,8 +7,8 @@ import { useAppDispatch } from '@/features/store/hooks';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
 import React, {
   ChangeEvent,
-  ReactElement,
   cloneElement,
+  ReactElement,
   useState,
 } from 'react';
 
@@ -32,7 +32,7 @@ function ResourceTypeSelect({
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelected(value);
-    dispatch(loadManagerActions.setResource({ resourceTypeId: value }));
+    dispatch(loadManagerActions.setResourceParams({ resourceTypeId: value }));
   };
 
   return cloneElement(children as ReactElement<ChildrenProps>, {

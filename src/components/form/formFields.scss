@@ -67,3 +67,9 @@ fieldset {
 .fieldset {
   width: 400px;
 }
+
+.radio-button-container {
+  @include flex-around-center;
+  width: 100%;
+  margin-bottom: 20px;
+}
