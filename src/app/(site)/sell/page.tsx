@@ -5,7 +5,7 @@ import ResourceSearch from '@/components/common/resourceSearch.tsx';
 import useStock from '@/features/stock/useStock';
 import LastTransaction from '@/features/transaction/LastTransactionForm';
 import TransactionForm from '@/features/transaction/transactionForm';
-import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
+import TransactionListByResourceId from '@/features/transaction/transactionTable';
 import { Resource, TransactionType } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import styles from './sell.module.scss';
@@ -57,7 +57,7 @@ function Sell(): React.ReactElement {
           <TransactionListByResourceId
             headers={headers}
             resourceId={resource.id}
-            type={TransactionType.SELL}
+            transactionType={TransactionType.SELL}
           />
         </section>
       )}

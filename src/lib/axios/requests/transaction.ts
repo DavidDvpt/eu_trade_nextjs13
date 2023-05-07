@@ -1,6 +1,3 @@
-import { TransactionExtended } from '@/app/extendedAppTypes';
-import { updateEntity } from './genericRequests';
-
 // export async function fetchTransactionsProfit() {
 //   try {
 //     const response = await fetchSingleData<TransactionBenefitResult>(
@@ -22,15 +19,4 @@ import { updateEntity } from './genericRequests';
 //   }
 // }
 
-export async function updateTransaction(transaction: TransactionExtended) {
-  try {
-    const response = await updateEntity({
-      url: `/api/transaction/${transaction.id}`,
-      body: transaction,
-    });
-
-    return response;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
+export {};

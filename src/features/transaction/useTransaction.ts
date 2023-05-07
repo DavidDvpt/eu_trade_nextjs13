@@ -2,86 +2,73 @@ import {
   TransactionExtended,
   TransactionsExtended,
 } from '@/app/extendedAppTypes';
-import {
-  fetchDatas,
-  postEntity,
-  updateEntity,
-} from '@/lib/axios/requests/genericRequests';
-import { SellStatus } from '@prisma/client';
+import { ContextType, SellStatus } from '@prisma/client';
 import { useEffect, useState } from 'react';
+import {
+  fetchTransactionsRequest,
+  postTransactionRequest,
+  updateTransactionRequest,
+} from './transactionRequests';
 
 interface IUseTransactions extends IFetchTransactionsParams {
   all?: boolean;
 }
-const useTransactions = ({
-  resourceId,
-  type,
-  sellStatus,
-  all,
-}: IUseTransactions) => {
+const useTransactions = (props: IUseTransactions) => {
   const [transactions, setTransactions] = useState<TransactionsExtended | null>(
     null
   );
-
-  const fetchTransactions = async () => {
-    try {
-      let url = '/api/transaction';
-
-      if (resourceId) {
-        //fetch only one resource
-        url = `/api/resource/${resourceId}/transactions`;
-      }
-
-      const response = await fetchDatas<TransactionExtended>(url, {
-        params: { sellStatus, type },
-      });
-
-      setTransactions(response);
-    } catch (error) {}
-  };
-  const fetchLastTransaction = async (resourceId: string) => {
-    try {
-      const transac = await fetchDatas<TransactionExtended>(
-        `/api/resource/${resourceId}/transactions`,
-        {
-          params: {
-            limit: 1,
-            sortKey: 'createdAt',
-            order: 'desc',
-            sellStatus: SellStatus.ENDED,
-          },
+  const { resourceId, all } = props;
+  const fetch = (params: IFetchTransactionsParams) => {
+    fetchTransactionsRequest(params)
+      .then(
+        (response) => {
+          setTransactions(response);
+        },
+        (error) => {
+          setTransactions([]);
         }
-      );
-
-      return setTransactions(transac);
-    } catch (error) {
-      Promise.reject(error);
-    }
-  };
-  const updateTransaction = async (transaction: TransactionExtended) => {
-    try {
-      const response = await updateEntity({
-        url: `/api/transaction/${transaction.id}`,
-        body: transaction,
+      )
+      .catch((error) => {
+        console.log(error);
       });
-      if (transactions) {
-        setTransactions(transactions?.filter((f) => f.id !== transaction.id));
-      }
-      return response;
-    } catch (error) {
-      return Promise.reject(error);
-    }
   };
+
   useEffect(() => {
     if (resourceId || all) {
-      fetchTransactions();
+      fetch(props);
     }
   }, [resourceId, all]);
 
+  const fetchLastTransaction = async (resourceId: string) => {
+    fetch({
+      resourceId,
+      limit: 1,
+      sortKey: 'createdAt',
+      order: 'desc',
+      context: ContextType.TRADE,
+      sellStatus: SellStatus.ENDED,
+    });
+  };
+  const updateTransaction = async (transaction: TransactionExtended) => {
+    updateTransactionRequest(transaction).then((response) => {
+      if (transactions) {
+        setTransactions(
+          transactions?.map((f) => (f.id !== response.id ? f : response))
+        );
+      }
+    });
+  };
+
   const createTransaction = async (body: PostTransactionBody) => {
-    try {
-      const r = await await postEntity({ url: '/api/transaction', body });
-    } catch (error) {}
+    postTransactionRequest(body).then(
+      (response) => {
+        console.log(response);
+        return response;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   };
 
   return {

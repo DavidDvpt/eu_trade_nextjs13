@@ -1,5 +1,10 @@
 import { TransactionsExtended } from '@/app/extendedAppTypes';
-import { SellStatus, Transaction, TransactionType } from '@prisma/client';
+import {
+  ContextType,
+  SellStatus,
+  Transaction,
+  TransactionType,
+} from '@prisma/client';
 import client from '../../../../prisma/prismadb';
 
 export async function getTransactions(params: {
@@ -10,16 +15,19 @@ export async function getTransactions(params: {
   sortKey?: keyof Transaction;
   order?: sortOrder;
   limit?: number;
+  context?: ContextType;
 }) {
   try {
     let request: any = {
       where: {
-        sellStatus: params?.sellStatus ?? undefined,
-        type: params?.transactionType ?? undefined,
+        sellStatus: params?.sellStatus,
+        context: params?.context,
+        type: params?.transactionType,
         userId: params.userId,
         resourceId: params.resourceId,
       },
       include: { resource: true },
+      take: params.limit,
     };
     if (params.sortKey)
       request = {
@@ -27,10 +35,9 @@ export async function getTransactions(params: {
         orderBy: [{ [params.sortKey]: params.order ?? 'asc' }],
       };
 
-    const response = (await client.transaction.findMany({
-      ...request,
-      take: params.limit,
-    })) as TransactionsExtended;
+    const response = (await client.transaction.findMany(
+      request
+    )) as TransactionsExtended;
 
     return response;
   } catch (error) {

@@ -1,10 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import loadManagerReducer from '../loadManager/loadManagerSlice';
 import stockReducer from '../stock/stockSlice';
-import transactionReducer from '../transaction/transactionSlice';
 
 const combinedReducers = combineReducers({
-  transaction: transactionReducer,
+  // transaction: transactionReducer,
   stock: stockReducer,
   loadManager: loadManagerReducer,
 });

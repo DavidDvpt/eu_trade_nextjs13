@@ -1,3 +1,4 @@
+import { ContextType, TransactionType } from '@prisma/client';
 import * as yup from 'yup';
 
 export const contextValues = [
@@ -6,14 +7,14 @@ export const contextValues = [
   { value: 'CRAFTING', label: 'Craft' },
 ];
 
-export const initialTransactionFormValues: TransactionFormType = {
+export const initialTransactionFormValues: PostTransactionBody = {
   resourceId: '',
   quantity: 0,
   sellStatus: null,
-  context: 'TRADE',
+  context: ContextType.TRADE,
   fee: 0,
   value: 0,
-  transactionType: null,
+  transactionType: TransactionType.BUY,
 };
 
 export const initialCalculatedValues: FormCalculatedValues = {

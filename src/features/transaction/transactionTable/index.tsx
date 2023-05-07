@@ -9,17 +9,29 @@ import {
 } from './transactionLib';
 import styles from './transactionListByResourceId.module.scss';
 
-interface IBuyTransactionResourceListProps {
-  resourceId: string;
+interface ITransactionTableProps extends IFetchTransactionsParams {
   headers: GenericHeadersTableType<TransactionRowForTable>;
-  type: TransactionType;
 }
-function TransactionListByResourceId({
+
+function TransactionTable({
+  context,
   resourceId,
-  type,
+  transactionType,
   headers,
-}: IBuyTransactionResourceListProps) {
-  const { transactions } = useTransactions({ resourceId, type });
+  sellStatus,
+  limit,
+  order,
+  sortKey,
+}: ITransactionTableProps) {
+  const { transactions } = useTransactions({
+    resourceId,
+    transactionType,
+    context,
+    sellStatus,
+    limit,
+    order,
+    sortKey,
+  });
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
 
@@ -37,7 +49,7 @@ function TransactionListByResourceId({
         markup: 0,
       };
 
-      if (type === TransactionType.SELL) footerRow.fee = 0;
+      if (transactionType === TransactionType.SELL) footerRow.fee = 0;
 
       const parsedRows: TransactionRowsForTable = [];
 
@@ -56,7 +68,7 @@ function TransactionListByResourceId({
         footerRow.ttCost = footerRow.ttCost + tt;
         footerRow.ttcCost = footerRow.ttcCost + e.value;
         footerRow.extraCost = footerRow.extraCost + ec;
-        if (type === TransactionType.SELL && e.fee) {
+        if (transactionType === TransactionType.SELL && e.fee) {
           footerRow.fee = (footerRow.fee as number) + e.fee;
         }
       });
@@ -78,4 +90,4 @@ function TransactionListByResourceId({
   );
 }
 
-export default TransactionListByResourceId;
+export default TransactionTable;

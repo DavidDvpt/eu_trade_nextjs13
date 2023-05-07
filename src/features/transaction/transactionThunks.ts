@@ -1,36 +1,28 @@
-import { TransactionExtended } from '@/app/extendedAppTypes';
-import {
-  fetchDatas,
-  fetchSingleData,
-  postEntity,
-  updateEntity,
-} from '@/lib/axios/requests/genericRequests';
-import { SellStatus, TransactionType } from '@prisma/client';
+import { fetchSingleData } from '@/lib/axios/requests/genericRequests';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { stockActions } from '../stock/stockSlice';
 
-export const fetchTransactionsThunk = createAsyncThunk(
-  'transaction/fetchTransactionsThunk',
-  async (params: IFetchTransactionsParams) => {
-    try {
-      const { sellStatus, type, resourceId } = params;
-      let url = '/api/transaction';
+// export const fetchTransactionsThunk = createAsyncThunk(
+//   'transaction/fetchTransactionsThunk',
+//   async (params: IFetchTransactionsParams) => {
+//     try {
+//       const { sellStatus, type, resourceId } = params;
+//       let url = '/api/transaction';
 
-      if (resourceId) {
-        //fetch only one resource
-        url = `/api/resource/${resourceId}/transactions`;
-      }
+//       if (resourceId) {
+//         //fetch only one resource
+//         url = `/api/resource/${resourceId}/transactions`;
+//       }
 
-      const response = await fetchDatas<TransactionExtended>(url, {
-        params: { sellStatus, type },
-      });
+//       const response = await fetchDatas<TransactionExtended>(url, {
+//         params: { sellStatus, type },
+//       });
 
-      return response;
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-);
+//       return response;
+//     } catch (error) {
+//       return Promise.reject(error);
+//     }
+//   }
+// );
 export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
   'transaction/fetchTransactionsGlobalProfit',
   async () => {
@@ -45,60 +37,60 @@ export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
     }
   }
 );
-export const postTransactionThunk = createAsyncThunk(
-  'transaction/postTransactionThunk',
-  async (
-    params: { body: TransactionFormType; callback?: () => void },
-    tools
-  ) => {
-    try {
-      const { body, callback } = params;
-      const response = await postEntity<TransactionExtended>({
-        url: '/api/transaction',
-        body,
-      });
+// export const postTransactionThunk = createAsyncThunk(
+//   'transaction/postTransactionThunk',
+//   async (
+//     params: { body: PostTransactionBody; callback?: () => void },
+//     tools
+//   ) => {
+//     try {
+//       const { body, callback } = params;
+//       const response = await postEntity<TransactionExtended>({
+//         url: '/api/transaction',
+//         body,
+//       });
 
-      callback && callback();
-      tools.dispatch(
-        fetchTransactionsThunk({
-          type: body.transactionType,
-          resourceId: body.resourceId,
-        })
-      );
-      if (body.transactionType === TransactionType.SELL) {
-        tools.dispatch(stockActions.singleQtySubstract(body.quantity));
-      }
-      if (body.transactionType === TransactionType.BUY) {
-      }
-      return response;
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-);
-export const updateTransactionThunk = createAsyncThunk(
-  'transaction/updateTransactionThunk',
-  async (
-    params: { transaction: TransactionExtended; sellStatus?: SellStatus },
-    tools
-  ) => {
-    try {
-      const { transaction, sellStatus } = params;
-      if (transaction.id) {
-        const response = await updateEntity({
-          url: `/api/transaction/${transaction.id}`,
-          body: transaction,
-        });
+//       callback && callback();
+//       tools.dispatch(
+//         fetchTransactionsThunk({
+//           type: body.transactionType,
+//           resourceId: body.resourceId,
+//         })
+//       );
+//       if (body.transactionType === TransactionType.SELL) {
+//         tools.dispatch(stockActions.singleQtySubstract(body.quantity));
+//       }
+//       if (body.transactionType === TransactionType.BUY) {
+//       }
+//       return response;
+//     } catch (error) {
+//       return Promise.reject(error);
+//     }
+//   }
+// );
+// export const updateTransactionThunk = createAsyncThunk(
+//   'transaction/updateTransactionThunk',
+//   async (
+//     params: { transaction: TransactionExtended; sellStatus?: SellStatus },
+//     tools
+//   ) => {
+//     try {
+//       const { transaction, sellStatus } = params;
+//       if (transaction.id) {
+//         const response = await updateEntity({
+//           url: `/api/transaction/${transaction.id}`,
+//           body: transaction,
+//         });
 
-        tools.dispatch(
-          fetchTransactionsThunk({ type: transaction.type, sellStatus })
-        );
-        tools.dispatch(fetchTransactionsGlobalProfitThunk());
+//         tools.dispatch(
+//           fetchTransactionsThunk({ type: transaction.type, sellStatus })
+//         );
+//         tools.dispatch(fetchTransactionsGlobalProfitThunk());
 
-        return response;
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-);
+//         return response;
+//       }
+//     } catch (error) {
+//       return Promise.reject(error);
+//     }
+//   }
+// );

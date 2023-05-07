@@ -28,6 +28,7 @@ function LastTransaction({
     if (resource && transactions && transactions[0]) {
       const newT = transactions[0];
       const t: PostTransactionBody = {
+        context: newT.context,
         resourceId: newT.resourceId,
         transactionType: TransactionType.SELL,
         sellStatus: SellStatus.PROGRESS,
@@ -40,7 +41,6 @@ function LastTransaction({
     }
   };
 
-  console.log(transactions && transactions[0]);
   if (
     !transactions ||
     isEmpty(transactions) ||

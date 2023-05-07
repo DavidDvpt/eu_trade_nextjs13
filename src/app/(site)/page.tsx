@@ -1,6 +1,6 @@
 'use client';
 
-import HomeProfitSection from '@/components/profit/HomeProfitSection';
+// import HomeProfitSection from '@/components/profit/HomeProfitSection';
 import SellProgessList from '@/components/sell/SellProgessList';
 import SimpleStockList from '../../components/stock/SimpleStockList';
 import styles from './home.module.scss';
@@ -10,7 +10,7 @@ export default function Home(): React.ReactElement {
     <div className={styles.home}>
       <div className={styles.leftColumn}>
         <SimpleStockList />
-        <HomeProfitSection />
+        {/* <HomeProfitSection /> */}
       </div>
       <div className={styles.rightColumn}>
         <SellProgessList />

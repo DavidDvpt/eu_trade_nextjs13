@@ -3,8 +3,8 @@
 import ResourceTitle from '@/components/common/ResourceTitle';
 import ResourceSearch from '@/components/common/resourceSearch.tsx';
 import TransactionForm from '@/features/transaction/transactionForm';
-import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
-import { Resource, TransactionType } from '@prisma/client';
+import TransactionTable from '@/features/transaction/transactionTable';
+import { ContextType, Resource, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
 
@@ -44,10 +44,14 @@ function Buy(): React.ReactElement {
       {resource && (
         <section>
           <h4>Liste des précédents achats</h4>
-          <TransactionListByResourceId
+          <TransactionTable
             headers={headers}
+            context={ContextType.TRADE}
             resourceId={resource?.id ?? ''}
-            type={TransactionType.BUY}
+            transactionType={TransactionType.BUY}
+            limit={10}
+            sortKey='createdAt'
+            order='desc'
           />
         </section>
       )}

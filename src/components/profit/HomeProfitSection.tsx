@@ -1,19 +1,18 @@
-import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
-import { getTransactionState } from '@/features/transaction/transactionSlice';
+import { useAppDispatch } from '@/features/store/hooks';
 import { fetchTransactionsGlobalProfitThunk } from '@/features/transaction/transactionThunks';
 import { getFixedNumber } from '@/lib/numberTools';
 import { useEffect } from 'react';
 import styles from './profit.module.scss';
 
 function HomeProfitSection(): React.ReactElement {
-  const { transactionProfit } = useAppSelector(getTransactionState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchTransactionsGlobalProfitThunk());
   }, []);
 
-  const tr = transactionProfit.result;
+  // const tr = transactionProfit.result;
+  const tr: any = {};
 
   return (
     <section className={styles.homeBenefitSection}>

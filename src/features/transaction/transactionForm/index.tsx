@@ -1,7 +1,6 @@
 import HookFormRadioButtons from '@/components/form/HookFormRadioButtons';
 import { loadManagerActions } from '@/features/loadManager/loadManagerSlice';
 import { useAppDispatch } from '@/features/store/hooks';
-import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ContextType,
@@ -13,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../../../components/form/Button';
 import HookFormInputField from '../../../components/form/HookFormInputField';
+import useTransactions from '../useTransaction';
 import {
   TransactionFormValidation,
   contextValues,
@@ -32,6 +32,7 @@ function TransactionForm({
   type,
   maxQty,
 }: ITransactionFormProps): React.ReactElement {
+  const { createTransaction } = useTransactions({});
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
 
@@ -44,7 +45,7 @@ function TransactionForm({
     handleSubmit,
     trigger,
     control,
-  } = useForm<TransactionFormType>({
+  } = useForm<PostTransactionBody>({
     defaultValues: initialTransactionFormValues,
     resolver: yupResolver(TransactionFormValidation(maxQty ?? 0)),
   });
@@ -62,18 +63,6 @@ function TransactionForm({
     if (type === TransactionType.SELL) {
       setValue('sellStatus', SellStatus.PROGRESS);
     }
-  };
-
-  const isFulfilled = () => {
-    dispatch(
-      loadManagerActions.setTransactionParams({
-        context: getValues('context') as ContextType,
-        type,
-        resourceId: resource?.id,
-      })
-    );
-    reset();
-    setDatas();
   };
 
   useEffect(() => {
@@ -103,9 +92,24 @@ function TransactionForm({
     }
   }, [quantity, value, fee, resource]);
 
-  const onSubmit = (values: TransactionFormType) => {
+  const onSubmit = (values: PostTransactionBody) => {
     if (isValid) {
-      dispatch(postTransactionThunk({ body: values, callback: isFulfilled }));
+      createTransaction(values).then(
+        (response) => {
+          dispatch(
+            loadManagerActions.setTransactionParams({
+              context: getValues('context') as ContextType,
+              type,
+              resourceId: resource?.id,
+            })
+          );
+          reset();
+          setDatas();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
   };
 
