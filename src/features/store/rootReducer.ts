@@ -1,10 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import resourceReducer from '../resource/resourceSlice';
+import resourceReducer from '../item/resourceSlice';
+import itemSearchEngineReducer from '../itemSearchEngine/itemSearchEngineSlice';
 import resourceTypeReducer from '../resourceType/resourceTypeSlice';
 import stockReducer from '../stock/stockSlice';
 import transactionReducer from '../transaction/transactionSlice';
 
 const combinedReducers = combineReducers({
+  itemSearchEngine: itemSearchEngineReducer,
   resource: resourceReducer,
   resourceType: resourceTypeReducer,
   transaction: transactionReducer,

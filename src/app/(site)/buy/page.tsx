@@ -1,6 +1,6 @@
 'use client';
 
-import ResourceSearch from '@/components/common/resourceSearch.tsx';
+import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
 import { Item, TradingType } from '@prisma/client';
@@ -27,7 +27,8 @@ function Buy(): React.ReactElement {
 
   return (
     <div className={styles.buy}>
-      <ResourceSearch onChange={handleChange} />
+      <ItemSearchEngineContainer />
+      {/* <ResourceSearch onChange={handleChange} /> */}
 
       <section>
         <TransactionForm item={item} type={TradingType.BUY} />

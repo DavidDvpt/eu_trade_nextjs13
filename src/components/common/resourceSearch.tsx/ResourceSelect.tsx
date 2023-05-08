@@ -1,7 +1,7 @@
 'use client';
 
-import { getResourcesState } from '@/features/resource/resourceSlice';
-import { fetchResourcesByTypeIdThunk } from '@/features/resource/resourceThunks';
+import { getResourcesState } from '@/features/item/resourceSlice';
+import { fetchResourcesByTypeIdThunk } from '@/features/item/resourceThunks';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
