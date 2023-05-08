@@ -10,11 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum SellStatus {
-  ENDED
-  PROGRESS
-  RETURNED
-}
+// enum SellStatus {
+//   ENDED
+//   PROGRESS
+//   RETURNED
+// }
 
 enum SessionContext {
   TRADING
@@ -33,24 +33,24 @@ enum TradingType {
   SELL
 }
 
-enum TransactionType {
-  BUY
-  SELL
-  MINING
-}
+// enum TransactionType {
+//   BUY
+//   SELL
+//   MINING
+// }
 
 model User {
-  id          String        @id @default(cuid())
-  firstname   String?       @db.VarChar(50)
-  lastname    String?       @db.VarChar(50)
-  pseudo      String?       @db.VarChar(50)
-  email       String        @unique @db.VarChar(255)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime?
-  isActive    Boolean       @default(true)
-  password    String        @db.VarChar(255)
-  Transaction Transaction[]
-  Session     Session[]
+  id        String    @id @default(cuid())
+  firstname String?   @db.VarChar(50)
+  lastname  String?   @db.VarChar(50)
+  pseudo    String?   @db.VarChar(50)
+  email     String    @unique @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  isActive  Boolean   @default(true)
+  password  String    @db.VarChar(255)
+  // Transaction Transaction[]
+  Session   Session[]
 }
 
 model ItemCategory {
@@ -74,14 +74,14 @@ model ItemType {
   items          Item[]
 }
 
-model ResourceType {
-  id         String     @id @default(cuid())
-  name       String     @unique
-  isActive   Boolean    @default(true)
-  createdAt  DateTime   @default(now())
-  modifiedAt DateTime?
-  Resources  Resource[]
-}
+// model ResourceType {
+//   id         String     @id @default(cuid())
+//   name       String     @unique
+//   isActive   Boolean    @default(true)
+//   createdAt  DateTime   @default(now())
+//   modifiedAt DateTime?
+//   Resources  Resource[]
+// }
 
 model Item {
   id         String       @id @default(cuid())
@@ -97,19 +97,19 @@ model Item {
   SessionRow SessionRow[]
 }
 
-model Resource {
-  id          String        @id @default(cuid())
-  name        String        @unique
-  value       Float         @default(0)
-  imageUrlId  String?
-  isActive    Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  modifiedAt  DateTime?
-  Transaction Transaction[]
+// model Resource {
+//   id          String        @id @default(cuid())
+//   name        String        @unique
+//   value       Float         @default(0)
+//   imageUrlId  String?
+//   isActive    Boolean       @default(true)
+//   createdAt   DateTime      @default(now())
+//   modifiedAt  DateTime?
+//   Transaction Transaction[]
 
-  resourceTypeId String
-  resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
-}
+//   resourceTypeId String
+//   resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
+// }
 
 model Session {
   id             String         @id @default(cuid())
@@ -135,17 +135,17 @@ model SessionRow {
   item      Item     @relation(fields: [itemId], references: [id])
 }
 
-model Transaction {
-  id         String          @id @default(cuid())
-  type       TransactionType
-  sellStatus SellStatus?
-  quantity   Int
-  fee        Float?
-  value      Int
-  createdAt  DateTime        @default(now())
-  modifiedAt DateTime?
-  userId     String
-  user       User            @relation(fields: [userId], references: [id])
-  resourceId String
-  resource   Resource        @relation(fields: [resourceId], references: [id])
-}
+// model Transaction {
+//   id         String          @id @default(cuid())
+//   type       TransactionType
+//   sellStatus SellStatus?
+//   quantity   Int
+//   fee        Float?
+//   value      Int
+//   createdAt  DateTime        @default(now())
+//   modifiedAt DateTime?
+//   userId     String
+//   user       User            @relation(fields: [userId], references: [id])
+//   resourceId String
+//   resource   Resource        @relation(fields: [resourceId], references: [id])
+// }

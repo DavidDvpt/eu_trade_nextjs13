@@ -13,9 +13,6 @@
     "pr": "npx prisma migrate reset --force",
     "ps": "npx prisma studio"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
   "dependencies": {
     "@hookform/resolvers": "^2.9.11",
     "@prisma/client": "^4.13.0",
