@@ -23,7 +23,11 @@ function GenericSelect({
       <label htmlFor='resourceType'></label>
       <div>
         <select value={value} onChange={onChange} name={name}>
-          {noValue && <option value=''>{noValue}</option>}
+          {noValue && (
+            <option disabled value=''>
+              {noValue}
+            </option>
+          )}
           {items.map((m) => (
             <option key={m.value} value={m.value}>
               {m.label}
