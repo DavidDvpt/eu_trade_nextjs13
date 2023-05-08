@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Resource, SellStatus, TransactionType } from '@prisma/client';
+import { Item, SessionState, TradingType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,12 +19,12 @@ import {
 import styles from './transactionForm.module.scss';
 
 interface ITransactionFormProps {
-  resource: Resource | null;
-  type: TransactionType;
+  item: Item | null;
+  type: TradingType;
 }
 
 function TransactionForm({
-  resource,
+  item,
   type,
 }: ITransactionFormProps): React.ReactElement {
   const { singleResourceQty } = useAppSelector(getStockState);
@@ -52,14 +52,14 @@ function TransactionForm({
   const dispatch = useAppDispatch();
 
   const setDatas = () => {
-    if (resource) {
-      setValue('resourceId', resource.id);
+    if (item) {
+      setValue('resourceId', item.id);
     }
     if (type) {
       setValue('transactionType', type);
     }
-    if (type === TransactionType.SELL) {
-      setValue('sellStatus', SellStatus.PROGRESS);
+    if (type === TradingType.SELL) {
+      setValue('sellStatus', SessionState.PROGRESS);
     }
   };
 
@@ -70,15 +70,15 @@ function TransactionForm({
 
   useEffect(() => {
     setDatas();
-  }, [resource, type]);
+  }, [item, type]);
 
   const quantity = watch('quantity');
   const value = watch('value');
   const fee = watch('fee');
 
   useEffect(() => {
-    if (resource) {
-      const calculatedTT = quantity * resource.value;
+    if (item) {
+      const calculatedTT = quantity * item.value;
       const calculatedExtraCost = calculatedTT > 0 ? value - calculatedTT : 0;
       const markup = calculatedTT > 0 ? (value / calculatedTT) * 100 : 0;
       const benefit = value - fee - calculatedTT;
@@ -93,7 +93,7 @@ function TransactionForm({
         markupNet,
       });
     }
-  }, [quantity, value, fee, resource]);
+  }, [quantity, value, fee, item]);
 
   const onSubmit = (values: TransactionFormType) => {
     if (isValid) {
@@ -103,9 +103,9 @@ function TransactionForm({
 
   return (
     <div className={styles.transactionForm}>
-      <ResourceTitle resource={resource} />
+      <ResourceTitle resource={item} />
 
-      {lastTransaction && type === TransactionType.SELL && (
+      {lastTransaction && type === TradingType.SELL && (
         <>
           <LastTransaction item={lastTransaction} />
           <h5>Nouvelle vente</h5>
@@ -123,18 +123,18 @@ function TransactionForm({
               className={`${styles.quantity} ${
                 errors.quantity ? styles.error : ''
               }`}
-              disabled={Boolean(!resource)}
+              disabled={Boolean(!item)}
               trigger={trigger}
               error={errors.quantity}
             />
-            {type === TransactionType.SELL && (
+            {type === TradingType.SELL && (
               <HookFormInputField
                 control={control}
                 name='fee'
                 type='number'
                 label='Fee'
                 className={styles.fee}
-                disabled={Boolean(!resource)}
+                disabled={Boolean(!item)}
               />
             )}
             <HookFormInputField
@@ -142,10 +142,10 @@ function TransactionForm({
               name='value'
               type='number'
               label={
-                type === TransactionType.SELL ? 'Prix de vente' : "Prix d'achat"
+                type === TradingType.SELL ? 'Prix de vente' : "Prix d'achat"
               }
               className={styles.buyValue}
-              disabled={Boolean(!resource)}
+              disabled={Boolean(!item)}
             />
           </div>
 
@@ -156,7 +156,7 @@ function TransactionForm({
               <span>ped(s)</span>
             </p>
 
-            {type === TransactionType.BUY && (
+            {type === TradingType.BUY && (
               <p>
                 <span>Extra TT : </span>
                 {Number(calculatedValues.calculatedExtraCost).toFixed(2)}{' '}
@@ -169,7 +169,7 @@ function TransactionForm({
               {Number(calculatedValues.markup).toFixed(2)}
               <span>%</span>
             </p>
-            {type === TransactionType.SELL && (
+            {type === TradingType.SELL && (
               <>
                 <p>
                   <span>Bénéfice NET: </span>
@@ -186,7 +186,7 @@ function TransactionForm({
           </div>
         </div>
         <Button type='submit' primary>
-          {type === TransactionType.BUY ? 'Acheter' : 'Mettre en vente'}
+          {type === TradingType.BUY ? 'Acheter' : 'Mettre en vente'}
         </Button>
       </form>
     </div>

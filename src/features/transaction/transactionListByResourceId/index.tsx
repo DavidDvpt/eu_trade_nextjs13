@@ -1,6 +1,6 @@
 import GenericTable from '@/components/generic/genericTable';
 import useTransactions from '@/features/transaction/useTransaction';
-import { TransactionType } from '@prisma/client';
+import { TradingType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import {
@@ -12,7 +12,7 @@ import styles from './transactionListByResourceId.module.scss';
 interface IBuyTransactionResourceListProps {
   resourceId: string;
   headers: GenericHeadersTableType<TransactionRowForTable>;
-  type: TransactionType;
+  type: TradingType;
 }
 function TransactionListByResourceId({
   resourceId,
@@ -36,7 +36,7 @@ function TransactionListByResourceId({
         markup: 0,
       };
 
-      if (type === TransactionType.SELL) footerRow.fee = 0;
+      if (type === TradingType.SELL) footerRow.fee = 0;
 
       const parsedRows: TransactionRowsForTable = [];
 
@@ -55,7 +55,7 @@ function TransactionListByResourceId({
         footerRow.ttCost = footerRow.ttCost + tt;
         footerRow.ttcCost = footerRow.ttcCost + e.value;
         footerRow.extraCost = footerRow.extraCost + ec;
-        if (type === TransactionType.SELL && e.fee) {
+        if (type === TradingType.SELL && e.fee) {
           footerRow.fee = (footerRow.fee as number) + e.fee;
         }
       });

@@ -1,6 +1,6 @@
 'use client';
 
-import { Resource } from '@prisma/client';
+import { Item } from '@prisma/client';
 import { ChangeEvent, useState } from 'react';
 import GenericSelect from '../../form/GenericSelect';
 import ResourceSelect from './ResourceSelect';
@@ -8,7 +8,7 @@ import ResourceTypeSelect from './ResourceTypeSelect';
 import styles from './resourceSearch.module.scss';
 
 interface IResourceSearchProps {
-  onChange: (value: Resource) => void;
+  onChange: (value: Item) => void;
 }
 
 const inisitalValues = {
@@ -24,7 +24,7 @@ function ResourceSearch({ onChange }: IResourceSearchProps) {
     setValues({ ...values, type: value });
   };
 
-  const handleResourceChange = (value: Resource) => {
+  const handleResourceChange = (value: Item) => {
     setValues({ ...values, resource: value.id });
     onChange(value);
   };

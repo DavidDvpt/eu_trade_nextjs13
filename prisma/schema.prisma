@@ -10,12 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// enum SellStatus {
-//   ENDED
-//   PROGRESS
-//   RETURNED
-// }
-
 enum SessionContext {
   TRADING
   MINING
@@ -33,12 +27,6 @@ enum TradingType {
   SELL
 }
 
-// enum TransactionType {
-//   BUY
-//   SELL
-//   MINING
-// }
-
 model User {
   id        String    @id @default(cuid())
   firstname String?   @db.VarChar(50)
@@ -49,7 +37,6 @@ model User {
   updatedAt DateTime?
   isActive  Boolean   @default(true)
   password  String    @db.VarChar(255)
-  // Transaction Transaction[]
   Session   Session[]
 }
 
@@ -74,15 +61,6 @@ model ItemType {
   items          Item[]
 }
 
-// model ResourceType {
-//   id         String     @id @default(cuid())
-//   name       String     @unique
-//   isActive   Boolean    @default(true)
-//   createdAt  DateTime   @default(now())
-//   modifiedAt DateTime?
-//   Resources  Resource[]
-// }
-
 model Item {
   id         String       @id @default(cuid())
   name       String       @unique
@@ -96,20 +74,6 @@ model Item {
   ItemType   ItemType?    @relation(fields: [itemTypeId], references: [id])
   SessionRow SessionRow[]
 }
-
-// model Resource {
-//   id          String        @id @default(cuid())
-//   name        String        @unique
-//   value       Float         @default(0)
-//   imageUrlId  String?
-//   isActive    Boolean       @default(true)
-//   createdAt   DateTime      @default(now())
-//   modifiedAt  DateTime?
-//   Transaction Transaction[]
-
-//   resourceTypeId String
-//   resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
-// }
 
 model Session {
   id             String         @id @default(cuid())
@@ -134,18 +98,3 @@ model SessionRow {
   itemId    String
   item      Item     @relation(fields: [itemId], references: [id])
 }
-
-// model Transaction {
-//   id         String          @id @default(cuid())
-//   type       TransactionType
-//   sellStatus SellStatus?
-//   quantity   Int
-//   fee        Float?
-//   value      Int
-//   createdAt  DateTime        @default(now())
-//   modifiedAt DateTime?
-//   userId     String
-//   user       User            @relation(fields: [userId], references: [id])
-//   resourceId String
-//   resource   Resource        @relation(fields: [resourceId], references: [id])
-// }

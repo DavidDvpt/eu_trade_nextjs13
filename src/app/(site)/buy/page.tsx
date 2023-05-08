@@ -3,7 +3,7 @@
 import ResourceSearch from '@/components/common/resourceSearch.tsx';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
-import { Resource, TransactionType } from '@prisma/client';
+import { Item, TradingType } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
 
@@ -19,10 +19,10 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 ];
 
 function Buy(): React.ReactElement {
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [item, setItem] = useState<Item | null>(null);
 
-  const handleChange = (value: Resource) => {
-    setResource(value);
+  const handleChange = (value: Item) => {
+    setItem(value);
   };
 
   return (
@@ -30,16 +30,16 @@ function Buy(): React.ReactElement {
       <ResourceSearch onChange={handleChange} />
 
       <section>
-        <TransactionForm resource={resource} type={TransactionType.BUY} />
+        <TransactionForm item={item} type={TradingType.BUY} />
       </section>
 
-      {resource && (
+      {item && (
         <section>
           <h4>Liste des précédents achats</h4>
           <TransactionListByResourceId
             headers={headers}
-            resourceId={resource?.id ?? ''}
-            type={TransactionType.BUY}
+            resourceId={item?.id ?? ''}
+            type={TradingType.BUY}
           />
         </section>
       )}
