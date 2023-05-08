@@ -16,6 +16,23 @@ enum SellStatus {
   RETURNED
 }
 
+enum SessionContext {
+  TRADING
+  MINING
+  CRAFTING
+}
+
+enum SessionState {
+  ENDED
+  PROGRESS
+  RETURNED
+}
+
+enum TradingType {
+  BUY
+  SELL
+}
+
 enum TransactionType {
   BUY
   SELL
@@ -33,6 +50,28 @@ model User {
   isActive    Boolean       @default(true)
   password    String        @db.VarChar(255)
   Transaction Transaction[]
+  Session     Session[]
+}
+
+model ItemCategory {
+  id         String     @id @default(cuid())
+  name       String     @unique
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  modifiedAt DateTime?
+  ItemType   ItemType[]
+}
+
+model ItemType {
+  id             String       @id @default(cuid())
+  name           String       @unique
+  isActive       Boolean      @default(true)
+  isStackable    Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  modifiedAt     DateTime?
+  itemCategoryId String
+  itemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
+  items          Item[]
 }
 
 model ResourceType {
@@ -42,6 +81,20 @@ model ResourceType {
   createdAt  DateTime   @default(now())
   modifiedAt DateTime?
   Resources  Resource[]
+}
+
+model Item {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  value      Float        @default(0)
+  imageUrlId String?
+  isActive   Boolean      @default(true)
+  isLimied   Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  modifiedAt DateTime?
+  itemTypeId String?
+  ItemType   ItemType?    @relation(fields: [itemTypeId], references: [id])
+  SessionRow SessionRow[]
 }
 
 model Resource {
@@ -56,6 +109,30 @@ model Resource {
 
   resourceTypeId String
   resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
+}
+
+model Session {
+  id             String         @id @default(cuid())
+  number         Int
+  sessionContext SessionContext @default(TRADING)
+  tradingType    TradingType?
+  sessionState   SessionState
+  createdAt      DateTime       @default(now())
+  modifiedAt     DateTime?
+  SessionRow     SessionRow[]
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+}
+
+model SessionRow {
+  id        String   @id @default(cuid())
+  quantity  Int
+  fee       Float
+  value     Float
+  sessionId String?
+  session   Session? @relation(fields: [sessionId], references: [id])
+  itemId    String
+  item      Item     @relation(fields: [itemId], references: [id])
 }
 
 model Transaction {
