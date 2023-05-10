@@ -2,7 +2,8 @@ import GenericSelect from '@/components/form/GenericSelect';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
-import { ChangeEvent, useEffect } from 'react';
+import { Item } from '@prisma/client';
+import { ChangeEvent, memo, useEffect } from 'react';
 import {
   getItemSearchEngineState,
   itemSearchEngineActions,
@@ -14,7 +15,12 @@ import {
 } from '../itemSearchEngineThunks';
 import styles from './itemSearchEngineContainer.module.scss';
 
-function ItemSearchEngineContainer(): JSX.Element {
+interface IItemSearchEngineContainerProps {
+  callback: (item: Item) => void;
+}
+function ItemSearchEngineContainer({
+  callback,
+}: IItemSearchEngineContainerProps): JSX.Element {
   const {
     itemCategories,
     selectedItemCategory,
@@ -24,7 +30,11 @@ function ItemSearchEngineContainer(): JSX.Element {
     selectedItem,
   } = useAppSelector(getItemSearchEngineState);
   const dispatch = useAppDispatch();
-  console.log(itemCategories.result);
+  console.log('refresh search');
+
+  useEffect(() => {
+    if (selectedItem) callback(selectedItem);
+  }, [selectedItem]);
 
   useEffect(() => {
     if (
@@ -81,4 +91,4 @@ function ItemSearchEngineContainer(): JSX.Element {
   );
 }
 
-export default ItemSearchEngineContainer;
+export default memo(ItemSearchEngineContainer);
