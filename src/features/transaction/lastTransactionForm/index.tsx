@@ -1,28 +1,27 @@
-import { TransactionExtended } from '@/app/extendedAppTypes';
 import styles from './transactionForm.module.scss';
 
 import { useAppDispatch } from '@/features/store/hooks';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
-import { SellStatus, TransactionType } from '@prisma/client';
+import { Item, SessionContext, TradingType } from '@prisma/client';
+import { useEffect } from 'react';
 import Button from '../../../components/form/Button';
 interface ILastTransactionProps {
-  item: TransactionExtended;
+  item: Item;
+  context: SessionContext;
+  type: TradingType;
 }
 
-function LastTransaction({ item }: ILastTransactionProps): JSX.Element {
+function LastTransactionForm({
+  item,
+  context,
+  type,
+}: ILastTransactionProps): JSX.Element {
   const dispatch = useAppDispatch();
+
+  useEffect(() => {}, [item]);
+
   const handleUseLastSold = () => {
     if (item) {
-      const { fee, quantity, resourceId, value } = item;
-      const t = {
-        fee: fee ?? 0,
-        quantity,
-        resourceId,
-        transactionType: TransactionType.SELL,
-        sellStatus: SellStatus.PROGRESS,
-        value,
-      };
-
       dispatch(postTransactionThunk({ body: t }));
     }
   };
@@ -54,4 +53,4 @@ function LastTransaction({ item }: ILastTransactionProps): JSX.Element {
   );
 }
 
-export default LastTransaction;
+export default LastTransactionForm;

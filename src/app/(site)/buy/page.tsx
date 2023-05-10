@@ -2,6 +2,7 @@
 
 import ItemTitle from '@/components/common/itemTitle';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
+import LastTransactionForm from '@/features/transaction/lastTransactionForm';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
 import { Item, TradingType } from '@prisma/client';
@@ -28,6 +29,7 @@ function Buy(): React.ReactElement {
       <ItemSearchEngineContainer callback={handleItem} />
 
       <ItemTitle item={item} />
+      <LastTransactionForm item={item} />
 
       <TransactionForm item={item} type={TradingType.BUY} />
 

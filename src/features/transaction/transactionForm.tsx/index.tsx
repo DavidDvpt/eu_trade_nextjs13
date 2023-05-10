@@ -1,15 +1,12 @@
 import { getStockState } from '@/features/stock/stockSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
-import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Item, SessionState, TradingType } from '@prisma/client';
-import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../../../components/form/Button';
 import HookFormInputField from '../../../components/form/HookFormInputField';
-import LastTransaction from './LastTransaction';
 import {
   TransactionFormValidation,
   initialCalculatedValues,
@@ -27,14 +24,9 @@ function TransactionForm({
   type,
 }: ITransactionFormProps): React.ReactElement {
   const { singleResourceQty } = useAppSelector(getStockState);
-  const { transactions } = useAppSelector(getTransactionState);
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
 
-  const lastTransaction =
-    transactions.result && !isEmpty(transactions.result)
-      ? transactions.result[0]
-      : undefined;
   const {
     formState: { isValid, errors },
     watch,
@@ -102,13 +94,6 @@ function TransactionForm({
 
   return (
     <section className={styles.transactionForm}>
-      {lastTransaction && type === TradingType.SELL && (
-        <>
-          <LastTransaction item={lastTransaction} />
-          <h5>Nouvelle vente</h5>
-        </>
-      )}
-
       <form onSubmit={handleSubmit(onSubmit)} className={styles.buyForm}>
         <div className={styles.formContent}>
           <div className={styles.formValues}>
