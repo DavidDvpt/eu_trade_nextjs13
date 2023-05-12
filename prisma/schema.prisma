@@ -27,17 +27,45 @@ enum TradingType {
   SELL
 }
 
+enum SellStatus {
+  ENDED
+  PROGRESS
+  RETURNED
+}
+
+enum TransactionType {
+  BUY
+  SELL
+  MINING
+}
+
+model Transaction {
+  id         String          @id @default(cuid())
+  type       TransactionType
+  sellStatus SellStatus?
+  quantity   Int
+  fee        Float?
+  value      Int
+  createdAt  DateTime        @default(now())
+  modifiedAt DateTime?
+  userId     String
+  user       User            @relation(fields: [userId], references: [id])
+  itemId     String
+  item       Item            @relation(fields: [itemId], references: [id])
+}
+
 model User {
-  id        String    @id @default(cuid())
-  firstname String?   @db.VarChar(50)
-  lastname  String?   @db.VarChar(50)
-  pseudo    String?   @db.VarChar(50)
-  email     String    @unique @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime?
-  isActive  Boolean   @default(true)
-  password  String    @db.VarChar(255)
-  Session   Session[]
+  id          String        @id @default(cuid())
+  firstname   String?       @db.VarChar(50)
+  lastname    String?       @db.VarChar(50)
+  pseudo      String?       @db.VarChar(50)
+  email       String        @unique @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?
+  isActive    Boolean       @default(true)
+  password    String        @db.VarChar(255)
+  Session     Session[]
+  Transaction Transaction[]
 }
 
 model ItemCategory {
@@ -62,17 +90,18 @@ model ItemType {
 }
 
 model Item {
-  id         String       @id @default(cuid())
-  name       String       @unique
-  value      Float        @default(0)
-  imageUrlId String?
-  isActive   Boolean      @default(true)
-  isLimied   Boolean      @default(false)
-  createdAt  DateTime     @default(now())
-  modifiedAt DateTime?
-  itemTypeId String?
-  ItemType   ItemType?    @relation(fields: [itemTypeId], references: [id])
-  SessionRow SessionRow[]
+  id          String        @id @default(cuid())
+  name        String        @unique
+  value       Float         @default(0)
+  imageUrlId  String?
+  isActive    Boolean       @default(true)
+  isLimied    Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  modifiedAt  DateTime?
+  itemTypeId  String?
+  ItemType    ItemType?     @relation(fields: [itemTypeId], references: [id])
+  SessionRow  SessionRow[]
+  Transaction Transaction[]
 }
 
 model Session {
