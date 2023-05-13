@@ -1,9 +1,9 @@
 'use client';
 
-import ResourceSearch from '@/components/common/resourceSearch.tsx';
+import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
-import { Resource, TransactionType } from '@prisma/client';
+import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
 
@@ -19,26 +19,24 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 ];
 
 function Buy(): React.ReactElement {
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [item, setItem] = useState<Item | null>(null);
 
-  const handleChange = (value: Resource) => {
-    setResource(value);
-  };
+  const handleItem = (value: Item) => setItem(value);
 
   return (
     <div className={styles.buy}>
-      <ResourceSearch onChange={handleChange} />
+      <ItemSearchEngineContainer callback={handleItem} />
 
       <section>
-        <TransactionForm resource={resource} type={TransactionType.BUY} />
+        <TransactionForm resource={item} type={TransactionType.BUY} />
       </section>
 
-      {resource && (
+      {item && (
         <section>
           <h4>Liste des précédents achats</h4>
           <TransactionListByResourceId
             headers={headers}
-            resourceId={resource?.id ?? ''}
+            resourceId={item.id ?? ''}
             type={TransactionType.BUY}
           />
         </section>
