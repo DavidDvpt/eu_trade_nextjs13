@@ -10,23 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// enum SessionContext {
-//   TRADING
-//   MINING
-//   CRAFTING
-// }
-
-// enum SessionState {
-//   ENDED
-//   PROGRESS
-//   RETURNED
-// }
-
-// enum TradingType {
-//   BUY
-//   SELL
-// }
-
 enum SellStatus {
   ENDED
   PROGRESS
