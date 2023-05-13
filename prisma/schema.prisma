@@ -10,22 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum SessionContext {
-  TRADING
-  MINING
-  CRAFTING
-}
+// enum SessionContext {
+//   TRADING
+//   MINING
+//   CRAFTING
+// }
 
-enum SessionState {
-  ENDED
-  PROGRESS
-  RETURNED
-}
+// enum SessionState {
+//   ENDED
+//   PROGRESS
+//   RETURNED
+// }
 
-enum TradingType {
-  BUY
-  SELL
-}
+// enum TradingType {
+//   BUY
+//   SELL
+// }
 
 enum SellStatus {
   ENDED
@@ -50,8 +50,10 @@ model Transaction {
   modifiedAt DateTime?
   userId     String
   user       User            @relation(fields: [userId], references: [id])
-  itemId     String
-  item       Item            @relation(fields: [itemId], references: [id])
+  // itemId     String
+  // item       Item            @relation(fields: [itemId], references: [id])
+  Resource   Resource?       @relation(fields: [resourceId], references: [id])
+  resourceId String?
 }
 
 model User {
@@ -64,66 +66,88 @@ model User {
   updatedAt   DateTime?
   isActive    Boolean       @default(true)
   password    String        @db.VarChar(255)
-  Session     Session[]
+  // Session     Session[]
   Transaction Transaction[]
 }
 
-model ItemCategory {
+model ResourceType {
   id         String     @id @default(cuid())
   name       String     @unique
   isActive   Boolean    @default(true)
   createdAt  DateTime   @default(now())
   modifiedAt DateTime?
-  ItemType   ItemType[]
+  Resources  Resource[]
 }
 
-model ItemType {
-  id             String       @id @default(cuid())
-  name           String       @unique
-  isActive       Boolean      @default(true)
-  isStackable    Boolean      @default(true)
-  createdAt      DateTime     @default(now())
+model Resource {
+  id             String        @id @default(cuid())
+  name           String        @unique
+  value          Float         @default(0)
+  imageUrlId     String?
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
   modifiedAt     DateTime?
-  itemCategoryId String
-  itemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
-  items          Item[]
+  transaction    Transaction[]
+  resourceTypeId String
+  resourceType   ResourceType  @relation(fields: [resourceTypeId], references: [id])
 }
 
-model Item {
-  id          String        @id @default(cuid())
-  name        String        @unique
-  value       Float         @default(0)
-  imageUrlId  String?
-  isActive    Boolean       @default(true)
-  isLimied    Boolean       @default(false)
-  createdAt   DateTime      @default(now())
-  modifiedAt  DateTime?
-  itemTypeId  String?
-  ItemType    ItemType?     @relation(fields: [itemTypeId], references: [id])
-  SessionRow  SessionRow[]
-  Transaction Transaction[]
-}
+// model ItemCategory {
+//   id         String     @id @default(cuid())
+//   name       String     @unique
+//   isActive   Boolean    @default(true)
+//   createdAt  DateTime   @default(now())
+//   modifiedAt DateTime?
+//   ItemType   ItemType[]
+// }
 
-model Session {
-  id             String         @id @default(cuid())
-  number         Int
-  sessionContext SessionContext @default(TRADING)
-  tradingType    TradingType?
-  sessionState   SessionState
-  createdAt      DateTime       @default(now())
-  modifiedAt     DateTime?
-  SessionRow     SessionRow[]
-  userId         String
-  user           User           @relation(fields: [userId], references: [id])
-}
+// model ItemType {
+//   id             String       @id @default(cuid())
+//   name           String       @unique
+//   isActive       Boolean      @default(true)
+//   isStackable    Boolean      @default(true)
+//   createdAt      DateTime     @default(now())
+//   modifiedAt     DateTime?
+//   itemCategoryId String
+//   itemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
+//   items          Item[]
+// }
 
-model SessionRow {
-  id        String   @id @default(cuid())
-  quantity  Int
-  fee       Float
-  value     Float
-  sessionId String?
-  session   Session? @relation(fields: [sessionId], references: [id])
-  itemId    String
-  item      Item     @relation(fields: [itemId], references: [id])
-}
+// model Item {
+//   id          String        @id @default(cuid())
+//   name        String        @unique
+//   value       Float         @default(0)
+//   imageUrlId  String?
+//   isActive    Boolean       @default(true)
+//   isLimied    Boolean       @default(false)
+//   createdAt   DateTime      @default(now())
+//   modifiedAt  DateTime?
+//   itemTypeId  String?
+//   ItemType    ItemType?     @relation(fields: [itemTypeId], references: [id])
+//   SessionRow  SessionRow[]
+//   Transaction Transaction[]
+// }
+
+// model Session {
+//   id             String         @id @default(cuid())
+//   number         Int
+//   sessionContext SessionContext @default(TRADING)
+//   tradingType    TradingType?
+//   sessionState   SessionState
+//   createdAt      DateTime       @default(now())
+//   modifiedAt     DateTime?
+//   SessionRow     SessionRow[]
+//   userId         String
+//   user           User           @relation(fields: [userId], references: [id])
+// }
+
+// model SessionRow {
+//   id        String   @id @default(cuid())
+//   quantity  Int
+//   fee       Float
+//   value     Float
+//   sessionId String?
+//   session   Session? @relation(fields: [sessionId], references: [id])
+//   itemId    String
+//   item      Item     @relation(fields: [itemId], references: [id])
+// }
