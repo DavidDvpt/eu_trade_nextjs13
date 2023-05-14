@@ -9,7 +9,7 @@ type TransactionState = {
 };
 type TransactionFormType = Pick<
   import('@prisma/client').Transaction,
-  'itemId' | 'quantity' | 'sellStatus' | 'fee' | 'value' | 'type'
+  'itemId' | 'quantity' | 'fee' | 'value'
 >;
 
 interface IFetchTransactionsParams {

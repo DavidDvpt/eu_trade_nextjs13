@@ -48,7 +48,13 @@ export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
 export const postTransactionThunk = createAsyncThunk(
   'transaction/postTransactionThunk',
   async (
-    params: { body: TransactionFormType; callback?: () => void },
+    params: {
+      body: TransactionFormType & {
+        type: TransactionType;
+        sellStatus: SellStatus | null;
+      };
+      callback?: () => void;
+    },
     tools
   ) => {
     try {

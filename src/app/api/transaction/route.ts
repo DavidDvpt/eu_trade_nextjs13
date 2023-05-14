@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
     const token: any = await getToken({ req });
 
     const res = await req.json();
+    console.log('api route', { ...res, userId: token.id });
     const transaction = await postTransaction({ ...res, userId: token.id });
 
     return NextResponse.json({ data: transaction }, { status: 201 });

@@ -3,7 +3,6 @@
 import ItemTitle from '@/components/common/itemTitle';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
-import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
 import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
@@ -30,9 +29,9 @@ function Buy(): React.ReactElement {
 
       <ItemTitle item={item} />
 
-      <TransactionForm resource={item} type={TransactionType.BUY} />
+      <TransactionForm item={item} type={TransactionType.BUY} />
 
-      {item && (
+      {/* {item && (
         <section>
           <h4>Liste des précédents achats</h4>
           <TransactionListByResourceId
@@ -41,7 +40,7 @@ function Buy(): React.ReactElement {
             type={TransactionType.BUY}
           />
         </section>
-      )}
+      )} */}
     </div>
   );
 }

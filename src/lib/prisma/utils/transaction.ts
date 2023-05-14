@@ -13,7 +13,7 @@ export async function getTransactions(params: {
         type: params?.transactionType ?? undefined,
         userId: params.userId,
       },
-      include: { resource: true },
+      include: { Item: true },
       orderBy: [{ createdAt: 'asc' }],
     });
 
@@ -24,18 +24,18 @@ export async function getTransactions(params: {
 }
 export async function getTransactionsByResourceId(
   userId: string,
-  resourceId: string,
+  itemId: string,
   type?: TransactionType
 ) {
   try {
     const transactions = await client.transaction.findMany({
       where: {
         userId,
-        resourceId,
+        itemId,
         type: type,
       },
       include: {
-        resource: true,
+        Item: true,
       },
     });
 
@@ -47,9 +47,9 @@ export async function getTransactionsByResourceId(
 export async function getStock(userId: string) {
   try {
     const response = await client.transaction.groupBy({
-      by: ['resourceId', 'type', 'sellStatus'],
+      by: ['itemId', 'type', 'sellStatus'],
       _sum: { quantity: true },
-      orderBy: { resourceId: 'asc' },
+      orderBy: { itemId: 'asc' },
       where: { userId },
     });
 
@@ -60,16 +60,16 @@ export async function getStock(userId: string) {
 }
 export async function getStockByResourceId(
   userId: string,
-  resourceId: string | null
+  itemId: string | null
 ) {
   try {
-    if (resourceId) {
+    if (itemId) {
       const response = await client.transaction.groupBy({
-        by: ['type', 'sellStatus', 'resourceId'],
+        by: ['type', 'sellStatus', 'itemId'],
         _sum: {
           quantity: true,
         },
-        where: { resourceId, userId },
+        where: { itemId, userId },
       });
 
       let stock = 0;
@@ -92,9 +92,9 @@ export async function postTransaction(data: any) {
   try {
     const transaction = await client.transaction.create({
       data: {
-        type: data.transactionType,
+        type: data.type,
         quantity: data.quantity,
-        resourceId: data.resourceId,
+        itemId: data.itemId,
         userId: data.userId,
         value: data.value,
         sellStatus: data.sellStatus,
@@ -104,6 +104,7 @@ export async function postTransaction(data: any) {
 
     return transaction;
   } catch (error) {
+    console.log(error);
     return Promise.reject(error);
   }
 }
@@ -114,7 +115,7 @@ export async function putTransaction(data: Transaction) {
       data: {
         type: data.type,
         quantity: data.quantity,
-        resourceId: data.resourceId,
+        itemId: data.itemId,
         userId: data.userId,
         value: data.value,
         sellStatus: data.sellStatus,

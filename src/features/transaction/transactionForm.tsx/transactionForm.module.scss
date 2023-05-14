@@ -10,21 +10,9 @@
       width: auto;
     }
   }
+
   h5 {
     margin: 20px 0;
-  }
-
-  .lastSell {
-    > div {
-      @include flex-around-center;
-      table {
-        width: auto;
-        td,
-        th {
-          width: 100px;
-        }
-      }
-    }
   }
 
   form {

@@ -30,7 +30,6 @@ function ItemSearchEngineContainer({
     selectedItem,
   } = useAppSelector(getItemSearchEngineState);
   const dispatch = useAppDispatch();
-  console.log('refresh search');
 
   useEffect(() => {
     if (selectedItem) callback(selectedItem);
