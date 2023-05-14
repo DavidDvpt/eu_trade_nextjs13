@@ -21,11 +21,11 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 function Buy(): React.ReactElement {
   const [item, setItem] = useState<Item | null>(null);
 
-  const handleItem = (value: Item) => setItem(value);
+  const handleItemChange = (value: Item) => setItem(value);
 
   return (
     <div className={styles.buy}>
-      <ItemSearchEngineContainer callback={handleItem} />
+      <ItemSearchEngineContainer callback={handleItemChange} />
 
       <ItemTitle item={item} />
 

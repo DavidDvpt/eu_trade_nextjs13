@@ -10,7 +10,9 @@ export async function GET(
     const token: any = await getToken({ req });
     if (token && params.id) {
       const stock = await getStockByResourceId(token.id, params.id);
-      return NextResponse.json({ data: stock }, { status: 200 });
+
+      console.log('stock', stock);
+      return NextResponse.json({ stock }, { status: 200 });
     } else {
       return NextResponse.json({ data: 'no params' }, { status: 422 });
     }

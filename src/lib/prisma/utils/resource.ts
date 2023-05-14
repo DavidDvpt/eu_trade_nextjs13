@@ -2,7 +2,7 @@ import client from '../../../../prisma/prismadb';
 
 export const getResources = async () => {
   try {
-    const resources = await client.resource.findMany();
+    const resources = await client.item.findMany();
 
     return resources;
   } catch (error) {
@@ -12,9 +12,9 @@ export const getResources = async () => {
 
 export const getResourcesByTypeId = async (typeId: string) => {
   try {
-    const resources = await client.resource.findMany({
+    const resources = await client.item.findMany({
       where: {
-        resourceTypeId: typeId,
+        itemTypeId: typeId,
       },
       orderBy: [{ name: 'asc' }],
     });

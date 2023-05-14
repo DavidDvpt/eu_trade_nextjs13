@@ -1,9 +1,9 @@
 'use client';
 
-import ResourceSearch from '@/components/common/resourceSearch.tsx';
+import ItemTitle from '@/components/common/itemTitle';
+import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
-import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
-import { Resource, TransactionType } from '@prisma/client';
+import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import AvailableQuantity from './AvailableQuantity';
 import styles from './sell.module.scss';
@@ -20,28 +20,29 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 ];
 
 function Sell(): React.ReactElement {
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [item, setItem] = useState<Item | null>(null);
 
-  const handleChange = (value: Resource) => {
-    setResource(value);
-  };
+  const handleItemChange = (value: Item) => setItem(value);
 
   return (
     <div className={styles.sell}>
-      <ResourceSearch onChange={handleChange} />
-      <section>
-        <AvailableQuantity resourceId={resource?.id ?? null} />
-        <TransactionForm resource={resource} type={TransactionType.SELL} />
-      </section>
-      {resource && (
+      <ItemSearchEngineContainer callback={handleItemChange} />
+
+      <ItemTitle item={item} />
+
+      <AvailableQuantity itemId={item?.id ?? null} />
+
+      <TransactionForm item={item} type={TransactionType.SELL} />
+
+      {/* {item && (
         <section>
           <TransactionListByResourceId
             headers={headers}
-            resourceId={resource.id}
+            resourceId={item.id}
             type={TransactionType.SELL}
           />
         </section>
-      )}
+      )} */}
     </div>
   );
 }

@@ -6,20 +6,18 @@ import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { useEffect } from 'react';
 
 interface IAvailableQuantityProps {
-  resourceId: string | null;
+  itemId: string | null;
 }
 
-function AvailableQuantity({
-  resourceId,
-}: IAvailableQuantityProps): JSX.Element {
+function AvailableQuantity({ itemId }: IAvailableQuantityProps): JSX.Element {
   const { singleResourceQty } = useAppSelector(getStockState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (resourceId) {
-      dispatch(fetchSingleResourceQuantity({ resourceId }));
+    if (itemId) {
+      dispatch(fetchSingleResourceQuantity({ itemId }));
     }
-  }, [resourceId]);
+  }, [itemId]);
 
   if (singleResourceQty.status === ApiStatusEnum.PENDING) {
     return <div>Stock : chargement ...</div>;

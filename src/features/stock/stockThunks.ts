@@ -5,14 +5,14 @@ import axios from 'axios';
 
 export const fetchSingleResourceQuantity = createAsyncThunk(
   'stock/fetchSingleResourceQuantity',
-  async (params: { resourceId: string }) => {
+  async (params: { itemId: string }) => {
     try {
-      if (params.resourceId) {
-        const response = await axios.get<{ data: number }>(
-          `/api/resource/${params.resourceId}/stock`
+      if (params.itemId) {
+        const response = await axios.get<{ stock: number }>(
+          `/api/resource/${params.itemId}/stock`
         );
-
-        return response.data.data ?? 0;
+        console.log(response);
+        return response.data.stock ?? 0;
       } else {
         return Promise.reject(MissingParamsError());
       }

@@ -10,8 +10,24 @@ export async function fetchDatas<T>(
       `${endpoint}`,
       params
     );
-
+    console.log('fetchDatas', response);
     return response.data.data as T[];
+  } catch (error) {
+    return Promise.reject({ status: 500, message: 'fetchDatas error' });
+  }
+}
+
+export async function fetchScalarData<T>(
+  endpoint: string,
+  params?: AxiosRequestConfig
+) {
+  try {
+    const response: AxiosResponse = await axiosInstance().get(
+      `${endpoint}`,
+      params
+    );
+
+    return response.data.data && (response.data.data[0] as T);
   } catch (error) {
     return Promise.reject({ status: 500, message: 'fetchDatas error' });
   }
