@@ -61,14 +61,14 @@ export const postTransactionThunk = createAsyncThunk(
       callback && callback();
       tools.dispatch(
         fetchTransactionsThunk({
-          type: body.transactionType,
-          resourceId: body.resourceId,
+          type: body.type,
+          resourceId: body.itemId,
         })
       );
-      if (body.transactionType === TransactionType.SELL) {
+      if (body.type === TransactionType.SELL) {
         tools.dispatch(stockActions.singleQtySubstract(body.quantity));
       }
-      if (body.transactionType === TransactionType.BUY) {
+      if (body.type === TransactionType.BUY) {
       }
       return response;
     } catch (error) {

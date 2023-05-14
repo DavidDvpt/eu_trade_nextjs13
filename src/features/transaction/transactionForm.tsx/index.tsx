@@ -7,7 +7,6 @@ import { Resource, SellStatus, TransactionType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ResourceTitle from '../../../components/common/ResourceTitle';
 import Button from '../../../components/form/Button';
 import HookFormInputField from '../../../components/form/HookFormInputField';
 import LastTransaction from './LastTransaction';
@@ -102,9 +101,7 @@ function TransactionForm({
   };
 
   return (
-    <div className={styles.transactionForm}>
-      <ResourceTitle resource={resource} />
-
+    <section className={styles.transactionForm}>
       {lastTransaction && type === TransactionType.SELL && (
         <>
           <LastTransaction item={lastTransaction} />
@@ -189,7 +186,7 @@ function TransactionForm({
           {type === TransactionType.BUY ? 'Acheter' : 'Mettre en vente'}
         </Button>
       </form>
-    </div>
+    </section>
   );
 }
 

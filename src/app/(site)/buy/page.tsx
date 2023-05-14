@@ -1,5 +1,6 @@
 'use client';
 
+import ItemTitle from '@/components/common/itemTitle';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
 import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
@@ -12,7 +13,7 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Nom', key: 'name' },
   { name: 'Quantité', key: 'quantity' },
   { name: 'Cout TT', key: 'ttCost' },
-  // { name: 'Fee', key: 'fee' },
+  { name: 'Fee', key: 'fee' },
   { name: 'Cout TTC', key: 'ttcCost' },
   { name: 'Cout Extra', key: 'extraCost' },
   { name: 'Markup', key: 'markup' },
@@ -27,9 +28,9 @@ function Buy(): React.ReactElement {
     <div className={styles.buy}>
       <ItemSearchEngineContainer callback={handleItem} />
 
-      <section>
-        <TransactionForm resource={item} type={TransactionType.BUY} />
-      </section>
+      <ItemTitle item={item} />
+
+      <TransactionForm resource={item} type={TransactionType.BUY} />
 
       {item && (
         <section>
