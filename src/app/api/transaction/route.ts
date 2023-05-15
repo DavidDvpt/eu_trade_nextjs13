@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(null, { status: 401 });
     }
   } catch (error) {
+    console.log(error);
     return NextResponse.error().status;
   }
 }

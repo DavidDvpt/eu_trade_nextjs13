@@ -13,12 +13,12 @@ export const fetchTransactionsThunk = createAsyncThunk(
   'transaction/fetchTransactionsThunk',
   async (params: IFetchTransactionsParams) => {
     try {
-      const { sellStatus, type, resourceId } = params;
+      const { sellStatus, type, itemId } = params;
       let url = '/api/transaction';
 
-      if (resourceId) {
+      if (itemId) {
         //fetch only one resource
-        url = `/api/resource/${resourceId}/transactions`;
+        url = `/api/resource/${itemId}/transactions`;
       }
 
       const response = await fetchDatas<TransactionExtended>(url, {
@@ -68,7 +68,7 @@ export const postTransactionThunk = createAsyncThunk(
       tools.dispatch(
         fetchTransactionsThunk({
           type: body.type,
-          resourceId: body.itemId,
+          itemId: body.itemId,
         })
       );
       if (body.type === TransactionType.SELL) {

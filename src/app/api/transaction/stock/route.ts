@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
       }
 
       const sorted = result.sort((a, b) => (a.name > b.name ? 1 : -1));
-      console.log('sort stock', sorted);
+
       return NextResponse.json({ data: sorted }, { status: 200 });
     } else {
       return NextResponse.json(null, { status: 401 });

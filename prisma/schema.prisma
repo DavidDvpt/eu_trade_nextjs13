@@ -105,6 +105,6 @@ model Transaction {
   user       User            @relation(fields: [userId], references: [id])
   // resourceId String
   // resource   Resource        @relation(fields: [resourceId], references: [id])
-  Item       Item?           @relation(fields: [itemId], references: [id])
+  item       Item?           @relation(fields: [itemId], references: [id])
   itemId     String
 }

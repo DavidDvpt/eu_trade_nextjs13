@@ -13,7 +13,7 @@ export async function getTransactions(params: {
         type: params?.transactionType ?? undefined,
         userId: params.userId,
       },
-      include: { Item: true },
+      include: { item: true },
       orderBy: [{ createdAt: 'asc' }],
     });
 
@@ -35,7 +35,7 @@ export async function getTransactionsByItemId(
         type: type,
       },
       include: {
-        Item: true,
+        item: true,
       },
     });
 

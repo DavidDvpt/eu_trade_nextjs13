@@ -9,7 +9,7 @@ function SellProgressRow({ row }: ISellProgressRowProps): JSX.Element {
   return (
     <tr>
       <td>{new Date(row.createdAt).toLocaleDateString('fr-FR')}</td>
-      <td>{row.Item.name}</td>
+      <td>{row.item.name}</td>
       <td>{row.quantity}</td>
       <td>{row.value}</td>
       <td className={styles.updateSelect}>
