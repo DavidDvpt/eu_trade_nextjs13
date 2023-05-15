@@ -7,7 +7,7 @@ type SimpleStock = {
 type SimpleStocks = SimpleStock[];
 
 type StockState = {
-  singleResourceQty: ApiType<number>;
+  singleItemQty: ApiType<number>;
   simpleStockList: ApiType<SimpleStocks | null>;
 };
 

@@ -7,7 +7,7 @@ interface IUseTransactions extends IFetchTransactionsParams {
   all?: boolean;
 }
 const useTransactions = ({
-  resourceId,
+  itemId,
   type,
   sellStatus,
   all,
@@ -16,10 +16,10 @@ const useTransactions = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (resourceId || all) {
-      dispatch(fetchTransactionsThunk({ resourceId, type, sellStatus }));
+    if (itemId || all) {
+      dispatch(fetchTransactionsThunk({ itemId, type, sellStatus }));
     }
-  }, [resourceId, all]);
+  }, [itemId, all]);
 
   useEffect(() => {
     return () => {

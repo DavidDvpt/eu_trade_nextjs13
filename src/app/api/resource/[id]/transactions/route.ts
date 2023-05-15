@@ -1,4 +1,4 @@
-import { getTransactionsByResourceId } from '@/lib/prisma/utils/transaction';
+import { getTransactionsByItemId } from '@/lib/prisma/utils/transaction';
 import { TransactionType } from '@prisma/client';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
@@ -14,7 +14,7 @@ export async function GET(
 
   try {
     if (params.id && type && token) {
-      const transactions = await getTransactionsByResourceId(
+      const transactions = await getTransactionsByItemId(
         token.id,
         params.id,
         type as TransactionType

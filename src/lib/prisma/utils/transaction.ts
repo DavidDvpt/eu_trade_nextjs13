@@ -22,7 +22,7 @@ export async function getTransactions(params: {
     return Promise.reject(error);
   }
 }
-export async function getTransactionsByResourceId(
+export async function getTransactionsByItemId(
   userId: string,
   itemId: string,
   type?: TransactionType
@@ -58,10 +58,7 @@ export async function getStock(userId: string) {
     return Promise.reject(error);
   }
 }
-export async function getStockByResourceId(
-  userId: string,
-  itemId: string | null
-) {
+export async function getStockByItemId(userId: string, itemId: string | null) {
   try {
     if (itemId) {
       const response = await client.transaction.groupBy({

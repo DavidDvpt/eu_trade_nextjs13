@@ -1,6 +1,6 @@
-import { Resource, Transaction } from '@prisma/client';
+import { Item, Transaction } from '@prisma/client';
 
 export type TransactionExtended = Transaction & {
-  resource: Resource;
+  Item: Item;
 };
 export type TransactionsExtended = TransactionExtended[];

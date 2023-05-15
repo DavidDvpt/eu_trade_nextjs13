@@ -3,11 +3,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
 import {
   fetchSimpleStockListThunk,
-  fetchSingleResourceQuantity,
+  fetchSingleItemQuantityThunk,
 } from './stockThunks';
 
 const initialState: StockState = {
-  singleResourceQty: { status: ApiStatusEnum.IDLE, result: 0, error: null },
+  singleItemQty: { status: ApiStatusEnum.IDLE, result: 0, error: null },
   simpleStockList: { status: ApiStatusEnum.IDLE, result: null, error: null },
 };
 const stockSlice = createSlice({
@@ -15,12 +15,10 @@ const stockSlice = createSlice({
   initialState,
   reducers: {
     singleQtyAdd: (state, action: PayloadAction<number>) => {
-      state.singleResourceQty.result =
-        state.singleResourceQty.result + action.payload;
+      state.singleItemQty.result = state.singleItemQty.result + action.payload;
     },
     singleQtySubstract: (state, action: PayloadAction<number>) => {
-      state.singleResourceQty.result =
-        state.singleResourceQty.result - action.payload;
+      state.singleItemQty.result = state.singleItemQty.result - action.payload;
     },
     simpleStockListReset: (state) => {
       state.simpleStockList = {
@@ -32,25 +30,25 @@ const stockSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchSingleResourceQuantity.pending, (state) => {
-        state.singleResourceQty.status = ApiStatusEnum.PENDING;
-        state.singleResourceQty.result = 0;
-        state.singleResourceQty.error = null;
+      .addCase(fetchSingleItemQuantityThunk.pending, (state) => {
+        state.singleItemQty.status = ApiStatusEnum.PENDING;
+        state.singleItemQty.result = 0;
+        state.singleItemQty.error = null;
       })
       .addCase(
-        fetchSingleResourceQuantity.fulfilled,
+        fetchSingleItemQuantityThunk.fulfilled,
         (state, action: PayloadAction<number>) => {
-          state.singleResourceQty.status = ApiStatusEnum.IDLE;
-          state.singleResourceQty.result = action.payload;
-          state.singleResourceQty.error = null;
+          state.singleItemQty.status = ApiStatusEnum.IDLE;
+          state.singleItemQty.result = action.payload;
+          state.singleItemQty.error = null;
         }
       )
       .addCase(
-        fetchSingleResourceQuantity.rejected,
+        fetchSingleItemQuantityThunk.rejected,
         (state, action: PayloadAction<any>) => {
-          state.singleResourceQty.status = ApiStatusEnum.REJECTED;
-          state.singleResourceQty.result = 0;
-          state.singleResourceQty.error = action.payload;
+          state.singleItemQty.status = ApiStatusEnum.REJECTED;
+          state.singleItemQty.result = 0;
+          state.singleItemQty.error = action.payload;
         }
       )
       .addCase(fetchSimpleStockListThunk.pending, (state) => {

@@ -11,7 +11,6 @@ export async function GET(
     if (token && params.id) {
       const stock = await getStockByItemId(token.id, params.id);
 
-      console.log('stock', stock);
       return NextResponse.json({ stock }, { status: 200 });
     } else {
       return NextResponse.json({ data: 'no params' }, { status: 422 });

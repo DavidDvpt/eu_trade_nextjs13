@@ -15,7 +15,7 @@ type TransactionFormType = Pick<
 interface IFetchTransactionsParams {
   type?: TransactionType;
   sellStatus?: SellStatus;
-  resourceId?: string;
+  itemId?: string;
 }
 
 interface TransactionRow {

@@ -1,6 +1,6 @@
 'use client';
 import { getStockState } from '@/features/stock/stockSlice';
-import { fetchSingleResourceQuantity } from '@/features/stock/stockThunks';
+import { fetchSingleItemQuantityThunk } from '@/features/stock/stockThunks';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { useEffect } from 'react';
@@ -10,20 +10,20 @@ interface IAvailableQuantityProps {
 }
 
 function AvailableQuantity({ itemId }: IAvailableQuantityProps): JSX.Element {
-  const { singleResourceQty } = useAppSelector(getStockState);
+  const { singleItemQty } = useAppSelector(getStockState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (itemId) {
-      dispatch(fetchSingleResourceQuantity({ itemId }));
+      dispatch(fetchSingleItemQuantityThunk({ itemId }));
     }
   }, [itemId]);
 
-  if (singleResourceQty.status === ApiStatusEnum.PENDING) {
+  if (singleItemQty.status === ApiStatusEnum.PENDING) {
     return <div>Stock : chargement ...</div>;
   }
 
-  return <div>Stock : {singleResourceQty.result}</div>;
+  return <div>Stock : {singleItemQty.result}</div>;
 }
 
 export default AvailableQuantity;

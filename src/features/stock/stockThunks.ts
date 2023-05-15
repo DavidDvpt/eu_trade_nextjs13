@@ -3,15 +3,15 @@ import { fetchDatas } from '@/lib/axios/requests/genericRequests';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchSingleResourceQuantity = createAsyncThunk(
-  'stock/fetchSingleResourceQuantity',
+export const fetchSingleItemQuantityThunk = createAsyncThunk(
+  'stock/fetchSingleItemQuantityThunk',
   async (params: { itemId: string }) => {
     try {
       if (params.itemId) {
         const response = await axios.get<{ stock: number }>(
-          `/api/resource/${params.itemId}/stock`
+          `/api/items/${params.itemId}/stock`
         );
-        console.log(response);
+
         return response.data.stock ?? 0;
       } else {
         return Promise.reject(MissingParamsError());
