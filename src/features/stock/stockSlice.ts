@@ -14,6 +14,13 @@ const stockSlice = createSlice({
   name: 'stock',
   initialState,
   reducers: {
+    singleQtyReset: (state) => {
+      state.singleItemQty = {
+        status: ApiStatusEnum.IDLE,
+        result: 0,
+        error: null,
+      };
+    },
     singleQtyAdd: (state, action: PayloadAction<number>) => {
       state.singleItemQty.result = state.singleItemQty.result + action.payload;
     },

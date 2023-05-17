@@ -42,6 +42,9 @@ function ItemSearchEngineContainer({
     ) {
       dispatch(fetchItemCategoriesThunk());
     }
+    return () => {
+      dispatch(itemSearchEngineActions.reset());
+    };
   }, []);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>, type: string) => {

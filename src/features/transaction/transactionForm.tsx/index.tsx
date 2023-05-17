@@ -23,7 +23,7 @@ function TransactionForm({
   item,
   type,
 }: ITransactionFormProps): React.ReactElement {
-  const { singleResourceQty } = useAppSelector(getStockState);
+  const { singleItemQty } = useAppSelector(getStockState);
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
 
@@ -37,7 +37,7 @@ function TransactionForm({
     control,
   } = useForm<TransactionFormType>({
     defaultValues: initialTransactionFormValues,
-    resolver: yupResolver(TransactionFormValidation(singleResourceQty.result)),
+    resolver: yupResolver(TransactionFormValidation(singleItemQty.result)),
   });
 
   const dispatch = useAppDispatch();

@@ -19,6 +19,7 @@ const itemSearchEngineSlice = createSlice({
   name: 'itemSearchEngine',
   initialState,
   reducers: {
+    reset: () => initialState,
     setSelectedItemCategory: (state, action: PayloadAction<string>) => {
       state.selectedItemCategory =
         state.itemCategories.result?.find((f) => f.id === action.payload) ??
