@@ -16,7 +16,7 @@ import {
 import styles from './itemSearchEngineContainer.module.scss';
 
 interface IItemSearchEngineContainerProps {
-  callback: (item: Item) => void;
+  callback: (item: Item | null) => void;
 }
 function ItemSearchEngineContainer({
   callback,
@@ -36,16 +36,20 @@ function ItemSearchEngineContainer({
   }, [selectedItem]);
 
   useEffect(() => {
+    if (itemCategories.result) {
+      dispatch(itemSearchEngineActions.reset());
+      callback(null);
+    }
+  }, []);
+
+  useEffect(() => {
     if (
       !itemCategories.result &&
       itemCategories.status === ApiStatusEnum.IDLE
     ) {
       dispatch(fetchItemCategoriesThunk());
     }
-    return () => {
-      dispatch(itemSearchEngineActions.reset());
-    };
-  }, []);
+  }, [itemCategories.result]);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>, type: string) => {
     const value = e.target.value;

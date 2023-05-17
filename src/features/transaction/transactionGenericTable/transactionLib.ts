@@ -6,7 +6,7 @@ export const transactionRowParser = (
 ): TransactionRowForTable => {
   const parsedRow: TransactionRowForTable = {
     date: new Date(e.createdAt).toLocaleDateString('fr-FR'),
-    name: e.resource.name,
+    name: e.item.name,
     quantity: e.quantity.toString(),
     ttCost: Number(ttCost).toFixed(2),
     fee: Number(e.fee ?? 0).toFixed(2),

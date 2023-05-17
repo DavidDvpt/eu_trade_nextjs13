@@ -3,6 +3,7 @@
 import ItemTitle from '@/components/common/itemTitle';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
+import TransactionGenericTable from '@/features/transaction/transactionGenericTable';
 import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import AvailableQuantity from './AvailableQuantity';
@@ -22,7 +23,7 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 function Sell(): React.ReactElement {
   const [item, setItem] = useState<Item | null>(null);
 
-  const handleItemChange = (value: Item) => setItem(value);
+  const handleItemChange = (value: Item | null) => setItem(value);
 
   return (
     <div className={styles.sell}>
@@ -34,15 +35,14 @@ function Sell(): React.ReactElement {
 
       <TransactionForm item={item} type={TransactionType.SELL} />
 
-      {/* {item && (
-        <section>
-          <TransactionListByResourceId
-            headers={headers}
-            resourceId={item.id}
-            type={TransactionType.SELL}
-          />
-        </section>
-      )} */}
+      {item && (
+        <TransactionGenericTable
+          headers={headers}
+          itemId={item.id}
+          type={TransactionType.SELL}
+          title='Dernières ventes pour cet item'
+        />
+      )}
     </div>
   );
 }

@@ -9,17 +9,19 @@ import {
 } from './transactionLib';
 import styles from './transactionListByResourceId.module.scss';
 
-interface IBuyTransactionResourceListProps {
-  resourceId: string;
+interface ITransactionGenericTableProps {
+  itemId: string;
   headers: GenericHeadersTableType<TransactionRowForTable>;
   type: TransactionType;
+  title: string;
 }
-function TransactionListByResourceId({
-  resourceId,
+function TransactionGenericTable({
+  itemId,
   type,
   headers,
-}: IBuyTransactionResourceListProps) {
-  const { transactions } = useTransactions({ resourceId, type });
+  title,
+}: ITransactionGenericTableProps) {
+  const { transactions } = useTransactions({ itemId, type });
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
 
@@ -41,7 +43,7 @@ function TransactionListByResourceId({
       const parsedRows: TransactionRowsForTable = [];
 
       transactions?.forEach((e) => {
-        const r = e.resource;
+        const r = e.item;
         const tt = e.quantity * r.value;
         const ec = e.value - tt - (e.fee ?? 0);
 
@@ -71,10 +73,11 @@ function TransactionListByResourceId({
   }, [transactions]);
 
   return (
-    <div className={styles.transactionByResourceIdTableContainer}>
+    <section className={styles.transactionByResourceIdTableContainer}>
+      <h4>{title}</h4>
       <GenericTable header={headers} rows={rows ?? []} footerRow={totalRow} />
-    </div>
+    </section>
   );
 }
 
-export default TransactionListByResourceId;
+export default TransactionGenericTable;
