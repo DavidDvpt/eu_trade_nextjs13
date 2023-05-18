@@ -87,12 +87,14 @@ export async function putTransaction(data: Transaction) {
 }
 export async function getStocks(userId: string) {
   try {
-    const response = await client.transaction.groupBy({
-      by: ['itemId', 'type', 'sellStatus'],
-      _sum: { quantity: true },
-      orderBy: { itemId: 'asc' },
-      where: { userId },
-    });
+    const response: DbUserStocks = await client.$queryRaw`
+      SELECT i.id itemId,i.name itemName,i.value itemValue, t.type transactionType, t.sellStatus sellStatus, COUNT(*) count,SUM(t.quantity) quantity, SUM(t.fee) fee, SUM(t.value) totalValue FROM Transaction t
+      LEFT JOIN Item i
+      ON t.itemId = i.id
+      WHERE t.userId = ${userId}
+      GROUP BY i.id, t.type, t.sellStatus
+      ORDER BY i.name, t.type, t.sellStatus
+    `;
 
     return response;
   } catch (error) {

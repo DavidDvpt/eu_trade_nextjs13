@@ -1,14 +1,11 @@
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store/storeTypes';
-import {
-  fetchItemQuantityThunk,
-  fetchSimpleStockListThunk,
-} from './stockThunks';
+import { fetchItemQuantityThunk, fetchUserStockListThunk } from './stockThunks';
 
 const initialState: StockState = {
   itemQty: { status: ApiStatusEnum.IDLE, result: 0, error: null },
-  simpleStockList: { status: ApiStatusEnum.IDLE, result: null, error: null },
+  userStockList: { status: ApiStatusEnum.IDLE, result: null, error: null },
 };
 const stockSlice = createSlice({
   name: 'stock',
@@ -27,8 +24,8 @@ const stockSlice = createSlice({
     singleQtySubstract: (state, action: PayloadAction<number>) => {
       state.itemQty.result = state.itemQty.result - action.payload;
     },
-    simpleStockListReset: (state) => {
-      state.simpleStockList = {
+    userStockListReset: (state) => {
+      state.userStockList = {
         status: ApiStatusEnum.IDLE,
         result: null,
         error: null,
@@ -59,24 +56,24 @@ const stockSlice = createSlice({
         }
       );
     builder
-      .addCase(fetchSimpleStockListThunk.pending, (state) => {
-        state.simpleStockList.status = ApiStatusEnum.PENDING;
-        state.simpleStockList.error = null;
+      .addCase(fetchUserStockListThunk.pending, (state) => {
+        state.userStockList.status = ApiStatusEnum.PENDING;
+        state.userStockList.error = null;
       })
       .addCase(
-        fetchSimpleStockListThunk.fulfilled,
-        (state, action: PayloadAction<SimpleStocks>) => {
-          state.simpleStockList.status = ApiStatusEnum.IDLE;
-          state.simpleStockList.result = action.payload;
-          state.simpleStockList.error = null;
+        fetchUserStockListThunk.fulfilled,
+        (state, action: PayloadAction<UserStocks>) => {
+          state.userStockList.status = ApiStatusEnum.IDLE;
+          state.userStockList.result = action.payload;
+          state.userStockList.error = null;
         }
       )
       .addCase(
-        fetchSimpleStockListThunk.rejected,
+        fetchUserStockListThunk.rejected,
         (state, action: PayloadAction<any>) => {
-          state.simpleStockList.status = ApiStatusEnum.REJECTED;
-          state.simpleStockList.result = null;
-          state.simpleStockList.error = action.payload;
+          state.userStockList.status = ApiStatusEnum.REJECTED;
+          state.userStockList.result = null;
+          state.userStockList.error = action.payload;
         }
       );
   },

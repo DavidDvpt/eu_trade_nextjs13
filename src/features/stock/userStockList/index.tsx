@@ -1,45 +1,43 @@
 import GenericTable from '@/components/generic/genericTable';
 import { getStockState, stockActions } from '@/features/stock/stockSlice';
-import { fetchSimpleStockListThunk } from '@/features/stock/stockThunks';
+import { fetchUserStockListThunk } from '@/features/stock/stockThunks';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { useEffect, useState } from 'react';
-import styles from './stock.module.scss';
-
-type HomeStockTableRow = Omit<IHomeStockForTable, 'resourceId'>;
+import styles from './userStockList.module.scss';
 
 const homeStockTableHeader: GenericHeadersTableType<HomeStockTableRow> = [
-  { name: 'Nom', key: 'name' },
+  { name: 'Nom', key: 'iName' },
   { name: 'Quantité', key: 'quantity' },
-  { name: 'Valeur', key: 'price' },
+  { name: 'Valeur', key: 'value' },
 ];
 
-function SimpleStockList(): JSX.Element {
-  const { simpleStockList } = useAppSelector(getStockState);
+function UserStockList(): JSX.Element {
+  const { userStockList } = useAppSelector(getStockState);
   const dispatch = useAppDispatch();
   const [footerRow, setFooterRow] = useState<HomeStockTableRow>({
-    name: '',
+    iName: '',
     quantity: '',
-    price: '0',
+    value: '0',
   });
   const [rows, setRows] = useState<HomeStockTableRows>([]);
 
   useEffect(() => {
-    dispatch(fetchSimpleStockListThunk());
+    dispatch(fetchUserStockListThunk());
 
     return () => {
-      dispatch(stockActions.simpleStockListReset());
+      dispatch(stockActions.userStockListReset());
     };
   }, []);
 
   useEffect(() => {
-    if (simpleStockList.result) {
+    if (userStockList.result) {
       const tempRows: HomeStockTableRows = [];
 
-      simpleStockList.result.forEach((e) => {
+      userStockList.result.forEach((e) => {
         const temp: HomeStockTableRow = {
           ...e,
           quantity: String(e.quantity),
-          price: Number(e.price).toFixed(2),
+          value: Number(e.value).toFixed(2),
         };
         tempRows.push(temp);
       });
@@ -48,14 +46,14 @@ function SimpleStockList(): JSX.Element {
 
       //footerRow
       const total = Number(
-        simpleStockList.result.reduce((t, c) => {
-          return (t += c.price);
+        userStockList.result.reduce((t, c) => {
+          return (t += c.value);
         }, 0)
       ).toFixed(2);
 
-      setFooterRow({ ...footerRow, price: total });
+      setFooterRow({ ...footerRow, value: total });
     }
-  }, [simpleStockList.result]);
+  }, [userStockList.result]);
 
   return (
     <section className={styles.homeStockList}>
@@ -69,4 +67,4 @@ function SimpleStockList(): JSX.Element {
   );
 }
 
-export default SimpleStockList;
+export default UserStockList;

@@ -21,11 +21,11 @@ export const fetchItemQuantityThunk = createAsyncThunk(
     }
   }
 );
-export const fetchSimpleStockListThunk = createAsyncThunk(
-  'stock/fetchSimpleStockListThunk',
+export const fetchUserStockListThunk = createAsyncThunk(
+  'stock/fetchUserStockListThunk',
   async () => {
     try {
-      const stocks = await fetchDatas<SimpleStock>(`/api/transaction/stock`);
+      const stocks = await fetchDatas<UserStock>(`/api/transaction/stock`);
 
       return stocks;
     } catch (error) {

@@ -1,29 +1,14 @@
 import client from './prismadb';
 
-export const getStockLeft = async (value: string) => {
-  const response = await client.transaction.groupBy({
-    by: ['type', 'sellStatus', 'resourceId'],
-    _sum: {
-      quantity: true,
-    },
-    where: { resourceId: value },
-  });
+const userStockList = async () => {
+  const response = await client.$queryRaw`
+  SELECT i.name, t.type, t.sellStatus, COUNT(*) count,SUM(t.quantity) quantity, SUM(t.fee) fee, SUM(t.value) value FROM Transaction t
+  LEFT JOIN Item i
+  ON t.itemId = i.id
+  GROUP BY i.id, t.type, t.sellStatus
+  ORDER BY i.name, t.type, t.sellStatus`;
 
-  let stock = 0;
-  response.forEach((e) => {
-    if (e.type === 'BUY') {
-      stock += e._sum.quantity ?? 0;
-    }
-    if (e.type === 'SELL' && e.sellStatus !== 'RETURNED') {
-      stock -= e._sum.quantity ?? 0;
-    }
-  });
   console.table(response);
-  console.log(stock);
 };
 
-// getStockLeft('clg87cpgc000spt1mbwfhwlw8');
-const getResources = async () => {
-  const res = await client.resourceType.findMany();
-};
-getResources();
+userStockList();

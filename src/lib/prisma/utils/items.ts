@@ -1,4 +1,3 @@
-import { MissingParamsError } from '@/lib/axios/axiosUtils';
 import client from '../../../../prisma/prismadb';
 
 interface FetchItemsProps {
@@ -7,16 +6,12 @@ interface FetchItemsProps {
 
 export async function dbGetItems({ itemTypeId }: FetchItemsProps) {
   try {
-    if (itemTypeId) {
-      const result = client.item.findMany({
-        where: { itemTypeId },
-        orderBy: [{ name: 'asc' }],
-      });
+    const result = client.item.findMany({
+      where: { itemTypeId },
+      orderBy: [{ name: 'asc' }],
+    });
 
-      return result;
-    } else {
-      Promise.reject(MissingParamsError());
-    }
+    return result;
   } catch (error) {
     Promise.reject(error);
   }
