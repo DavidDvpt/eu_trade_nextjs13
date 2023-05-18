@@ -22,7 +22,7 @@ export async function getTransactions(params: {
     return Promise.reject(error);
   }
 }
-export async function getTransactionsByItemId(
+export async function getTransaction(
   userId: string,
   itemId: string,
   type?: TransactionType
@@ -40,47 +40,6 @@ export async function getTransactionsByItemId(
     });
 
     return transactions;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
-export async function getStock(userId: string) {
-  try {
-    const response = await client.transaction.groupBy({
-      by: ['itemId', 'type', 'sellStatus'],
-      _sum: { quantity: true },
-      orderBy: { itemId: 'asc' },
-      where: { userId },
-    });
-
-    return response;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
-export async function getStockByItemId(userId: string, itemId: string | null) {
-  try {
-    if (itemId) {
-      const response = await client.transaction.groupBy({
-        by: ['type', 'sellStatus', 'itemId'],
-        _sum: {
-          quantity: true,
-        },
-        where: { itemId, userId },
-      });
-
-      let stock = 0;
-      response.forEach((e) => {
-        if (e.type === 'BUY') {
-          stock += e._sum.quantity ?? 0;
-        }
-        if (e.type === 'SELL' && e.sellStatus !== 'RETURNED') {
-          stock -= e._sum.quantity ?? 0;
-        }
-      });
-
-      return stock;
-    }
   } catch (error) {
     return Promise.reject(error);
   }
@@ -122,6 +81,47 @@ export async function putTransaction(data: Transaction) {
     });
 
     return transaction;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+export async function getStocks(userId: string) {
+  try {
+    const response = await client.transaction.groupBy({
+      by: ['itemId', 'type', 'sellStatus'],
+      _sum: { quantity: true },
+      orderBy: { itemId: 'asc' },
+      where: { userId },
+    });
+
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+export async function getStock(userId: string, itemId: string | null) {
+  try {
+    if (itemId) {
+      const response = await client.transaction.groupBy({
+        by: ['type', 'sellStatus', 'itemId'],
+        _sum: {
+          quantity: true,
+        },
+        where: { itemId, userId },
+      });
+
+      let stock = 0;
+      response.forEach((e) => {
+        if (e.type === 'BUY') {
+          stock += e._sum.quantity ?? 0;
+        }
+        if (e.type === 'SELL' && e.sellStatus !== 'RETURNED') {
+          stock -= e._sum.quantity ?? 0;
+        }
+      });
+
+      return stock;
+    }
   } catch (error) {
     return Promise.reject(error);
   }

@@ -3,8 +3,8 @@ import { fetchDatas } from '@/lib/axios/requests/genericRequests';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchSingleItemQuantityThunk = createAsyncThunk(
-  'stock/fetchSingleItemQuantityThunk',
+export const fetchItemQuantityThunk = createAsyncThunk(
+  'stock/fetchItemQuantityThunk',
   async (params: { itemId: string }) => {
     try {
       if (params.itemId) {

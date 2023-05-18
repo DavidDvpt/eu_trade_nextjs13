@@ -3,11 +3,11 @@ import useTransactions from '@/features/transaction/useTransaction';
 import { TransactionType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
+import styles from './transactionGenericTable.module.scss';
 import {
   transactionFooterRowParser,
   transactionRowParser,
 } from './transactionLib';
-import styles from './transactionListByResourceId.module.scss';
 
 interface ITransactionGenericTableProps {
   itemId: string;

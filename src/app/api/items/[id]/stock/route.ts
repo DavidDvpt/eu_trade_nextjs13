@@ -1,4 +1,4 @@
-import { getStockByItemId } from '@/lib/prisma/utils/transaction';
+import { getStock } from '@/lib/prisma/utils/transaction';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -9,7 +9,7 @@ export async function GET(
   try {
     const token: any = await getToken({ req });
     if (token && params.id) {
-      const stock = await getStockByItemId(token.id, params.id);
+      const stock = await getStock(token.id, params.id);
 
       return NextResponse.json({ stock }, { status: 200 });
     } else {
