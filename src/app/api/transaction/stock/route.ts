@@ -2,6 +2,14 @@ import { getStocks } from '@/lib/prisma/utils/transaction';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
+const setCurrent = (e: DbUserStock, q: number): UserStock => ({
+  iId: e.itemId,
+  iName: e.itemName,
+  iValue: e.itemValue,
+  quantity: q,
+  value: 0,
+});
+
 export async function GET(req: NextRequest) {
   try {
     const token = await getToken({ req });
@@ -21,23 +29,13 @@ export async function GET(req: NextRequest) {
         if (buyType) q = +e.quantity;
         if (sellOk) q = -e.quantity;
 
-        const setCurrent = (): UserStock => {
-          return {
-            iId: e.itemId,
-            iName: e.itemName,
-            iValue: e.itemValue,
-            quantity: q,
-            value: 0,
-          };
-        };
-
         if (!c) {
-          c = setCurrent();
+          c = setCurrent(e, q);
         } else {
           if (c.iId !== e.itemId) {
             c.value = c.quantity * c.iValue;
             result.push(c);
-            c = setCurrent();
+            c = setCurrent(e, q);
           } else {
             c.quantity += q;
           }
