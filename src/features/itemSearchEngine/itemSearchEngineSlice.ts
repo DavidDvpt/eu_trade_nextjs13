@@ -9,30 +9,14 @@ import {
 
 const initialState: ItemSearchEngineState = {
   itemCategories: { status: ApiStatusEnum.IDLE, result: null, error: null },
-  selectedItemCategory: null,
   itemTypes: { status: ApiStatusEnum.IDLE, result: null, error: null },
-  selectedItemType: null,
   items: { status: ApiStatusEnum.IDLE, result: null, error: null },
-  selectedItem: null,
 };
 const itemSearchEngineSlice = createSlice({
   name: 'itemSearchEngine',
   initialState,
   reducers: {
     reset: () => initialState,
-    setSelectedItemCategory: (state, action: PayloadAction<string>) => {
-      state.selectedItemCategory =
-        state.itemCategories.result?.find((f) => f.id === action.payload) ??
-        null;
-    },
-    setSelectedItemType: (state, action: PayloadAction<string>) => {
-      state.selectedItemType =
-        state.itemTypes.result?.find((f) => f.id === action.payload) ?? null;
-    },
-    setSelectedItem: (state, action: PayloadAction<string>) => {
-      state.selectedItem =
-        state.items.result?.find((f) => f.id === action.payload) ?? null;
-    },
   },
   extraReducers: (builder) =>
     builder

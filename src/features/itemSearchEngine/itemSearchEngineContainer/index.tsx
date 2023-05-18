@@ -2,8 +2,8 @@ import GenericSelect from '@/components/form/GenericSelect';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
-import { Item } from '@prisma/client';
-import { ChangeEvent, memo, useEffect } from 'react';
+import { Item, ItemCategory, ItemType } from '@prisma/client';
+import { ChangeEvent, memo, useEffect, useState } from 'react';
 import {
   getItemSearchEngineState,
   itemSearchEngineActions,
@@ -18,28 +18,26 @@ import styles from './itemSearchEngineContainer.module.scss';
 interface IItemSearchEngineContainerProps {
   callback: (item: Item | null) => void;
 }
+
+const initialState = {
+  itemCategory: null,
+  itemType: null,
+  item: null,
+};
+
 function ItemSearchEngineContainer({
   callback,
 }: IItemSearchEngineContainerProps): JSX.Element {
-  const {
-    itemCategories,
-    selectedItemCategory,
-    itemTypes,
-    selectedItemType,
-    items,
-    selectedItem,
-  } = useAppSelector(getItemSearchEngineState);
+  const [selected, setSelected] = useState<SelectedDatas>(initialState);
+  const { itemCategories, itemTypes, items } = useAppSelector(
+    getItemSearchEngineState
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (selectedItem) callback(selectedItem);
-  }, [selectedItem]);
-
-  useEffect(() => {
-    if (itemCategories.result) {
+    return () => {
       dispatch(itemSearchEngineActions.reset());
-      callback(null);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -55,15 +53,34 @@ function ItemSearchEngineContainer({
     const value = e.target.value;
     switch (type) {
       case 'category':
-        dispatch(itemSearchEngineActions.setSelectedItemCategory(value));
-        dispatch(fetchItemTypesThunk({ itemCategoryId: value }));
+        {
+          setSelected({
+            ...selected,
+            itemCategory: itemCategories.result?.find(
+              (f) => f.id === value
+            ) as ItemCategory,
+          });
+          dispatch(fetchItemTypesThunk({ itemCategoryId: value }));
+        }
         break;
       case 'type':
-        dispatch(itemSearchEngineActions.setSelectedItemType(value));
-        dispatch(fetchItemsThunk({ itemTypeId: value }));
+        {
+          setSelected({
+            ...selected,
+            itemType: itemTypes.result?.find((f) => f.id === value) as ItemType,
+          });
+          dispatch(fetchItemsThunk({ itemTypeId: value }));
+        }
         break;
       case 'item':
-        dispatch(itemSearchEngineActions.setSelectedItem(value));
+        {
+          const i = items.result?.find((f) => f.id === value) as Item;
+          setSelected({
+            ...selected,
+            item: i,
+          });
+          callback(i);
+        }
         break;
       default:
         break;
@@ -76,21 +93,21 @@ function ItemSearchEngineContainer({
         items={selectItemParser(itemCategories.result)}
         name='itemCategory'
         noValue='Categorie'
-        value={selectedItemCategory?.id ?? ''}
+        value={selected.itemCategory?.id ?? ''}
         onChange={(e) => handleChange(e, 'category')}
       />
       <GenericSelect
         items={selectItemParser(itemTypes.result)}
         name='itemType'
         noValue='Type'
-        value={selectedItemType?.id ?? ''}
+        value={selected.itemType?.id ?? ''}
         onChange={(e) => handleChange(e, 'type')}
       />
       <GenericSelect
         items={selectItemParser(items.result)}
         name='item'
         noValue='Item'
-        value={selectedItem?.id ?? ''}
+        value={selected.item?.id ?? ''}
         onChange={(e) => handleChange(e, 'item')}
       />
     </section>
