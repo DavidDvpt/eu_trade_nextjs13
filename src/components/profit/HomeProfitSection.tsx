@@ -1,3 +1,5 @@
+import { ReloadActionEnum } from '@/features/global/globalEnums';
+import { getGlobalState, globalActions } from '@/features/global/globalSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { getTransactionState } from '@/features/transaction/transactionSlice';
 import { fetchTransactionsGlobalProfitThunk } from '@/features/transaction/transactionThunks';
@@ -6,12 +8,21 @@ import { useEffect } from 'react';
 import styles from './profit.module.scss';
 
 function HomeProfitSection(): React.ReactElement {
+  const NAME = ReloadActionEnum.HOME_PROFIT_SECTION;
   const { transactionProfit } = useAppSelector(getTransactionState);
+  const { reload } = useAppSelector(getGlobalState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchTransactionsGlobalProfitThunk());
   }, []);
+
+  useEffect(() => {
+    if (reload.includes(NAME)) {
+      dispatch(fetchTransactionsGlobalProfitThunk());
+      dispatch(globalActions.removeReload(NAME));
+    }
+  }, [reload]);
 
   const tr = transactionProfit.result;
 

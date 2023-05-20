@@ -82,23 +82,21 @@ export const postTransactionThunk = createAsyncThunk(
 export const updateTransactionThunk = createAsyncThunk(
   'transaction/updateTransactionThunk',
   async (
-    params: { transaction: TransactionExtended; sellStatus?: SellStatus },
+    params: {
+      transaction: TransactionExtended;
+      toReload: ReloadActionEnum[];
+    },
     tools
   ) => {
     try {
-      const { transaction, sellStatus } = params;
+      const { transaction, toReload } = params;
       if (transaction.id) {
         const response = await updateEntity({
           url: `/api/transactions/${transaction.id}`,
           body: transaction,
         });
 
-        tools.dispatch(
-          fetchTransactionsThunk({
-            transactionType: transaction.type,
-            sellStatus,
-          })
-        );
+        tools.dispatch(globalActions.addReload(toReload));
         tools.dispatch(fetchTransactionsGlobalProfitThunk());
 
         return response;

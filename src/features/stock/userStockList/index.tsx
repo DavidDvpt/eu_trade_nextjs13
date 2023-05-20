@@ -1,4 +1,6 @@
 import GenericTable from '@/components/generic/genericTable';
+import { ReloadActionEnum } from '@/features/global/globalEnums';
+import { getGlobalState, globalActions } from '@/features/global/globalSlice';
 import { getStockState, stockActions } from '@/features/stock/stockSlice';
 import { fetchUserStockListThunk } from '@/features/stock/stockThunks';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
@@ -12,7 +14,9 @@ const homeStockTableHeader: GenericHeadersTableType<HomeStockTableRow> = [
 ];
 
 function UserStockList(): JSX.Element {
+  const NAME = ReloadActionEnum.RELOAD_USER_STOCK_LIST;
   const { userStockList } = useAppSelector(getStockState);
+  const { reload } = useAppSelector(getGlobalState);
   const dispatch = useAppDispatch();
   const [footerRow, setFooterRow] = useState<HomeStockTableRow>({
     iName: '',
@@ -20,6 +24,13 @@ function UserStockList(): JSX.Element {
     value: '0',
   });
   const [rows, setRows] = useState<HomeStockTableRows>([]);
+
+  useEffect(() => {
+    if (reload.includes(NAME)) {
+      dispatch(fetchUserStockListThunk());
+      dispatch(globalActions.removeReload(NAME));
+    }
+  }, [reload]);
 
   useEffect(() => {
     dispatch(fetchUserStockListThunk());

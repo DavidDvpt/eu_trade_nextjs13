@@ -44,10 +44,7 @@ function Sell(): React.ReactElement {
       <TransactionForm
         item={item}
         type={TransactionType.SELL}
-        toReload={[
-          // ReloadActionEnum.RELOAD_SELL_ENDED_TRANSACTION_LIST,
-          ReloadActionEnum.RELOAD_UNIQUE_ITEM_QUANTITY,
-        ]}
+        toReload={[ReloadActionEnum.RELOAD_UNIQUE_ITEM_QUANTITY]}
       />
 
       {item && (
