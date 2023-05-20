@@ -35,28 +35,6 @@ model User {
   Transaction Transaction[]
 }
 
-// model ResourceType {
-//   id         String     @id @default(cuid())
-//   name       String     @unique
-//   isActive   Boolean    @default(true)
-//   createdAt  DateTime   @default(now())
-//   modifiedAt DateTime?
-//   Resources  Resource[]
-// }
-
-// model Resource {
-//   id             String        @id @default(cuid())
-//   name           String        @unique
-//   value          Float         @default(0)
-//   imageUrlId     String?
-//   isActive       Boolean       @default(true)
-//   createdAt      DateTime      @default(now())
-//   modifiedAt     DateTime?
-//   resourceTypeId String
-//   resourceType   ResourceType  @relation(fields: [resourceTypeId], references: [id])
-//   Transaction    Transaction[]
-// }
-
 model ItemCategory {
   id         String     @id @default(cuid())
   name       String     @unique
@@ -103,8 +81,6 @@ model Transaction {
   modifiedAt DateTime?
   userId     String
   user       User            @relation(fields: [userId], references: [id])
-  // resourceId String
-  // resource   Resource        @relation(fields: [resourceId], references: [id])
   item       Item?           @relation(fields: [itemId], references: [id])
   itemId     String
 }
