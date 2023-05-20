@@ -14,7 +14,7 @@ import { updateEntity } from './genericRequests';
 // }
 // export async function fetchStock() {
 //   try {
-//     const stocks = await fetchDatas<SimpleStock>(`/api/transaction/stock`);
+//     const stocks = await fetchDatas<UserStock>(`/api/transaction/stock`);
 
 //     return stocks;
 //   } catch (error) {

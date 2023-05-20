@@ -1,4 +1,5 @@
 import { TransactionsExtended } from '@/app/extendedAppTypes';
+import { nanoid } from '@reduxjs/toolkit';
 import SellProgressRow from './SellProgressRow';
 
 interface ISellProgessTableProps {
@@ -18,8 +19,8 @@ function SellProgessTable({ rows }: ISellProgessTableProps): JSX.Element {
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
-          <SellProgressRow key={row.id} row={row} />
+        {rows?.map((row) => (
+          <SellProgressRow key={nanoid()} row={row} />
         ))}
       </tbody>
     </table>

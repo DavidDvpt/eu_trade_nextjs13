@@ -1,0 +1,13 @@
+@import '../../../styles/main';
+
+.container {
+  @include flex-center-center;
+
+  fieldset {
+    width: 25%;
+
+    div {
+      width: 100%;
+    }
+  }
+}

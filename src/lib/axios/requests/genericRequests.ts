@@ -17,6 +17,22 @@ export async function fetchDatas<T>(
   }
 }
 
+export async function fetchScalarData<T>(
+  endpoint: string,
+  params?: AxiosRequestConfig
+) {
+  try {
+    const response: AxiosResponse = await axiosInstance().get(
+      `${endpoint}`,
+      params
+    );
+
+    return response.data.data && (response.data.data[0] as T);
+  } catch (error) {
+    return Promise.reject({ status: 500, message: 'fetchDatas error' });
+  }
+}
+
 export async function fetchSingleData<T>(
   endpoint: string,
   params?: AxiosRequestConfig

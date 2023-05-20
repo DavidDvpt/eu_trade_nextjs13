@@ -1,57 +1,53 @@
-import { getResources } from '@/lib/prisma/utils/resource';
-import { getStock } from '@/lib/prisma/utils/transaction';
-import { Resource } from '@prisma/client';
+import { getStocks } from '@/lib/prisma/utils/transaction';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
+
+const setCurrent = (e: DbUserStock, q: number): UserStock => ({
+  iId: e.itemId,
+  iName: e.itemName,
+  iValue: e.itemValue,
+  quantity: q,
+  value: 0,
+});
 
 export async function GET(req: NextRequest) {
   try {
     const token = await getToken({ req });
     if (token?.id) {
-      const stocks = await getStock(token.id as string);
-      const resources = await getResources();
+      const stocks = await getStocks(token.id as string);
 
-      const result: SimpleStocks = [];
-      let c: SimpleStock | null = null;
-      let cr: Resource | null = null;
+      const result: UserStocks = [];
+      let c: UserStock | null = null;
+
       for (let i = 0; i < stocks.length; i++) {
         const e = stocks[i];
-        const setResource = () =>
-          resources?.find((res) => res.id === e.resourceId) as Resource;
+        const buyType = e.transactionType === 'BUY';
+        const sellOk =
+          e.sellStatus !== 'RETURNED' && e.transactionType === 'SELL';
         let q = 0;
-        if (e.type === 'BUY') q = e._sum.quantity as number;
-        if (e.type === 'SELL' && e.sellStatus !== 'RETURNED')
-          q = (e._sum.quantity as number) * -1;
 
-        const setCurrent = () => {
-          return {
-            resourceId: e.resourceId,
-            name: cr?.name ?? '',
-            quantity: q,
-            price: 0,
-          };
-        };
+        if (buyType) q = +e.quantity;
+        if (sellOk) q = -e.quantity;
+
         if (!c) {
-          cr = setResource();
-          c = setCurrent();
+          c = setCurrent(e, q);
         } else {
-          if (c.resourceId !== e.resourceId) {
-            c.price = c.quantity * (cr as Resource)?.value;
+          if (c.iId !== e.itemId) {
+            c.value = c.quantity * c.iValue;
             result.push(c);
-            cr = setResource();
-            c = setCurrent();
+            c = setCurrent(e, q);
           } else {
             c.quantity += q;
           }
         }
 
         if (i === stocks.length - 1) {
-          c.price = c.quantity * (cr as Resource)?.value;
+          c.value = c.quantity * c.iValue;
           result.push(c);
         }
       }
 
-      const sorted = result.sort((a, b) => (a.name > b.name ? 1 : -1));
+      const sorted = result.sort((a, b) => (a.iName > b.iName ? 1 : -1));
 
       return NextResponse.json({ data: sorted }, { status: 200 });
     } else {

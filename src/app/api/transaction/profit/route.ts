@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
       response.forEach((t) => {
         t;
-        const b = t.value - t.resource.value * t.quantity;
+        const b = t.value - (t.item?.value ?? 0) * t.quantity;
 
         if (t.type === 'BUY') {
           result.buy += b;

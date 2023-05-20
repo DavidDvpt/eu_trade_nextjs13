@@ -1,9 +1,10 @@
 'use client';
 
-import ResourceSearch from '@/components/common/resourceSearch.tsx';
+import ItemTitle from '@/components/common/itemTitle';
+import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
-import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
-import { Resource, TransactionType } from '@prisma/client';
+import TransactionGenericTable from '@/features/transaction/transactionGenericTable';
+import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import styles from './buy.module.scss';
 
@@ -12,36 +13,32 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
   { name: 'Nom', key: 'name' },
   { name: 'Quantité', key: 'quantity' },
   { name: 'Cout TT', key: 'ttCost' },
-  // { name: 'Fee', key: 'fee' },
+  { name: 'Fee', key: 'fee' },
   { name: 'Cout TTC', key: 'ttcCost' },
   { name: 'Cout Extra', key: 'extraCost' },
   { name: 'Markup', key: 'markup' },
 ];
 
 function Buy(): React.ReactElement {
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [item, setItem] = useState<Item | null>(null);
 
-  const handleChange = (value: Resource) => {
-    setResource(value);
-  };
+  const handleItemChange = (value: Item | null) => setItem(value);
 
   return (
     <div className={styles.buy}>
-      <ResourceSearch onChange={handleChange} />
+      <ItemSearchEngineContainer callback={handleItemChange} />
 
-      <section>
-        <TransactionForm resource={resource} type={TransactionType.BUY} />
-      </section>
+      <ItemTitle item={item} />
 
-      {resource && (
-        <section>
-          <h4>Liste des précédents achats</h4>
-          <TransactionListByResourceId
-            headers={headers}
-            resourceId={resource?.id ?? ''}
-            type={TransactionType.BUY}
-          />
-        </section>
+      <TransactionForm item={item} type={TransactionType.BUY} />
+
+      {item && (
+        <TransactionGenericTable
+          title='Liste des précédents achats'
+          headers={headers}
+          itemId={item.id ?? ''}
+          type={TransactionType.BUY}
+        />
       )}
     </div>
   );

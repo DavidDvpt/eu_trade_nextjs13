@@ -7,11 +7,15 @@ type TransactionState = {
     import('@/app/extendedAppTypes').TransactionExtended | null
   >;
 };
+type TransactionFormType = Pick<
+  import('@prisma/client').Transaction,
+  'itemId' | 'quantity' | 'fee' | 'value'
+>;
 
 interface IFetchTransactionsParams {
   type?: TransactionType;
   sellStatus?: SellStatus;
-  resourceId?: string;
+  itemId?: string;
 }
 
 interface TransactionRow {

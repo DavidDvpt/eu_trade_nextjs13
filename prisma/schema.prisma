@@ -35,27 +35,39 @@ model User {
   Transaction Transaction[]
 }
 
-model ResourceType {
+model ItemCategory {
   id         String     @id @default(cuid())
   name       String     @unique
   isActive   Boolean    @default(true)
   createdAt  DateTime   @default(now())
   modifiedAt DateTime?
-  Resources  Resource[]
+  ItemType   ItemType[]
 }
 
-model Resource {
+model ItemType {
+  id             String       @id @default(cuid())
+  name           String       @unique
+  isActive       Boolean      @default(true)
+  isStackable    Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  modifiedAt     DateTime?
+  itemCategoryId String
+  itemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
+  items          Item[]
+}
+
+model Item {
   id          String        @id @default(cuid())
   name        String        @unique
   value       Float         @default(0)
   imageUrlId  String?
   isActive    Boolean       @default(true)
+  isLimied    Boolean       @default(false)
   createdAt   DateTime      @default(now())
   modifiedAt  DateTime?
+  itemTypeId  String?
+  ItemType    ItemType?     @relation(fields: [itemTypeId], references: [id])
   Transaction Transaction[]
-
-  resourceTypeId String
-  resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
 }
 
 model Transaction {
@@ -69,6 +81,6 @@ model Transaction {
   modifiedAt DateTime?
   userId     String
   user       User            @relation(fields: [userId], references: [id])
-  resourceId String
-  resource   Resource        @relation(fields: [resourceId], references: [id])
+  item       Item?           @relation(fields: [itemId], references: [id])
+  itemId     String
 }

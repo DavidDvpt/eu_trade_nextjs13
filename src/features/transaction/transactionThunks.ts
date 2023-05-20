@@ -13,12 +13,12 @@ export const fetchTransactionsThunk = createAsyncThunk(
   'transaction/fetchTransactionsThunk',
   async (params: IFetchTransactionsParams) => {
     try {
-      const { sellStatus, type, resourceId } = params;
+      const { sellStatus, type, itemId } = params;
       let url = '/api/transaction';
 
-      if (resourceId) {
+      if (itemId) {
         //fetch only one resource
-        url = `/api/resource/${resourceId}/transactions`;
+        url = `/api/resource/${itemId}/transactions`;
       }
 
       const response = await fetchDatas<TransactionExtended>(url, {
@@ -48,27 +48,31 @@ export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
 export const postTransactionThunk = createAsyncThunk(
   'transaction/postTransactionThunk',
   async (
-    params: { body: TransactionFormType; callback?: () => void },
+    params: {
+      body: TransactionFormType & {
+        type: TransactionType;
+        sellStatus: SellStatus | null;
+      };
+    },
     tools
   ) => {
     try {
-      const { body, callback } = params;
+      const { body } = params;
       const response = await postEntity<TransactionExtended>({
         url: '/api/transaction',
         body,
       });
 
-      callback && callback();
       tools.dispatch(
         fetchTransactionsThunk({
-          type: body.transactionType,
-          resourceId: body.resourceId,
+          type: body.type,
+          itemId: body.itemId,
         })
       );
-      if (body.transactionType === TransactionType.SELL) {
+      if (body.type === TransactionType.SELL) {
         tools.dispatch(stockActions.singleQtySubstract(body.quantity));
       }
-      if (body.transactionType === TransactionType.BUY) {
+      if (body.type === TransactionType.BUY) {
       }
       return response;
     } catch (error) {

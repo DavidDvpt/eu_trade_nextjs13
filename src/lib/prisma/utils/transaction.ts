@@ -13,7 +13,7 @@ export async function getTransactions(params: {
         type: params?.transactionType ?? undefined,
         userId: params.userId,
       },
-      include: { resource: true },
+      include: { item: true },
       orderBy: [{ createdAt: 'asc' }],
     });
 
@@ -22,20 +22,20 @@ export async function getTransactions(params: {
     return Promise.reject(error);
   }
 }
-export async function getTransactionsByResourceId(
+export async function getTransaction(
   userId: string,
-  resourceId: string,
+  itemId: string,
   type?: TransactionType
 ) {
   try {
     const transactions = await client.transaction.findMany({
       where: {
         userId,
-        resourceId,
+        itemId,
         type: type,
       },
       include: {
-        resource: true,
+        item: true,
       },
     });
 
@@ -44,32 +44,72 @@ export async function getTransactionsByResourceId(
     return Promise.reject(error);
   }
 }
-export async function getStock(userId: string) {
+export async function postTransaction(data: any) {
   try {
-    const response = await client.transaction.groupBy({
-      by: ['resourceId', 'type', 'sellStatus'],
-      _sum: { quantity: true },
-      orderBy: { resourceId: 'asc' },
-      where: { userId },
+    const transaction = await client.transaction.create({
+      data: {
+        type: data.type,
+        quantity: data.quantity,
+        itemId: data.itemId,
+        userId: data.userId,
+        value: data.value,
+        sellStatus: data.sellStatus,
+        fee: data.fee,
+      },
     });
+
+    return transaction;
+  } catch (error) {
+    console.log(error);
+    return Promise.reject(error);
+  }
+}
+export async function putTransaction(data: Transaction) {
+  try {
+    const transaction = await client.transaction.update({
+      where: { id: data.id },
+      data: {
+        type: data.type,
+        quantity: data.quantity,
+        itemId: data.itemId,
+        userId: data.userId,
+        value: data.value,
+        sellStatus: data.sellStatus,
+        fee: data.fee,
+        modifiedAt: new Date().toISOString(),
+      },
+    });
+
+    return transaction;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+export async function getStocks(userId: string) {
+  try {
+    const response: DbUserStocks = await client.$queryRaw`
+      SELECT i.id itemId,i.name itemName,i.value itemValue, t.type transactionType, t.sellStatus sellStatus, COUNT(*) count,SUM(t.quantity) quantity, SUM(t.fee) fee, SUM(t.value) totalValue FROM Transaction t
+      LEFT JOIN Item i
+      ON t.itemId = i.id
+      WHERE t.userId = ${userId}
+      GROUP BY i.id, t.type, t.sellStatus
+      ORDER BY i.name, t.type, t.sellStatus
+    `;
 
     return response;
   } catch (error) {
     return Promise.reject(error);
   }
 }
-export async function getStockByResourceId(
-  userId: string,
-  resourceId: string | null
-) {
+export async function getStock(userId: string, itemId: string | null) {
   try {
-    if (resourceId) {
+    if (itemId) {
       const response = await client.transaction.groupBy({
-        by: ['type', 'sellStatus', 'resourceId'],
+        by: ['type', 'sellStatus', 'itemId'],
         _sum: {
           quantity: true,
         },
-        where: { resourceId, userId },
+        where: { itemId, userId },
       });
 
       let stock = 0;
@@ -84,46 +124,6 @@ export async function getStockByResourceId(
 
       return stock;
     }
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
-export async function postTransaction(data: any) {
-  try {
-    const transaction = await client.transaction.create({
-      data: {
-        type: data.transactionType,
-        quantity: data.quantity,
-        resourceId: data.resourceId,
-        userId: data.userId,
-        value: data.value,
-        sellStatus: data.sellStatus,
-        fee: data.fee,
-      },
-    });
-
-    return transaction;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
-export async function putTransaction(data: Transaction) {
-  try {
-    const transaction = await client.transaction.update({
-      where: { id: data.id },
-      data: {
-        type: data.type,
-        quantity: data.quantity,
-        resourceId: data.resourceId,
-        userId: data.userId,
-        value: data.value,
-        sellStatus: data.sellStatus,
-        fee: data.fee,
-        modifiedAt: new Date().toISOString(),
-      },
-    });
-
-    return transaction;
   } catch (error) {
     return Promise.reject(error);
   }

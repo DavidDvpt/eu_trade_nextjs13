@@ -1,9 +1,10 @@
 'use client';
 
-import ResourceSearch from '@/components/common/resourceSearch.tsx';
+import ItemTitle from '@/components/common/itemTitle';
+import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm.tsx';
-import TransactionListByResourceId from '@/features/transaction/transactionListByResourceId';
-import { Resource, TransactionType } from '@prisma/client';
+import TransactionGenericTable from '@/features/transaction/transactionGenericTable';
+import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import AvailableQuantity from './AvailableQuantity';
 import styles from './sell.module.scss';
@@ -20,27 +21,27 @@ const headers: GenericHeadersTableType<TransactionRowForTable> = [
 ];
 
 function Sell(): React.ReactElement {
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [item, setItem] = useState<Item | null>(null);
 
-  const handleChange = (value: Resource) => {
-    setResource(value);
-  };
+  const handleItemChange = (value: Item | null) => setItem(value);
 
   return (
     <div className={styles.sell}>
-      <ResourceSearch onChange={handleChange} />
-      <section>
-        <AvailableQuantity resourceId={resource?.id ?? null} />
-        <TransactionForm resource={resource} type={TransactionType.SELL} />
-      </section>
-      {resource && (
-        <section>
-          <TransactionListByResourceId
-            headers={headers}
-            resourceId={resource.id}
-            type={TransactionType.SELL}
-          />
-        </section>
+      <ItemSearchEngineContainer callback={handleItemChange} />
+
+      <ItemTitle item={item} />
+
+      <AvailableQuantity itemId={item?.id ?? null} />
+
+      <TransactionForm item={item} type={TransactionType.SELL} />
+
+      {item && (
+        <TransactionGenericTable
+          headers={headers}
+          itemId={item.id}
+          type={TransactionType.SELL}
+          title='Dernières ventes pour cet item'
+        />
       )}
     </div>
   );

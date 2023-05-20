@@ -3,16 +3,16 @@ import { fetchDatas } from '@/lib/axios/requests/genericRequests';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const fetchSingleResourceQuantity = createAsyncThunk(
-  'stock/fetchSingleResourceQuantity',
-  async (params: { resourceId: string }) => {
+export const fetchItemQuantityThunk = createAsyncThunk(
+  'stock/fetchItemQuantityThunk',
+  async (params: { itemId: string }) => {
     try {
-      if (params.resourceId) {
-        const response = await axios.get<{ data: number }>(
-          `/api/resource/${params.resourceId}/stock`
+      if (params.itemId) {
+        const response = await axios.get<{ stock: number }>(
+          `/api/items/${params.itemId}/stock`
         );
 
-        return response.data.data ?? 0;
+        return response.data.stock ?? 0;
       } else {
         return Promise.reject(MissingParamsError());
       }
@@ -21,11 +21,11 @@ export const fetchSingleResourceQuantity = createAsyncThunk(
     }
   }
 );
-export const fetchSimpleStockListThunk = createAsyncThunk(
-  'stock/fetchSimpleStockListThunk',
+export const fetchUserStockListThunk = createAsyncThunk(
+  'stock/fetchUserStockListThunk',
   async () => {
     try {
-      const stocks = await fetchDatas<SimpleStock>(`/api/transaction/stock`);
+      const stocks = await fetchDatas<UserStock>(`/api/transaction/stock`);
 
       return stocks;
     } catch (error) {

@@ -41,7 +41,8 @@ const transactionSlice = createSlice({
           state.transactions.status = ApiStatusEnum.REJECTED;
           state.transactions.error = action.payload;
         }
-      )
+      );
+    builder
       .addCase(postTransactionThunk.pending, (state) => {
         state.mutateStatus.status = ApiStatusEnum.PENDING;
         state.mutateStatus.result = null;
@@ -62,7 +63,8 @@ const transactionSlice = createSlice({
           state.mutateStatus.result = null;
           state.mutateStatus.error = action.payload;
         }
-      )
+      );
+    builder
       .addCase(fetchTransactionsGlobalProfitThunk.pending, (state) => {
         state.transactionProfit.status = ApiStatusEnum.PENDING;
         state.transactionProfit.error = null;
