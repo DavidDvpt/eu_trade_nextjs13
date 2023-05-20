@@ -2,7 +2,7 @@
 
 import ItemTitle from '@/components/common/itemTitle';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
-import TransactionForm from '@/features/transaction/transactionForm.tsx';
+import TransactionForm from '@/features/transaction/transactionForm';
 import TransactionGenericTable from '@/features/transaction/transactionGenericTable';
 import { Item, TransactionType } from '@prisma/client';
 import { useState } from 'react';

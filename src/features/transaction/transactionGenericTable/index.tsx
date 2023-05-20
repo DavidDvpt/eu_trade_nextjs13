@@ -1,29 +1,45 @@
 import GenericTable from '@/components/generic/genericTable';
-import useTransactions from '@/features/transaction/useTransaction';
+import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { TransactionType } from '@prisma/client';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
+import useTransactions from '../useTransactions';
 import styles from './transactionGenericTable.module.scss';
 import {
   transactionFooterRowParser,
   transactionRowParser,
 } from './transactionLib';
 
-interface ITransactionGenericTableProps {
-  itemId: string;
+interface ITransactionGenericTableProps extends IFetchTransactionsParams {
   headers: GenericHeadersTableType<TransactionRowForTable>;
-  type: TransactionType;
   title: string;
 }
 function TransactionGenericTable({
   itemId,
-  type,
+  transactionType,
+  sellStatus,
   headers,
   title,
+  limit,
+  order,
+  sortKey,
 }: ITransactionGenericTableProps) {
-  const { transactions } = useTransactions({ itemId, type });
+  const { transactions, loadTransactions, apiState } = useTransactions();
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
+
+  useEffect(() => {
+    if (itemId && apiState.status !== ApiStatusEnum.PENDING) {
+      loadTransactions({
+        itemId,
+        transactionType,
+        sellStatus,
+        sortKey,
+        order,
+        limit,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (transactions && !isEmpty(transactions)) {
@@ -38,7 +54,7 @@ function TransactionGenericTable({
         markup: 0,
       };
 
-      if (type === TransactionType.SELL) footerRow.fee = 0;
+      if (transactionType === TransactionType.SELL) footerRow.fee = 0;
 
       const parsedRows: TransactionRowsForTable = [];
 
@@ -57,7 +73,7 @@ function TransactionGenericTable({
         footerRow.ttCost = footerRow.ttCost + tt;
         footerRow.ttcCost = footerRow.ttcCost + e.value;
         footerRow.extraCost = footerRow.extraCost + ec;
-        if (type === TransactionType.SELL && e.fee) {
+        if (transactionType === TransactionType.SELL && e.fee) {
           footerRow.fee = (footerRow.fee as number) + e.fee;
         }
       });

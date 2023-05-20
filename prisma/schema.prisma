@@ -19,7 +19,6 @@ enum SellStatus {
 enum TransactionType {
   BUY
   SELL
-  MINING
 }
 
 model User {

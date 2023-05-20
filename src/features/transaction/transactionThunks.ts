@@ -13,16 +13,16 @@ export const fetchTransactionsThunk = createAsyncThunk(
   'transaction/fetchTransactionsThunk',
   async (params: IFetchTransactionsParams) => {
     try {
-      const { sellStatus, type, itemId } = params;
+      const { sellStatus, transactionType, itemId } = params;
       let url = '/api/transaction';
 
       if (itemId) {
         //fetch only one resource
-        url = `/api/resource/${itemId}/transactions`;
+        url = `/api/items/${itemId}/transactions`;
       }
 
       const response = await fetchDatas<TransactionExtended>(url, {
-        params: { sellStatus, type },
+        params: { sellStatus, transactionType },
       });
 
       return response;
@@ -36,7 +36,7 @@ export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
   async () => {
     try {
       const response = await fetchSingleData<TransactionBenefitResult>(
-        '/api/transaction/profit'
+        '/api/transactions/profit'
       );
 
       return response;
@@ -59,13 +59,13 @@ export const postTransactionThunk = createAsyncThunk(
     try {
       const { body } = params;
       const response = await postEntity<TransactionExtended>({
-        url: '/api/transaction',
+        url: '/api/transactions',
         body,
       });
 
       tools.dispatch(
         fetchTransactionsThunk({
-          type: body.type,
+          transactionType: body.type,
           itemId: body.itemId,
         })
       );
@@ -90,12 +90,15 @@ export const updateTransactionThunk = createAsyncThunk(
       const { transaction, sellStatus } = params;
       if (transaction.id) {
         const response = await updateEntity({
-          url: `/api/transaction/${transaction.id}`,
+          url: `/api/transactions/${transaction.id}`,
           body: transaction,
         });
 
         tools.dispatch(
-          fetchTransactionsThunk({ type: transaction.type, sellStatus })
+          fetchTransactionsThunk({
+            transactionType: transaction.type,
+            sellStatus,
+          })
         );
         tools.dispatch(fetchTransactionsGlobalProfitThunk());
 

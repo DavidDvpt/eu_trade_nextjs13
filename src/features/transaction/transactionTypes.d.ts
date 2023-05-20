@@ -13,9 +13,12 @@ type TransactionFormType = Pick<
 >;
 
 interface IFetchTransactionsParams {
-  type?: TransactionType;
-  sellStatus?: SellStatus;
   itemId?: string;
+  transactionType?: import('@prisma/client').TransactionType;
+  sellStatus?: import('@prisma/client').SellStatus;
+  sortKey?: keyof import('@prisma/client').Transaction;
+  order?: Order;
+  limit?: number;
 }
 
 interface TransactionRow {

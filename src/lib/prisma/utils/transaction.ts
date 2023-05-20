@@ -1,20 +1,26 @@
-import { SellStatus, Transaction, TransactionType } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import client from '../../../../prisma/prismadb';
 
-export async function getTransactions(params: {
-  sellStatus?: SellStatus;
-  transactionType?: TransactionType;
-  userId: string;
-}) {
+export async function getTransactions(
+  params: IFetchTransactionsParams & {
+    userId: string;
+  }
+) {
   try {
+    const sort = params.sortKey
+      ? [{ [params.sortKey]: params.order }]
+      : undefined;
+
     const response = await client.transaction.findMany({
       where: {
-        sellStatus: params?.sellStatus ?? undefined,
-        type: params?.transactionType ?? undefined,
         userId: params.userId,
+        itemId: params.itemId,
+        type: params?.transactionType ?? undefined,
+        sellStatus: params?.sellStatus ?? undefined,
       },
       include: { item: true },
-      orderBy: [{ createdAt: 'asc' }],
+      orderBy: sort,
+      take: params.limit,
     });
 
     return response;
@@ -22,28 +28,32 @@ export async function getTransactions(params: {
     return Promise.reject(error);
   }
 }
-export async function getTransaction(
-  userId: string,
-  itemId: string,
-  type?: TransactionType
-) {
-  try {
-    const transactions = await client.transaction.findMany({
-      where: {
-        userId,
-        itemId,
-        type: type,
-      },
-      include: {
-        item: true,
-      },
-    });
+// export async function getTransaction(
+//   userId: string,
+//   itemId: string,
+//   type?: TransactionType,
+//   order?: Order,
+//   limit?: number
+// ) {
+//   try {
+//     const transactions = await client.transaction.findMany({
+//       where: {
+//         userId,
+//         itemId,
+//         type: type,
+//       },
+//       include: {
+//         item: true,
+//       },
+//       orderBy: [{ createdAt: order }],
+//       take: limit,
+//     });
 
-    return transactions;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-}
+//     return transactions;
+//   } catch (error) {
+//     return Promise.reject(error);
+//   }
+// }
 export async function postTransaction(data: any) {
   try {
     const transaction = await client.transaction.create({
