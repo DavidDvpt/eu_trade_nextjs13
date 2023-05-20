@@ -1,4 +1,7 @@
 import GenericTable from '@/components/generic/genericTable';
+import { ReloadActionEnum } from '@/features/global/globalEnums';
+import { getGlobalState, globalActions } from '@/features/global/globalSlice';
+import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { TransactionType } from '@prisma/client';
 import { isEmpty } from 'lodash';
@@ -13,6 +16,7 @@ import {
 interface ITransactionGenericTableProps extends IFetchTransactionsParams {
   headers: GenericHeadersTableType<TransactionRowForTable>;
   title: string;
+  name: ReloadActionEnum;
 }
 function TransactionGenericTable({
   itemId,
@@ -23,13 +27,16 @@ function TransactionGenericTable({
   limit,
   order,
   sortKey,
+  name,
 }: ITransactionGenericTableProps) {
+  const { reload } = useAppSelector(getGlobalState);
   const { transactions, loadTransactions, apiState } = useTransactions();
   const [totalRow, setTotalRow] = useState<TransactionRowForTable>();
   const [rows, setRows] = useState<TransactionRowsForTable>([]);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (itemId && apiState.status !== ApiStatusEnum.PENDING) {
+  const request = () => {
+    if (apiState.status !== ApiStatusEnum.PENDING) {
       loadTransactions({
         itemId,
         transactionType,
@@ -39,6 +46,17 @@ function TransactionGenericTable({
         limit,
       });
     }
+  };
+
+  useEffect(() => {
+    if (reload.includes(name)) {
+      request();
+      dispatch(globalActions.removeReload(name));
+    }
+  }, [reload]);
+
+  useEffect(() => {
+    request();
   }, []);
 
   useEffect(() => {

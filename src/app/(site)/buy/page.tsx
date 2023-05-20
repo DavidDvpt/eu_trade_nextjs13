@@ -1,6 +1,7 @@
 'use client';
 
 import ItemTitle from '@/components/common/itemTitle';
+import { ReloadActionEnum } from '@/features/global/globalEnums';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
 import TransactionForm from '@/features/transaction/transactionForm';
 import TransactionGenericTable from '@/features/transaction/transactionGenericTable';
@@ -30,14 +31,19 @@ function Buy(): React.ReactElement {
 
       <ItemTitle item={item} />
 
-      <TransactionForm item={item} type={TransactionType.BUY} />
+      <TransactionForm
+        item={item}
+        type={TransactionType.BUY}
+        toReload={[ReloadActionEnum.RELOAD_BUY_TRANSACTION_LIST]}
+      />
 
       {item && (
         <TransactionGenericTable
           title='Liste des précédents achats'
           headers={headers}
           itemId={item.id ?? ''}
-          type={TransactionType.BUY}
+          transactionType={TransactionType.BUY}
+          name={ReloadActionEnum.RELOAD_BUY_TRANSACTION_LIST}
         />
       )}
     </div>

@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+import globalReducer from '../global/globalSlice';
 import itemSearchEngineReducer from '../itemSearchEngine/itemSearchEngineSlice';
 import stockReducer from '../stock/stockSlice';
 import transactionReducer from '../transaction/transactionSlice';
@@ -8,6 +9,7 @@ const combinedReducers = combineReducers({
 
   transaction: transactionReducer,
   stock: stockReducer,
+  global: globalReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

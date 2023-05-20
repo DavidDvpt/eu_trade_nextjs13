@@ -1,3 +1,4 @@
+import { ReloadActionEnum } from '@/features/global/globalEnums';
 import { getStockState } from '@/features/stock/stockSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,11 +18,13 @@ import styles from './transactionForm.module.scss';
 interface ITransactionFormProps {
   item: Item | null;
   type: TransactionType;
+  toReload: ReloadActionEnum[];
 }
 
 function TransactionForm({
   item,
   type,
+  toReload,
 }: ITransactionFormProps): React.ReactElement {
   const { itemQty } = useAppSelector(getStockState);
   const [calculatedValues, setCalculatedValues] =
@@ -90,7 +93,7 @@ function TransactionForm({
             type === TransactionType.SELL ? SellStatus.PROGRESS : null,
         };
 
-        dispatch(postTransactionThunk({ body: extendedValues }));
+        dispatch(postTransactionThunk({ body: extendedValues, toReload }));
       }
     }
   };
