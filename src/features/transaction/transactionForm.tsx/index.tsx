@@ -90,9 +90,7 @@ function TransactionForm({
             type === TransactionType.SELL ? SellStatus.PROGRESS : null,
         };
 
-        dispatch(
-          postTransactionThunk({ body: extendedValues, callback: isFulfilled })
-        );
+        dispatch(postTransactionThunk({ body: extendedValues }));
       }
     }
   };

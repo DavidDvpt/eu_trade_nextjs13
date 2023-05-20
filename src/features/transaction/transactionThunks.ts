@@ -53,18 +53,16 @@ export const postTransactionThunk = createAsyncThunk(
         type: TransactionType;
         sellStatus: SellStatus | null;
       };
-      callback?: () => void;
     },
     tools
   ) => {
     try {
-      const { body, callback } = params;
+      const { body } = params;
       const response = await postEntity<TransactionExtended>({
         url: '/api/transaction',
         body,
       });
 
-      callback && callback();
       tools.dispatch(
         fetchTransactionsThunk({
           type: body.type,

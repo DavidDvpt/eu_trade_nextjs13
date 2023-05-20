@@ -2,7 +2,7 @@ import styles from './transactionForm.module.scss';
 
 import { useAppDispatch } from '@/features/store/hooks';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
-import { Transaction } from '@prisma/client';
+import { SellStatus, Transaction, TransactionType } from '@prisma/client';
 import Button from '../../../components/form/Button';
 
 interface ILastTransactionProps {
@@ -15,7 +15,15 @@ function LastTransactionForm({
   const dispatch = useAppDispatch();
 
   const handleUseLastSold = (lt: TransactionFormType) => {
-    dispatch(postTransactionThunk({ body: lt }));
+    dispatch(
+      postTransactionThunk({
+        body: {
+          ...lt,
+          type: TransactionType.SELL,
+          sellStatus: SellStatus.PROGRESS,
+        },
+      })
+    );
   };
 
   if (!item) {
