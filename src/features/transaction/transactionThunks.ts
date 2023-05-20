@@ -7,22 +7,23 @@ import {
 } from '@/lib/axios/requests/genericRequests';
 import { SellStatus, TransactionType } from '@prisma/client';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { stockActions } from '../stock/stockSlice';
+import { ReloadActionEnum } from '../global/globalEnums';
+import { globalActions } from '../global/globalSlice';
 
 export const fetchTransactionsThunk = createAsyncThunk(
   'transaction/fetchTransactionsThunk',
   async (params: IFetchTransactionsParams) => {
     try {
-      const { sellStatus, type, itemId } = params;
+      const { sellStatus, transactionType, itemId } = params;
       let url = '/api/transaction';
 
       if (itemId) {
         //fetch only one resource
-        url = `/api/resource/${itemId}/transactions`;
+        url = `/api/items/${itemId}/transactions`;
       }
 
       const response = await fetchDatas<TransactionExtended>(url, {
-        params: { sellStatus, type },
+        params: { sellStatus, transactionType },
       });
 
       return response;
@@ -36,7 +37,7 @@ export const fetchTransactionsGlobalProfitThunk = createAsyncThunk(
   async () => {
     try {
       const response = await fetchSingleData<TransactionBenefitResult>(
-        '/api/transaction/profit'
+        '/api/transactions/profit'
       );
 
       return response;
@@ -53,27 +54,25 @@ export const postTransactionThunk = createAsyncThunk(
         type: TransactionType;
         sellStatus: SellStatus | null;
       };
+      toReload?: ReloadActionEnum[];
     },
     tools
   ) => {
     try {
-      const { body } = params;
+      const { body, toReload } = params;
       const response = await postEntity<TransactionExtended>({
-        url: '/api/transaction',
+        url: '/api/transactions',
         body,
       });
 
-      tools.dispatch(
-        fetchTransactionsThunk({
-          type: body.type,
-          itemId: body.itemId,
-        })
-      );
-      if (body.type === TransactionType.SELL) {
-        tools.dispatch(stockActions.singleQtySubstract(body.quantity));
+      if (toReload) {
+        tools.dispatch(globalActions.addReload(toReload));
       }
-      if (body.type === TransactionType.BUY) {
-      }
+      // if (body.type === TransactionType.SELL) {
+      //   tools.dispatch(stockActions.singleQtySubstract(body.quantity));
+      // }
+      // if (body.type === TransactionType.BUY) {
+      // }
       return response;
     } catch (error) {
       return Promise.reject(error);
@@ -83,20 +82,21 @@ export const postTransactionThunk = createAsyncThunk(
 export const updateTransactionThunk = createAsyncThunk(
   'transaction/updateTransactionThunk',
   async (
-    params: { transaction: TransactionExtended; sellStatus?: SellStatus },
+    params: {
+      transaction: TransactionExtended;
+      toReload: ReloadActionEnum[];
+    },
     tools
   ) => {
     try {
-      const { transaction, sellStatus } = params;
+      const { transaction, toReload } = params;
       if (transaction.id) {
         const response = await updateEntity({
-          url: `/api/transaction/${transaction.id}`,
+          url: `/api/transactions/${transaction.id}`,
           body: transaction,
         });
 
-        tools.dispatch(
-          fetchTransactionsThunk({ type: transaction.type, sellStatus })
-        );
+        tools.dispatch(globalActions.addReload(toReload));
         tools.dispatch(fetchTransactionsGlobalProfitThunk());
 
         return response;

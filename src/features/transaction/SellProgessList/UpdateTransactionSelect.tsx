@@ -1,5 +1,6 @@
 import { TransactionExtended } from '@/app/extendedAppTypes';
 import GenericSelect from '@/components/form/GenericSelect';
+import { ReloadActionEnum } from '@/features/global/globalEnums';
 import { useAppDispatch } from '@/features/store/hooks';
 import { updateTransactionThunk } from '@/features/transaction/transactionThunks';
 import { SellStatus } from '@prisma/client';
@@ -7,10 +8,12 @@ import { ChangeEvent, useState } from 'react';
 
 interface IUpdateTransactionSelectProps {
   transaction: TransactionExtended;
+  toReload: ReloadActionEnum[];
 }
 
 function UpdateTransactionButton({
   transaction,
+  toReload,
 }: IUpdateTransactionSelectProps): JSX.Element {
   const [value, setValue] = useState<SellStatus>(
     transaction.sellStatus ?? SellStatus.PROGRESS
@@ -26,7 +29,7 @@ function UpdateTransactionButton({
     dispatch(
       updateTransactionThunk({
         transaction: updated,
-        sellStatus: SellStatus.PROGRESS,
+        toReload,
       })
     );
   };

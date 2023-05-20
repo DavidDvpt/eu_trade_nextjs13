@@ -1,7 +1,7 @@
 'use client';
 
 import HomeProfitSection from '@/components/profit/HomeProfitSection';
-import SellProgessList from '@/components/sell/SellProgessList';
+import SellProgessList from '@/features/transaction/SellProgessList';
 import UserStockList from '../../features/stock/userStockList';
 import styles from './home.module.scss';
 

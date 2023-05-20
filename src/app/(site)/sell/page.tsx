@@ -1,10 +1,12 @@
 'use client';
 
 import ItemTitle from '@/components/common/itemTitle';
+import { ReloadActionEnum } from '@/features/global/globalEnums';
 import ItemSearchEngineContainer from '@/features/itemSearchEngine/itemSearchEngineContainer';
-import TransactionForm from '@/features/transaction/transactionForm.tsx';
+import LastTransactionForm from '@/features/transaction/lastTransactionForm';
+import TransactionForm from '@/features/transaction/transactionForm';
 import TransactionGenericTable from '@/features/transaction/transactionGenericTable';
-import { Item, TransactionType } from '@prisma/client';
+import { Item, SellStatus, TransactionType } from '@prisma/client';
 import { useState } from 'react';
 import AvailableQuantity from './AvailableQuantity';
 import styles from './sell.module.scss';
@@ -31,16 +33,31 @@ function Sell(): React.ReactElement {
 
       <ItemTitle item={item} />
 
-      <AvailableQuantity itemId={item?.id ?? null} />
+      {item && <AvailableQuantity itemId={item.id} />}
 
-      <TransactionForm item={item} type={TransactionType.SELL} />
+      <LastTransactionForm
+        item={item}
+        transactionType={TransactionType.SELL}
+        sellStatus={SellStatus.ENDED}
+      />
+
+      <TransactionForm
+        item={item}
+        type={TransactionType.SELL}
+        toReload={[ReloadActionEnum.RELOAD_UNIQUE_ITEM_QUANTITY]}
+      />
 
       {item && (
         <TransactionGenericTable
           headers={headers}
           itemId={item.id}
-          type={TransactionType.SELL}
+          transactionType={TransactionType.SELL}
+          sellStatus={SellStatus.ENDED}
+          sortKey='createdAt'
+          order='desc'
+          limit={10}
           title='Dernières ventes pour cet item'
+          name={ReloadActionEnum.RELOAD_SELL_ENDED_TRANSACTION_LIST}
         />
       )}
     </div>

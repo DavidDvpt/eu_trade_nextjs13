@@ -11,7 +11,7 @@ function ItemTitle({ item }: IItemTitleProps): React.ReactElement | null {
   if (!item) {
     return null;
   }
-  console.log(item);
+
   return (
     <h4 className={styles.itemTitle}>
       <>

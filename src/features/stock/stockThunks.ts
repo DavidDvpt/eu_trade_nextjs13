@@ -25,7 +25,7 @@ export const fetchUserStockListThunk = createAsyncThunk(
   'stock/fetchUserStockListThunk',
   async () => {
     try {
-      const stocks = await fetchDatas<UserStock>(`/api/transaction/stock`);
+      const stocks = await fetchDatas<UserStock>(`/api/transactions/stock`);
 
       return stocks;
     } catch (error) {
