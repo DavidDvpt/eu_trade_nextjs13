@@ -1,4 +1,4 @@
-import styles from '../transactionForm/transactionForm.module.scss';
+import styles from './lastTransactionForm.module.scss';
 
 import { useAppDispatch } from '@/features/store/hooks';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
@@ -18,7 +18,7 @@ function LastTransactionForm({
   transactionType,
   sellStatus,
 }: ILastTransactionProps): JSX.Element | null {
-  const { loadTransactions, apiState, transactions } = useTransactions();
+  const { loadTransactions, transactions } = useTransactions();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -53,10 +53,10 @@ function LastTransactionForm({
   }
 
   return (
-    <section>
-      <form className={styles.lastSell} onSubmit={handleUseLastSold}>
+    <section className={styles.lastTransactionForm}>
+      <form onSubmit={handleUseLastSold}>
         <h5>Vente à partir de l&#0039;ancienne transaction</h5>
-        <div>
+        <div className={styles.container}>
           <table>
             <thead>
               <tr>

@@ -70,7 +70,6 @@ export async function postTransaction(data: any) {
 
     return transaction;
   } catch (error) {
-    console.log(error);
     return Promise.reject(error);
   }
 }
