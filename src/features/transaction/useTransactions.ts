@@ -10,18 +10,20 @@ const useTransactions = () => {
   const [transactions, setTransactions] = useState<TransactionsExtended | null>(
     null
   );
-  const [apiState, setSetApiState] = useState<{
+  const [apiState, setApiState] = useState<{
     status: ApiStatusEnum;
     error: any;
   }>({ status: ApiStatusEnum.IDLE, error: null });
 
   const request = async (params: IFetchTransactionsParams) => {
     try {
-      const t = await fetchTransactions(params);
-      setSetApiState({ status: ApiStatusEnum.IDLE, error: null });
-      setTransactions(t);
+      if (apiState.status !== ApiStatusEnum.PENDING) {
+        const t = await fetchTransactions(params);
+        setApiState({ status: ApiStatusEnum.IDLE, error: null });
+        setTransactions(t);
+      }
     } catch (error) {
-      setSetApiState({ status: ApiStatusEnum.REJECTED, error });
+      setApiState({ status: ApiStatusEnum.REJECTED, error });
     }
   };
 
@@ -29,11 +31,12 @@ const useTransactions = () => {
     itemId,
     transactionType,
     sellStatus,
+    sortKey,
     limit,
     order,
   }: IFetchTransactionsParams) => {
-    setSetApiState({ status: ApiStatusEnum.PENDING, error: null });
-    request({ itemId, transactionType, sellStatus, limit, order });
+    setApiState({ status: ApiStatusEnum.PENDING, error: null });
+    request({ itemId, transactionType, sellStatus, limit, order, sortKey });
   };
 
   return {

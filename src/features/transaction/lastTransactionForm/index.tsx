@@ -3,7 +3,7 @@ import styles from '../transactionForm/transactionForm.module.scss';
 import { useAppDispatch } from '@/features/store/hooks';
 import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { Item, SellStatus, TransactionType } from '@prisma/client';
-import { useEffect } from 'react';
+import { FormEvent, useEffect } from 'react';
 import Button from '../../../components/form/Button';
 import useTransactions from '../useTransactions';
 
@@ -33,7 +33,8 @@ function LastTransactionForm({
     }
   }, [item]);
 
-  const handleUseLastSold = () => {
+  const handleUseLastSold = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (transactions && transactions[0]) {
       dispatch(
         postTransactionThunk({
@@ -53,7 +54,7 @@ function LastTransactionForm({
 
   return (
     <section>
-      <form className={styles.lastSell} onSubmit={() => handleUseLastSold()}>
+      <form className={styles.lastSell} onSubmit={handleUseLastSold}>
         <h5>Vente à partir de l&#0039;ancienne transaction</h5>
         <div>
           <table>

@@ -1,4 +1,5 @@
 'use client';
+import { ReloadActionEnum } from '@/features/global/globalEnums';
 import { getGlobalState } from '@/features/global/globalSlice';
 import { getStockState, stockActions } from '@/features/stock/stockSlice';
 import { fetchItemQuantityThunk } from '@/features/stock/stockThunks';
@@ -12,12 +13,15 @@ interface IAvailableQuantityProps {
 }
 
 function AvailableQuantity({ itemId }: IAvailableQuantityProps): JSX.Element {
+  const NAME = ReloadActionEnum.RELOAD_UNIQUE_ITEM_QUANTITY;
   const { reload } = useAppSelector(getGlobalState);
   const { itemQty } = useAppSelector(getStockState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchItemQuantityThunk({ itemId }));
+    if (reload.includes(NAME)) {
+      dispatch(fetchItemQuantityThunk({ itemId }));
+    }
   }, [reload]);
 
   useEffect(() => {

@@ -11,6 +11,7 @@ export async function GET(
 
   const transactionType = searchParams.get('transactionType');
   const sellStatus = searchParams.get('sellStatus');
+  const limit = searchParams.get('limit');
   const sortKey = searchParams.get('sortKey');
   const order = searchParams.get('order');
   const token: any = await getToken({ req });
@@ -24,6 +25,7 @@ export async function GET(
         sellStatus: sellStatus as SellStatus,
         sortKey: sortKey as keyof Transaction,
         order: order as Order,
+        limit: limit ? parseInt(limit) : undefined,
       });
 
       return NextResponse.json({ data: transactions }, { status: 200 });
