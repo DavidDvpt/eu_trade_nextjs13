@@ -10,6 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SessionContext {
+  TRADE
+  MINING
+  CRAFT
+}
+
+enum SessionState {
+  OPEN
+  CLOSE
+}
+
+enum SessionStatus {
+  ACTIVE
+  SOLDED
+}
+
 enum SellStatus {
   ENDED
   PROGRESS
@@ -70,16 +86,44 @@ model Item {
 }
 
 model Transaction {
-  id         String          @id @default(cuid())
-  type       TransactionType
-  sellStatus SellStatus?
-  quantity   Int
-  fee        Float?          @default(0)
-  value      Float
-  createdAt  DateTime        @default(now())
-  modifiedAt DateTime?
-  userId     String
-  user       User            @relation(fields: [userId], references: [id])
-  item       Item            @relation(fields: [itemId], references: [id])
-  itemId     String
+  id           String                @id @default(cuid())
+  type         TransactionType
+  sellStatus   SellStatus?
+  quantity     Int
+  fee          Float?                @default(0)
+  value        Float
+  createdAt    DateTime              @default(now())
+  modifiedAt   DateTime?
+  userId       String
+  user         User                  @relation(fields: [userId], references: [id])
+  itemId       String
+  item         Item                  @relation(fields: [itemId], references: [id])
+  sessionId    String?
+  session      Session?              @relation(fields: [sessionId], references: [id])
+  inRelations  TransactionRelation[] @relation("inRelations")
+  outRelations TransactionRelation[] @relation("outRelations")
+}
+
+model Session {
+  id          String          @id @default(cuid())
+  clickCount  Int?
+  context     SessionContext?
+  status      SessionStatus?
+  state       SessionState?
+  totalOutTT  Float?          @default(0)
+  totalOutTTC Float?          @default(0)
+  totalInTT   Float?          @default(0)
+  totalInTTC  Float?          @default(0)
+  totalFee    Float?          @default(0)
+  Transaction Transaction[]
+}
+
+model TransactionRelation {
+  inId     String
+  in       Transaction @relation("inRelations", fields: [inId], references: [id])
+  outId    String
+  out      Transaction @relation("outRelations", fields: [outId], references: [id])
+  quantity Int
+
+  @@id([inId, outId])
 }
