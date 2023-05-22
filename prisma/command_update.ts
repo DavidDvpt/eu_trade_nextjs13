@@ -7,6 +7,7 @@
 // } from '@prisma/client';
 // import client from './prismadb';
 
+import { getDistinctValues } from '@/lib/arrayTools';
 import { Transaction, TransactionType } from '@prisma/client';
 import client from './prismadb';
 
@@ -43,52 +44,55 @@ import client from './prismadb';
 const createTransactiosnRelations = async () => {
   const buyTransactions = client.transaction.findMany({
     where: { type: TransactionType.BUY },
-  });
-  const sellTransactions = await client.transaction.findMany({
-    where: { type: TransactionType.SELL },
+    orderBy: [{ createdAt: 'asc' }],
   });
 
   buyTransactions.then(async (buys: Transaction[]) => {
-    let buyLeft = 0;
+    const distinctItems = getDistinctValues(buys.map((m) => m.itemId));
     const sellLeft = 0;
 
-    for (let i = 0; i < buys.length; i++) {
-      const bt = buys[i];
-      const sells = sellTransactions.filter((f) => f.itemId === bt.itemId);
-      let sellIndex = 0;
+    const request = async (iid: string, oid: string, qty: number) => {
+      await client.transactionRelation.create({
+        data: {
+          inId: iid,
+          outId: oid,
+          quantity: qty,
+        },
+      });
+    };
 
-      while (buyLeft > 0) {
-        const s = sells[sellIndex];
-        // faire constante sellLeft ou s.quantity pour faire que if/else
-        if (sellLeft > 0 && buyLeft >= sellLeft) {
-          await client.transactionRelation.create({
-            data: {
-              inId: bt.id,
-              outId: s.id,
-              quantity: s.quantity,
-            },
-          });
-          buyLeft -= s.quantity;
-          sellIndex++;
-        } else if (buyLeft >= s.quantity) {
-          await client.transactionRelation.create({
-            data: {
-              inId: bt.id,
-              outId: s.id,
-              quantity: s.quantity,
-            },
-          });
-          buyLeft -= s.quantity;
-          sellIndex++;
+    for (let i = 0; i < distinctItems.length; i++) {
+      const singleItemBuys = buys.filter((f) => f.itemId === distinctItems[i]);
+      let selectedBuy = 0;
+      let buyLeft = singleItemBuys[selectedBuy].quantity;
+
+      const sells = await client.transaction.findMany({
+        where: { type: TransactionType.SELL, itemId: distinctItems[i] },
+      });
+
+      for (let i = 0; i < sells.length; i++) {
+        const e = sells[i];
+        if (buyLeft >= e.quantity) {
+          request(singleItemBuys[selectedBuy].id, e.id, e.quantity);
+          buyLeft -= e.quantity;
         } else {
-          await client.transactionRelation.create({
-            data: {
-              inId: bt.id,
-              outId: s.id,
-              quantity: buyLeft,
-            },
-          });
-          buyLeft = 0;
+          let sellLeft = e.quantity - buyLeft;
+          request(singleItemBuys[selectedBuy].id, e.id, buyLeft);
+          selectedBuy++;
+          buyLeft = singleItemBuys[selectedBuy].quantity;
+
+          while (sellLeft > 0) {
+            if (buyLeft >= sellLeft) {
+              request(singleItemBuys[selectedBuy].id, e.id, sellLeft);
+              buyLeft -= sellLeft;
+              sellLeft = 0;
+            } else {
+              request(singleItemBuys[selectedBuy].id, e.id, buyLeft);
+              sellLeft = sellLeft - buyLeft;
+              selectedBuy++;
+              buyLeft = singleItemBuys[selectedBuy].quantity;
+            }
+          }
         }
       }
     }
