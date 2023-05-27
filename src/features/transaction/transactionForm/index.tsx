@@ -1,4 +1,5 @@
 import { ReloadActionEnum } from '@/features/global/globalEnums';
+import { globalActions } from '@/features/global/globalSlice';
 import { getStockState } from '@/features/stock/stockSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../../../components/form/Button';
 import HookFormInputField from '../../../components/form/HookFormInputField';
-import { postTransactionThunk } from '../transactionThunks';
+import useTransactions from '../useTransactions';
 import {
   TransactionFormValidation,
   initialCalculatedValues,
@@ -27,6 +28,7 @@ function TransactionForm({
   toReload,
 }: ITransactionFormProps): React.ReactElement {
   const { itemQty } = useAppSelector(getStockState);
+  const { createTransaction } = useTransactions();
   const [calculatedValues, setCalculatedValues] =
     useState<FormCalculatedValues>(initialCalculatedValues);
 
@@ -49,11 +51,6 @@ function TransactionForm({
     if (item) {
       setValue('itemId', item.id);
     }
-  };
-
-  const isFulfilled = () => {
-    reset();
-    setDatas();
   };
 
   useEffect(() => {
@@ -83,7 +80,7 @@ function TransactionForm({
     }
   }, [quantity, value, fee, item]);
 
-  const onSubmit = (values: TransactionFormType) => {
+  const onSubmit = async (values: TransactionFormType) => {
     if (isValid) {
       if (type) {
         const extendedValues = {
@@ -93,7 +90,11 @@ function TransactionForm({
             type === TransactionType.SELL ? SellStatus.PROGRESS : null,
         };
 
-        dispatch(postTransactionThunk({ body: extendedValues, toReload }));
+        await createTransaction(extendedValues);
+
+        dispatch(globalActions.addReload(toReload));
+        reset();
+        setDatas();
       }
     }
   };

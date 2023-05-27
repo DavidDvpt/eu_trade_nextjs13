@@ -1,4 +1,5 @@
 import GenericSelect from '@/components/form/GenericSelect';
+import { globalActions } from '@/features/global/globalSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
 import { selectItemParser } from '@/lib/parser/selectItemsParser';
@@ -17,6 +18,7 @@ import styles from './itemSearchEngineContainer.module.scss';
 
 interface IItemSearchEngineContainerProps {
   callback: (item: Item | null) => void;
+  toReload?: string[];
 }
 
 const initialState = {
@@ -27,6 +29,7 @@ const initialState = {
 
 function ItemSearchEngineContainer({
   callback,
+  toReload,
 }: IItemSearchEngineContainerProps): JSX.Element {
   const [selected, setSelected] = useState<SelectedDatas>(initialState);
   const { itemCategories, itemTypes, items } = useAppSelector(
@@ -80,6 +83,9 @@ function ItemSearchEngineContainer({
             item: i,
           });
           callback(i);
+          if (toReload) {
+            dispatch(globalActions.addReload(toReload));
+          }
         }
         break;
       default:
