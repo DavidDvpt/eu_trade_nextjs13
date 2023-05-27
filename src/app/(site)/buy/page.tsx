@@ -27,7 +27,10 @@ function Buy(): React.ReactElement {
 
   return (
     <div className={styles.buy}>
-      <ItemSearchEngineContainer callback={handleItemChange} />
+      <ItemSearchEngineContainer
+        callback={handleItemChange}
+        toReload={[ReloadActionEnum.RELOAD_BUY_TRANSACTION_LIST]}
+      />
 
       <ItemTitle item={item} />
 

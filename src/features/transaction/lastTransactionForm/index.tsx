@@ -1,13 +1,14 @@
 import styles from './lastTransactionForm.module.scss';
 
+import { globalActions } from '@/features/global/globalSlice';
 import { useAppDispatch } from '@/features/store/hooks';
-import { postTransactionThunk } from '@/features/transaction/transactionThunks';
 import { Item, SellStatus, TransactionType } from '@prisma/client';
 import { FormEvent, useEffect } from 'react';
-import Button from '../../../components/form/Button';
+
+import Button from '@/components/form/Button';
 import useTransactions from '../useTransactions';
 
-interface ILastTransactionProps {
+interface ILastTransactionProps extends IToReload {
   item: Item | null;
   transactionType?: TransactionType;
   sellStatus?: SellStatus;
@@ -17,13 +18,16 @@ function LastTransactionForm({
   item,
   transactionType,
   sellStatus,
+  toReload,
 }: ILastTransactionProps): JSX.Element | null {
-  const { loadTransactions, transactions } = useTransactions();
+  const { loadTransactions, transactions, createTransaction } =
+    useTransactions();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (item) {
       loadTransactions({
+        sortKey: 'createdAt',
         itemId: item.id,
         order: 'desc',
         limit: 1,
@@ -33,18 +37,18 @@ function LastTransactionForm({
     }
   }, [item]);
 
-  const handleUseLastSold = (e: FormEvent<HTMLFormElement>) => {
+  const handleUseLastSold = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (transactions && transactions[0]) {
-      dispatch(
-        postTransactionThunk({
-          body: {
-            ...transactions[0],
-            type: TransactionType.SELL,
-            sellStatus: SellStatus.PROGRESS,
-          },
-        })
-      );
+      await createTransaction({
+        ...transactions[0],
+        type: TransactionType.SELL,
+        sellStatus: SellStatus.PROGRESS,
+      });
+
+      if (toReload) {
+        dispatch(globalActions.addReload(toReload));
+      }
     }
   };
 

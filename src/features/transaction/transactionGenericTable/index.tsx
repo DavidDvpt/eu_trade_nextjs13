@@ -53,11 +53,11 @@ function TransactionGenericTable({
       request();
       dispatch(globalActions.removeReload(name));
     }
-  }, [reload]);
+  }, [reload, itemId]);
 
-  useEffect(() => {
-    request();
-  }, []);
+  // useEffect(() => {
+  //   request();
+  // }, []);
 
   useEffect(() => {
     if (transactions && !isEmpty(transactions)) {

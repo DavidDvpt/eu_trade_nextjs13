@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/features/transaction/transactionForm"
+    "src/assets/features/transaction/transactionForm"
   ],
   "exclude": ["node_modules"]
 }

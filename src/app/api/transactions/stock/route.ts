@@ -1,4 +1,5 @@
 import { getStocks } from '@/lib/prisma/utils/transaction';
+import { SellStatus, TransactionType } from '@prisma/client';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -21,9 +22,10 @@ export async function GET(req: NextRequest) {
 
       for (let i = 0; i < stocks.length; i++) {
         const e = stocks[i];
-        const buyType = e.transactionType === 'BUY';
+        const buyType = e.transactionType === TransactionType.BUY;
         const sellOk =
-          e.sellStatus !== 'RETURNED' && e.transactionType === 'SELL';
+          e.sellStatus !== SellStatus.RETURNED &&
+          e.transactionType === TransactionType.SELL;
         let q = 0;
 
         if (buyType) q = +e.quantity;
