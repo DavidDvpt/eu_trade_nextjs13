@@ -1,3 +1,4 @@
+import { SellStatus, TransactionType } from '@prisma/client';
 import client from './prismadb';
 
 const userStockList = async () => {
@@ -11,4 +12,22 @@ const userStockList = async () => {
   console.table(response);
 };
 
-userStockList();
+// userStockList();
+
+const transactions = async () => {
+  const r = await client.transaction.findMany({
+    where: {
+      userId: 'clgs40jg40005kr9726jsxqrh',
+      itemId: 'clgs40jgq001hkr978p2a4v4j',
+      type: TransactionType.SELL,
+      sellStatus: SellStatus.ENDED,
+    },
+    include: { item: true },
+    orderBy: [{ createdAt: 'desc' }],
+    take: 1,
+  });
+
+  console.log(r);
+};
+
+transactions();

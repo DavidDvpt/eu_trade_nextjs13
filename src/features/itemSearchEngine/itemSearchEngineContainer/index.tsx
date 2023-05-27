@@ -16,9 +16,8 @@ import {
 } from '../itemSearchEngineThunks';
 import styles from './itemSearchEngineContainer.module.scss';
 
-interface IItemSearchEngineContainerProps {
+interface IItemSearchEngineContainerProps extends IToReload {
   callback: (item: Item | null) => void;
-  toReload?: string[];
 }
 
 const initialState = {
@@ -83,6 +82,7 @@ function ItemSearchEngineContainer({
             item: i,
           });
           callback(i);
+
           if (toReload) {
             dispatch(globalActions.addReload(toReload));
           }

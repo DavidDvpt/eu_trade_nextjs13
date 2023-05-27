@@ -1,4 +1,5 @@
-import { ReloadActionEnum } from '@/features/global/globalEnums';
+import Button from '@/components/form/Button';
+import HookFormInputField from '@/components/form/HookFormInputField';
 import { globalActions } from '@/features/global/globalSlice';
 import { getStockState } from '@/features/stock/stockSlice';
 import { useAppDispatch, useAppSelector } from '@/features/store/hooks';
@@ -6,8 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Item, SellStatus, TransactionType } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../../../components/form/Button';
-import HookFormInputField from '../../../components/form/HookFormInputField';
 import useTransactions from '../useTransactions';
 import {
   TransactionFormValidation,
@@ -16,10 +15,9 @@ import {
 } from './constant';
 import styles from './transactionForm.module.scss';
 
-interface ITransactionFormProps {
+interface ITransactionFormProps extends IToReload {
   item: Item | null;
   type: TransactionType;
-  toReload: ReloadActionEnum[];
 }
 
 function TransactionForm({
@@ -92,9 +90,12 @@ function TransactionForm({
 
         await createTransaction(extendedValues);
 
-        dispatch(globalActions.addReload(toReload));
         reset();
         setDatas();
+
+        if (toReload) {
+          dispatch(globalActions.addReload(toReload));
+        }
       }
     }
   };
