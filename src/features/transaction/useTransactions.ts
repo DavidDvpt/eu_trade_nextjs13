@@ -1,11 +1,12 @@
 import { TransactionsExtended } from '@/app/extendedAppTypes';
 import { ApiStatusEnum } from '@/lib/axios/apiTypes';
+import { SellStatus, TransactionType } from '@prisma/client';
 import { useState } from 'react';
-import { fetchTransactions } from './transactionRequest';
+import {
+  createTransactionAsync,
+  fetchTransactions,
+} from './transactionRequest';
 
-interface IUseTransactions extends IFetchTransactionsParams {
-  all?: boolean;
-}
 const useTransactions = () => {
   const [transactions, setTransactions] = useState<TransactionsExtended | null>(
     null
@@ -27,7 +28,7 @@ const useTransactions = () => {
     }
   };
 
-  const loadTransactions = ({
+  const loadTransactions = async ({
     itemId,
     transactionType,
     sellStatus,
@@ -35,12 +36,45 @@ const useTransactions = () => {
     limit,
     order,
   }: IFetchTransactionsParams) => {
-    setApiState({ status: ApiStatusEnum.PENDING, error: null });
-    request({ itemId, transactionType, sellStatus, limit, order, sortKey });
+    try {
+      if (apiState.status !== ApiStatusEnum.PENDING) {
+        setApiState({ status: ApiStatusEnum.PENDING, error: null });
+        const t = await fetchTransactions({
+          itemId,
+          transactionType,
+          sellStatus,
+          limit,
+          order,
+          sortKey,
+        });
+        setApiState({ status: ApiStatusEnum.IDLE, error: null });
+        setTransactions(t);
+      }
+    } catch (error) {
+      setApiState({ status: ApiStatusEnum.REJECTED, error });
+    }
+  };
+
+  const createTransaction = async (
+    body: TransactionFormType & {
+      type: TransactionType;
+      sellStatus: SellStatus | null;
+    }
+  ) => {
+    try {
+      if (apiState.status !== ApiStatusEnum.PENDING) {
+        setApiState({ status: ApiStatusEnum.PENDING, error: null });
+        await createTransactionAsync({ body });
+        setApiState({ status: ApiStatusEnum.IDLE, error: null });
+      }
+    } catch (error) {
+      setApiState({ status: ApiStatusEnum.REJECTED, error });
+    }
   };
 
   return {
     loadTransactions,
+    createTransaction,
     transactions,
     apiState,
     transactionsCount: transactions?.length ?? 0,

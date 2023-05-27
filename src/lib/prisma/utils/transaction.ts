@@ -28,6 +28,7 @@ export async function getTransactions(
     return Promise.reject(error);
   }
 }
+
 // export async function getTransaction(
 //   userId: string,
 //   itemId: string,
@@ -105,7 +106,9 @@ export async function getStocks(userId: string) {
       ORDER BY i.name, t.type, t.sellStatus
     `;
 
-    return response;
+    const haveQuantity = response.filter((m) => m.quantity !== 0);
+
+    return haveQuantity;
   } catch (error) {
     return Promise.reject(error);
   }

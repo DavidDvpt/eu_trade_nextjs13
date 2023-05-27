@@ -29,7 +29,13 @@ function Sell(): React.ReactElement {
 
   return (
     <div className={styles.sell}>
-      <ItemSearchEngineContainer callback={handleItemChange} />
+      <ItemSearchEngineContainer
+        callback={handleItemChange}
+        toReload={[
+          ReloadActionEnum.RELOAD_UNIQUE_ITEM_QUANTITY,
+          ReloadActionEnum.RELOAD_SELL_ENDED_TRANSACTION_LIST,
+        ]}
+      />
 
       <ItemTitle item={item} />
 
@@ -39,6 +45,7 @@ function Sell(): React.ReactElement {
         item={item}
         transactionType={TransactionType.SELL}
         sellStatus={SellStatus.ENDED}
+        toReload={[ReloadActionEnum.RELOAD_UNIQUE_ITEM_QUANTITY]}
       />
 
       <TransactionForm
@@ -54,7 +61,7 @@ function Sell(): React.ReactElement {
           transactionType={TransactionType.SELL}
           sellStatus={SellStatus.ENDED}
           sortKey='createdAt'
-          order='desc'
+          order='asc'
           limit={10}
           title='Dernières ventes pour cet item'
           name={ReloadActionEnum.RELOAD_SELL_ENDED_TRANSACTION_LIST}

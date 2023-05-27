@@ -12,6 +12,10 @@ interface IId {
   id: string;
 }
 
+interface IToReload {
+  toReload?: ReloadActionEnum[];
+}
+
 type FormCalculatedValues = {
   calculatedTT: number;
   calculatedExtraCost: number;

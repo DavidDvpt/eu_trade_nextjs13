@@ -6,7 +6,7 @@ import {
   updateEntity,
 } from '@/lib/axios/requests/genericRequests';
 import { SellStatus, TransactionType } from '@prisma/client';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, isFulfilled } from '@reduxjs/toolkit';
 import { ReloadActionEnum } from '../global/globalEnums';
 import { globalActions } from '../global/globalSlice';
 
@@ -55,6 +55,7 @@ export const postTransactionThunk = createAsyncThunk(
         sellStatus: SellStatus | null;
       };
       toReload?: ReloadActionEnum[];
+      isFulfilled: () => void;
     },
     tools
   ) => {
@@ -68,11 +69,8 @@ export const postTransactionThunk = createAsyncThunk(
       if (toReload) {
         tools.dispatch(globalActions.addReload(toReload));
       }
-      // if (body.type === TransactionType.SELL) {
-      //   tools.dispatch(stockActions.singleQtySubstract(body.quantity));
-      // }
-      // if (body.type === TransactionType.BUY) {
-      // }
+      isFulfilled();
+
       return response;
     } catch (error) {
       return Promise.reject(error);
