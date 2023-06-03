@@ -10,6 +10,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SessionStatus {
+  ACTIVE
+  SOLDED
+}
+
+enum TransactionType {
+  BUY
+  SELL
+}
+
+model Transaction {
+  id                     String                   @id @default(cuid())
+  type                   TransactionType
+  sellStatus             SellStatus?
+  quantity               Int
+  fee                    Float?                   @default(0)
+  value                  Float
+  createdAt              DateTime                 @default(now())
+  modifiedAt             DateTime?
+  userId                 String
+  user                   User                     @relation(fields: [userId], references: [id])
+  itemId                 String
+  item                   Item                     @relation(fields: [itemId], references: [id])
+  sessionId              String?
+  session                Session?                 @relation(fields: [sessionId], references: [id])
+  inRelations            TransactionRelation[]    @relation("inRelations")
+  outRelations           TransactionRelation[]    @relation("outRelations")
+  SessionRowSellRelation SessionRowSellRelation[]
+  SessionRowSellRelation SessionRowSellRelation[]
+}
+
+model TransactionRelation {
+  inId     String
+  in       Transaction @relation("inRelations", fields: [inId], references: [id])
+  outId    String
+  out      Transaction @relation("outRelations", fields: [outId], references: [id])
+  quantity Int
+
+  @@id([inId, outId])
+}
+
+// NEW TABLES
+
 enum SessionContext {
   TRADE
   MINING
@@ -18,23 +61,13 @@ enum SessionContext {
 
 enum SessionState {
   OPEN
-  CLOSE
-}
-
-enum SessionStatus {
-  ACTIVE
-  SOLDED
+  CLOSED
 }
 
 enum SellStatus {
   ENDED
   PROGRESS
   RETURNED
-}
-
-enum TransactionType {
-  BUY
-  SELL
 }
 
 model User {
@@ -48,6 +81,7 @@ model User {
   isActive    Boolean       @default(true)
   password    String        @db.VarChar(255)
   Transaction Transaction[]
+  Sells       Sells[]
 }
 
 model ItemCategory {
@@ -75,55 +109,68 @@ model Item {
   id          String        @id @default(cuid())
   name        String        @unique
   value       Float         @default(0)
+  decay       Float?        @default(0)
   imageUrlId  String?
   isActive    Boolean       @default(true)
   isLimied    Boolean       @default(false)
   createdAt   DateTime      @default(now())
   modifiedAt  DateTime?
   itemTypeId  String
-  ItemType    ItemType      @relation(fields: [itemTypeId], references: [id])
   Transaction Transaction[]
-}
-
-model Transaction {
-  id           String                @id @default(cuid())
-  type         TransactionType
-  sellStatus   SellStatus?
-  quantity     Int
-  fee          Float?                @default(0)
-  value        Float
-  createdAt    DateTime              @default(now())
-  modifiedAt   DateTime?
-  userId       String
-  user         User                  @relation(fields: [userId], references: [id])
-  itemId       String
-  item         Item                  @relation(fields: [itemId], references: [id])
-  sessionId    String?
-  session      Session?              @relation(fields: [sessionId], references: [id])
-  inRelations  TransactionRelation[] @relation("inRelations")
-  outRelations TransactionRelation[] @relation("outRelations")
+  Sells       Sells[]
+  SessionRow  SessionRow[]
+  ItemType    ItemType      @relation(fields: [itemTypeId], references: [id])
 }
 
 model Session {
   id          String          @id @default(cuid())
   clickCount  Int?
   context     SessionContext?
-  status      SessionStatus?
   state       SessionState?
+  createdAt   DateTime        @default(now())
+  modifiedAt  DateTime?
   totalOutTT  Float?          @default(0)
   totalOutTTC Float?          @default(0)
   totalInTT   Float?          @default(0)
   totalInTTC  Float?          @default(0)
   totalFee    Float?          @default(0)
   Transaction Transaction[]
+  SessionRow  SessionRow[]
 }
 
-model TransactionRelation {
-  inId     String
-  in       Transaction @relation("inRelations", fields: [inId], references: [id])
-  outId    String
-  out      Transaction @relation("outRelations", fields: [outId], references: [id])
-  quantity Int
+model SessionRow {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  modifiedAt DateTime?
+  sessionId  String
+  itemId     String
+  quantity   Int
+  fee        Float?    @default(0)
+  value      Float
+  session    Session   @relation(fields: [sessionId], references: [id])
+  item       Item      @relation(fields: [itemId], references: [id])
+}
+
+model Sell {
+  id         String     @id @default(cuid())
+  status     SellStatus
+  itemId     String
+  userId     String
+  createdAt  DateTime   @default(now())
+  modifiedAt DateTime?
+  quantity   Int
+  fee        Float?     @default(0)
+  value      Float
+  item       Item       @relation(fields: [itemId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+}
+
+model SessionRowSellRelation {
+  sessionRowId String
+  sellId       String
+  quantity     Int
+  sessionRow   SessionRow @relation(fields: [sessionRowId], references: [id])
+  sell         Sell       @relation(fields: [sellId], references: [id])
 
   @@id([inId, outId])
 }
