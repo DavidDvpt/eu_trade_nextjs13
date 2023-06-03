@@ -98,31 +98,31 @@ const createTransactiosnRelations = async () => {
         const s = sells[i];
 
         if (buyLeft >= s.quantity) {
-          console.log('buyLeft', buyLeft, 'qty', s.quantity);
-          // request(singleItemBuys[selectedBuy].id, s.id, s.quantity);
+          // console.log('buyLeft', buyLeft, 'qty', s.quantity);
+          request(singleItemBuys[selectedBuy].id, s.id, s.quantity);
           buyLeft -= s.quantity;
         } else {
-          // soldCurrentSell(
-          //   s,
-          //   singleItemBuys[selectedBuy],
-          //   buyLeft,
-          //   buys[selectedBuy].sessionId as string
-          // );
-          let sellLeft = s.quantity - buyLeft;
-          console.log(
-            'buyLeft',
+          soldCurrentSell(
+            s,
+            singleItemBuys[selectedBuy],
             buyLeft,
-            'sellLeft',
-            sellLeft,
-            'qty',
-            s.quantity
+            buys[selectedBuy].sessionId as string
           );
+          let sellLeft = s.quantity - buyLeft;
+          // console.log(
+          //   'buyLeft',
+          //   buyLeft,
+          //   'sellLeft',
+          //   sellLeft,
+          //   'qty',
+          //   s.quantity
+          // );
           selectedBuy++;
           buyLeft = singleItemBuys[selectedBuy].quantity;
 
           while (sellLeft > 0) {
             if (buyLeft >= sellLeft) {
-              // request(singleItemBuys[selectedBuy].id, s.id, sellLeft);
+              request(singleItemBuys[selectedBuy].id, s.id, sellLeft);
               buyLeft -= sellLeft;
               sellLeft = 0;
               console.log(
@@ -134,21 +134,21 @@ const createTransactiosnRelations = async () => {
                 s.quantity
               );
             } else {
-              // soldCurrentSell(
-              //   s,
-              //   singleItemBuys[selectedBuy],
-              //   buyLeft,
-              //   buys[selectedBuy].sessionId as string
-              // );
-              sellLeft -= buyLeft;
-              console.log(
-                'buyLeft',
+              soldCurrentSell(
+                s,
+                singleItemBuys[selectedBuy],
                 buyLeft,
-                'sellLeft',
-                sellLeft,
-                'qty',
-                s.quantity
+                buys[selectedBuy].sessionId as string
               );
+              sellLeft -= buyLeft;
+              // console.log(
+              //   'buyLeft',
+              //   buyLeft,
+              //   'sellLeft',
+              //   sellLeft,
+              //   'qty',
+              //   s.quantity
+              // );
               selectedBuy++;
               buyLeft = singleItemBuys[selectedBuy].quantity;
             }
