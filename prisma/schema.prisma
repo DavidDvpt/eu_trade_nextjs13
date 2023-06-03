@@ -21,24 +21,22 @@ enum TransactionType {
 }
 
 model Transaction {
-  id                     String                   @id @default(cuid())
-  type                   TransactionType
-  sellStatus             SellStatus?
-  quantity               Int
-  fee                    Float?                   @default(0)
-  value                  Float
-  createdAt              DateTime                 @default(now())
-  modifiedAt             DateTime?
-  userId                 String
-  user                   User                     @relation(fields: [userId], references: [id])
-  itemId                 String
-  item                   Item                     @relation(fields: [itemId], references: [id])
-  sessionId              String?
-  session                Session?                 @relation(fields: [sessionId], references: [id])
-  inRelations            TransactionRelation[]    @relation("inRelations")
-  outRelations           TransactionRelation[]    @relation("outRelations")
-  SessionRowSellRelation SessionRowSellRelation[]
-  SessionRowSellRelation SessionRowSellRelation[]
+  id           String                @id @default(cuid())
+  type         TransactionType
+  sellStatus   SellStatus?
+  quantity     Int
+  fee          Float?                @default(0)
+  value        Float
+  createdAt    DateTime              @default(now())
+  modifiedAt   DateTime?
+  userId       String
+  user         User                  @relation(fields: [userId], references: [id])
+  itemId       String
+  item         Item                  @relation(fields: [itemId], references: [id])
+  sessionId    String?
+  session      Session?              @relation(fields: [sessionId], references: [id])
+  inRelations  TransactionRelation[] @relation("inRelations")
+  outRelations TransactionRelation[] @relation("outRelations")
 }
 
 model TransactionRelation {
@@ -61,6 +59,7 @@ enum SessionContext {
 
 enum SessionState {
   OPEN
+  CLOSE
   CLOSED
 }
 
@@ -81,7 +80,7 @@ model User {
   isActive    Boolean       @default(true)
   password    String        @db.VarChar(255)
   Transaction Transaction[]
-  Sells       Sells[]
+  Sells       Sell[]
 }
 
 model ItemCategory {
@@ -117,8 +116,8 @@ model Item {
   modifiedAt  DateTime?
   itemTypeId  String
   Transaction Transaction[]
-  Sells       Sells[]
-  SessionRow  SessionRow[]
+  Sells       Sell[]
+  SessionRows SessionRow[]
   ItemType    ItemType      @relation(fields: [itemTypeId], references: [id])
 }
 
@@ -139,30 +138,32 @@ model Session {
 }
 
 model SessionRow {
-  id         String    @id @default(cuid())
-  createdAt  DateTime  @default(now())
-  modifiedAt DateTime?
-  sessionId  String
-  itemId     String
-  quantity   Int
-  fee        Float?    @default(0)
-  value      Float
-  session    Session   @relation(fields: [sessionId], references: [id])
-  item       Item      @relation(fields: [itemId], references: [id])
+  id                     String                   @id @default(cuid())
+  createdAt              DateTime                 @default(now())
+  modifiedAt             DateTime?
+  sessionId              String
+  itemId                 String
+  quantity               Int
+  fee                    Float?                   @default(0)
+  value                  Float
+  session                Session                  @relation(fields: [sessionId], references: [id])
+  item                   Item                     @relation(fields: [itemId], references: [id])
+  SessionRowSellRelation SessionRowSellRelation[]
 }
 
 model Sell {
-  id         String     @id @default(cuid())
-  status     SellStatus
-  itemId     String
-  userId     String
-  createdAt  DateTime   @default(now())
-  modifiedAt DateTime?
-  quantity   Int
-  fee        Float?     @default(0)
-  value      Float
-  item       Item       @relation(fields: [itemId], references: [id])
-  user       User       @relation(fields: [userId], references: [id])
+  id                     String                   @id @default(cuid())
+  status                 SellStatus
+  itemId                 String
+  userId                 String
+  createdAt              DateTime                 @default(now())
+  modifiedAt             DateTime?
+  quantity               Int
+  fee                    Float?                   @default(0)
+  value                  Float
+  item                   Item                     @relation(fields: [itemId], references: [id])
+  user                   User                     @relation(fields: [userId], references: [id])
+  SessionRowSellRelation SessionRowSellRelation[]
 }
 
 model SessionRowSellRelation {
@@ -172,5 +173,5 @@ model SessionRowSellRelation {
   sessionRow   SessionRow @relation(fields: [sessionRowId], references: [id])
   sell         Sell       @relation(fields: [sellId], references: [id])
 
-  @@id([inId, outId])
+  @@id([sessionRowId, sellId])
 }
