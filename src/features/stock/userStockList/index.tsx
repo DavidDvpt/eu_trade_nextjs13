@@ -44,14 +44,16 @@ function UserStockList(): JSX.Element {
     if (userStockList.result) {
       const tempRows: HomeStockTableRows = [];
 
-      userStockList.result.forEach((e) => {
-        const temp: HomeStockTableRow = {
-          ...e,
-          quantity: String(e.quantity),
-          value: Number(e.value).toFixed(2),
-        };
-        tempRows.push(temp);
-      });
+      userStockList.result
+        .filter((f) => f.quantity > 0)
+        .forEach((e) => {
+          const temp: HomeStockTableRow = {
+            ...e,
+            quantity: String(e.quantity),
+            value: Number(e.value).toFixed(2),
+          };
+          tempRows.push(temp);
+        });
 
       setRows(tempRows);
 
