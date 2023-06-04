@@ -84,12 +84,12 @@ model User {
 }
 
 model ItemCategory {
-  id         String     @id @default(cuid())
-  name       String     @unique
-  isActive   Boolean    @default(true)
-  createdAt  DateTime   @default(now())
-  modifiedAt DateTime?
-  ItemType   ItemType[]
+  id        String     @id @default(cuid())
+  name      String     @unique
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?
+  ItemType  ItemType[]
 }
 
 model ItemType {
@@ -98,7 +98,7 @@ model ItemType {
   isActive       Boolean      @default(true)
   isStackable    Boolean      @default(true)
   createdAt      DateTime     @default(now())
-  modifiedAt     DateTime?
+  updatedAt      DateTime?
   itemCategoryId String
   itemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
   items          Item[]
@@ -113,7 +113,7 @@ model Item {
   isActive    Boolean       @default(true)
   isLimied    Boolean       @default(false)
   createdAt   DateTime      @default(now())
-  modifiedAt  DateTime?
+  updatedAt   DateTime?
   itemTypeId  String
   Transaction Transaction[]
   Sells       Sell[]
@@ -127,20 +127,20 @@ model Session {
   context     SessionContext?
   state       SessionState?
   createdAt   DateTime        @default(now())
-  modifiedAt  DateTime?
+  updatedAt   DateTime?
   totalOutTT  Float?          @default(0)
   totalOutTTC Float?          @default(0)
   totalInTT   Float?          @default(0)
   totalInTTC  Float?          @default(0)
   totalFee    Float?          @default(0)
   Transaction Transaction[]
-  SessionRow  SessionRow[]
+  SessionRows SessionRow[]
 }
 
 model SessionRow {
   id                     String                   @id @default(cuid())
   createdAt              DateTime                 @default(now())
-  modifiedAt             DateTime?
+  updatedAt              DateTime?
   sessionId              String
   itemId                 String
   quantity               Int
@@ -157,7 +157,7 @@ model Sell {
   itemId                 String
   userId                 String
   createdAt              DateTime                 @default(now())
-  modifiedAt             DateTime?
+  updatedAt              DateTime?
   quantity               Int
   fee                    Float?                   @default(0)
   value                  Float
